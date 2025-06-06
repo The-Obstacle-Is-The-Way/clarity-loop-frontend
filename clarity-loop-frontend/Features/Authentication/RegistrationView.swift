@@ -35,7 +35,7 @@ struct RegistrationView: View {
             
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
-                    Button { viewModel.termsAccepted.toggle() } content: {
+                    Button(action: { viewModel.termsAccepted.toggle() }) {
                         Image(systemName: viewModel.termsAccepted ? "checkmark.square.fill" : "square")
                             .foregroundColor(viewModel.termsAccepted ? .blue : .gray)
                     }
@@ -45,7 +45,7 @@ struct RegistrationView: View {
                 }
                 
                 HStack {
-                    Button { viewModel.privacyPolicyAccepted.toggle() } content: {
+                    Button(action: { viewModel.privacyPolicyAccepted.toggle() }) {
                         Image(systemName: viewModel.privacyPolicyAccepted ? "checkmark.square.fill" : "square")
                             .foregroundColor(viewModel.privacyPolicyAccepted ? .blue : .gray)
                     }
