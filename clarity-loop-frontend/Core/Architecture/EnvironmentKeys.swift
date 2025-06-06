@@ -5,7 +5,12 @@ import SwiftUI
 /// The key for accessing the `AuthServiceProtocol` in the SwiftUI Environment.
 struct AuthServiceKey: EnvironmentKey {
     static var defaultValue: AuthServiceProtocol {
+        // Provide a safe mock for previews and testing
+        #if DEBUG
+        return MockAuthService()
+        #else
         fatalError("AuthService not found. Did you forget to inject it?")
+        #endif
     }
 }
 
@@ -68,6 +73,36 @@ extension EnvironmentValues {
 
 #if DEBUG
 // MARK: - Mock Implementations for Previews
+
+class MockAuthService: AuthServiceProtocol {
+    var currentUser: FirebaseAuth.User? = nil
+    var authState: AsyncStream<FirebaseAuth.User?> {
+        AsyncStream { continuation in
+            continuation.yield(currentUser)
+            continuation.finish()
+        }
+    }
+    
+    func signIn(withEmail email: String, password: String) async throws {
+        // Mock implementation
+    }
+    
+    func signUp(withEmail email: String, password: String) async throws {
+        // Mock implementation
+    }
+    
+    func signOut() throws {
+        // Mock implementation
+    }
+    
+    func sendPasswordReset(withEmail email: String) async throws {
+        // Mock implementation
+    }
+    
+    func getCurrentUserToken() async throws -> String {
+        return "mock-token"
+    }
+}
 
 class MockHealthDataRepository: HealthDataRepositoryProtocol {
     func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
