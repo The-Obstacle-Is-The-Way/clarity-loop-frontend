@@ -63,33 +63,8 @@ struct SettingsView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     SettingsView()
-        .environment(\.authService, MockAuthService())
-        .environment(\.healthKitService, MockHealthKitService())
 }
-
-// Mock service for previews
-class MockAuthService: AuthServiceProtocol {
-    var authState: AsyncStream<FirebaseAuth.User?> {
-        AsyncStream { _ in }
-    }
-    
-    var currentUser: FirebaseAuth.User? { nil }
-    
-    func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
-        throw APIError.notImplemented
-    }
-    
-    func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO {
-        throw APIError.notImplemented
-    }
-    
-    func signOut() throws {}
-    
-    func sendPasswordReset(to email: String) async throws {}
-    
-    func getCurrentUserToken() async throws -> String {
-        throw APIError.notImplemented
-    }
-}
+#endif
