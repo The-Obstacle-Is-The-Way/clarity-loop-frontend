@@ -1,102 +1,69 @@
 import SwiftUI
-import FirebaseAuth
 
 struct LoginView: View {
     
-    // The ViewModel is now initialized directly with the service from the environment.
-    @State private var viewModel: LoginViewModel
+    // MARK: - Environment
     
-    // Access the shared AuthService via the environment.
     @Environment(\.authService) private var authService
     
-    // State for navigation to the registration view.
-    @State private var showRegistration = false
+    // MARK: - State
+    
+    @State private var viewModel: LoginViewModel
+    @State private var isRegistrationPresented = false
+    
+    // MARK: - Initializer
     
     init(authService: AuthServiceProtocol) {
         _viewModel = State(initialValue: LoginViewModel(authService: authService))
     }
-    
+
+    // MARK: - Body
+
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 20) {
-                
-                Spacer()
-                
-                // App Title
-                Text("CLARITY Pulse")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                
-                // Form Fields
-                VStack(spacing: 15) {
-                    TextField("Email", text: $viewModel.email)
-                        .keyboardType(.emailAddress)
-                        .textContentType(.emailAddress)
-                        .autocapitalization(.none)
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                    
-                    SecureField("Password", text: $viewModel.password)
-                        .textContentType(.password)
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                }
-                
-                // Error Message Display
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
-                        .font(.caption)
-                        .multilineTextAlignment(.center)
-                }
-                
-                // Login Button
-                Button(action: {
-                    viewModel.signIn()
-                }) {
-                    HStack {
-                        if viewModel.isLoading {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        } else {
-                            Text("Login")
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(viewModel.isLoading ? Color.gray : Color.blue)
-                    .cornerRadius(10)
-                }
-                .disabled(viewModel.isLoading)
-                
-                // Forgot Password Button
-                Button("Forgot Password?") {
-                    viewModel.sendPasswordReset()
-                }
-                .font(.footnote)
-                .tint(.blue)
-                
-                Spacer()
-                
-                // Registration Link
-                HStack {
-                    Text("Don't have an account?")
-                    Button("Sign Up") {
-                        showRegistration.toggle()
-                    }
-                    .fontWeight(.semibold)
-                    .tint(.blue)
-                }
-                .font(.footnote)
-                
+        VStack(spacing: 20) {
+            
+            Text("Welcome to CLARITY Pulse")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
+            TextField("Email", text: $viewModel.email)
+                .keyboardType(.emailAddress)
+                .autocapitalization(.none)
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+            
+            SecureField("Password", text: $viewModel.password)
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+            
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .font(.caption)
             }
-            .padding(30)
-            .navigationDestination(isPresented: $showRegistration) {
-                RegistrationView(authService: authService)
+            
+            Button(action: viewModel.signIn) {
+                if viewModel.isLoading {
+                    ProgressView()
+                } else {
+                    Text("Login")
+                }
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(viewModel.isLoading)
+            
+            Button("Forgot Password?", action: viewModel.sendPasswordReset)
+                .font(.footnote)
+
+            Spacer()
+            
+            NavigationLink(destination: RegistrationView(authService: authService), isActive: $isRegistrationPresented) {
+                Text("Don't have an account? Sign Up")
             }
         }
+        .padding()
+        .navigationTitle("Login")
     }
 } 

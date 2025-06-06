@@ -26,20 +26,17 @@ enum APIError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "There was an issue connecting to the server. (Invalid URL)"
-        case .networkError(let urlError):
-            return "Network error: \(urlError.localizedDescription)"
+            return "The URL provided was invalid."
+        case .networkError(let error):
+            return "Network error: \(error.localizedDescription)"
         case .serverError(let statusCode, let message):
-            if let message = message, !message.isEmpty {
-                return "Server error (\(statusCode)): \(message)"
-            }
-            return "An error occurred on the server (Code: \(statusCode))."
+            return "Server error \(statusCode): \(message ?? "No message")"
         case .decodingError:
-            return "There was an issue processing the response from the server."
+            return "There was a problem decoding the data from the server."
         case .unauthorized:
-            return "Your session has expired. Please log in again."
+            return "You are not authorized. Please log in again."
         case .unknown:
-            return "An unknown error occurred. Please try again."
+            return "An unknown error occurred."
         }
     }
 } 

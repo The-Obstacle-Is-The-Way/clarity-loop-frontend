@@ -23,11 +23,14 @@ final class APIClient: APIClientProtocol {
 
     // MARK: - Initializer
 
-    init(
-        baseURL: URL = URL(string: "https://api.clarity.health/api/v1")!, // Default can be overridden for different environments
+    init?(
+        baseURLString: String = "https://api.clarity.health/api/v1",
         session: URLSession = .shared,
         tokenProvider: @escaping () async -> String?
     ) {
+        guard let baseURL = URL(string: baseURLString) else {
+            return nil // Return nil if the URL is invalid
+        }
         self.baseURL = baseURL
         self.session = session
         self.tokenProvider = tokenProvider
