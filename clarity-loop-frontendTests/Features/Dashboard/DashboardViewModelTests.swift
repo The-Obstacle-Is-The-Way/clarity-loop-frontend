@@ -32,6 +32,9 @@ fileprivate class MockHealthKitService: HealthKitServiceProtocol {
     func fetchDailySteps(for date: Date) async throws -> Double { 0.0 }
     func fetchRestingHeartRate(for date: Date) async throws -> Double? { nil }
     func fetchSleepAnalysis(for date: Date) async throws -> SleepData? { nil }
+    func uploadHealthKitData(_ uploadRequest: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO {
+        return HealthKitUploadResponseDTO(success: true, uploadId: "test", processedSamples: 1, skippedSamples: 0, errors: nil, message: nil)
+    }
 }
 
 @MainActor

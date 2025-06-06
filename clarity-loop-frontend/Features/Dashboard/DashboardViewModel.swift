@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import FirebaseAuth
 
 /// A struct to hold all the necessary data for the dashboard.
 /// This will be expanded as more data sources are integrated.
@@ -49,7 +50,8 @@ class DashboardViewModel: ObservableObject {
             
             // Fetch health metrics and insights in parallel
             async let metrics = healthKitService.fetchAllDailyMetrics(for: Date())
-            async let insightsResponse = insightsRepo.getInsightHistory(userId: "current_user_id_placeholder", limit: 1, offset: 0) // Placeholder user ID
+            let userId = Auth.auth().currentUser?.uid ?? "unknown"
+            async let insightsResponse = insightsRepo.getInsightHistory(userId: userId, limit: 1, offset: 0)
             
             let (dailyMetrics, insights) = try await (metrics, insightsResponse)
             

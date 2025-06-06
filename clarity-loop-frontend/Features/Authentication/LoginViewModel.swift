@@ -28,6 +28,11 @@ final class LoginViewModel {
             return
         }
         
+        guard isValidEmail(email) else {
+            errorMessage = "Please enter a valid email address."
+            return
+        }
+        
         isLoading = true
         errorMessage = nil
         
@@ -50,6 +55,11 @@ final class LoginViewModel {
             return
         }
         
+        guard isValidEmail(email) else {
+            errorMessage = "Please enter a valid email address."
+            return
+        }
+        
         Task {
             do {
                 try await authService.sendPasswordReset(to: email)
@@ -58,5 +68,13 @@ final class LoginViewModel {
                 self.errorMessage = error.localizedDescription
             }
         }
+    }
+    
+    // MARK: - Private Helpers
+    
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
     }
 } 

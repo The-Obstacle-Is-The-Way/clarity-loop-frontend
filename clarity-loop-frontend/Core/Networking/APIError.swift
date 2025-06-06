@@ -21,6 +21,9 @@ enum APIError: Error, LocalizedError {
 
     /// An unknown or uncategorized error occurred.
     case unknown(Error)
+    
+    /// Functionality not yet implemented (for mocks and testing).
+    case notImplemented
 
     /// Provides a user-friendly description for each error case.
     public var errorDescription: String? {
@@ -37,6 +40,8 @@ enum APIError: Error, LocalizedError {
             return "You are not authorized. Please log in again."
         case .unknown:
             return "An unknown error occurred."
+        case .notImplemented:
+            return "This functionality is not yet implemented."
         }
     }
 } 

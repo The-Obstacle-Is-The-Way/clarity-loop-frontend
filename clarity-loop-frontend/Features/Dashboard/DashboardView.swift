@@ -22,7 +22,8 @@ struct DashboardView: View {
             fatalError("Failed to initialize APIClient")
         }
         let insightsRepo = RemoteInsightsRepository(apiClient: apiClient)
-        _viewModel = StateObject(wrappedValue: DashboardViewModel(insightsRepo: insightsRepo, healthKitService: HealthKitService()))
+        let healthKitService = HealthKitService(apiClient: apiClient)
+        _viewModel = StateObject(wrappedValue: DashboardViewModel(insightsRepo: insightsRepo, healthKitService: healthKitService))
     }
 
     var body: some View {
@@ -64,24 +65,57 @@ struct DashboardView: View {
                         }
                         .padding()
                     }
+                    .refreshable {
+                        await viewModel.loadDashboard()
+                    }
                 case .empty:
-                    Text("No Health Data Available")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                case .error(let errorMessage):
-                    VStack {
-                        Text("Oops, something went wrong.")
+                    VStack(spacing: 16) {
+                        Image(systemName: "heart.text.square")
+                            .font(.system(size: 60))
+                            .foregroundColor(.gray)
+                        
+                        Text("No Health Data Available")
                             .font(.headline)
-                        Text(errorMessage)
-                            .font(.caption)
                             .foregroundColor(.secondary)
-                        Button("Retry") {
+                        
+                        Text("Allow HealthKit access to see your health metrics and insights.")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        
+                        Button("Enable HealthKit") {
                             Task {
                                 await viewModel.loadDashboard()
                             }
                         }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .padding()
+                case .error(let errorMessage):
+                    VStack(spacing: 16) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.system(size: 50))
+                            .foregroundColor(.orange)
+                        
+                        Text("Oops, something went wrong.")
+                            .font(.headline)
+                        
+                        Text(errorMessage)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        
+                        Button("Try Again") {
+                            Task {
+                                await viewModel.loadDashboard()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
                         .padding(.top)
                     }
+                    .padding()
                 }
             }
             .navigationTitle("Your Pulse")

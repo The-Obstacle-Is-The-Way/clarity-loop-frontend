@@ -74,6 +74,11 @@ final class RegistrationViewModel {
             return false
         }
         
+        guard isValidEmail(email) else {
+            errorMessage = "Please enter a valid email address."
+            return false
+        }
+        
         guard password.count >= 8 else {
             errorMessage = "Password must be at least 8 characters long."
             return false
@@ -87,5 +92,11 @@ final class RegistrationViewModel {
         // Add more robust email/password validation as needed
         
         return true
+    }
+    
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
     }
 } 

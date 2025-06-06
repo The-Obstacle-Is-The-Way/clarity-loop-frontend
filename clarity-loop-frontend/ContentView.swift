@@ -13,7 +13,7 @@ struct ContentView: View {
 
     var body: some View {
         if authViewModel.isLoggedIn {
-            DashboardView()
+            MainTabView()
         } else {
             // The LoginView should be wrapped in a NavigationView for proper UI flow.
             NavigationView {
