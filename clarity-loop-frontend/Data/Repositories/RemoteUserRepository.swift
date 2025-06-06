@@ -17,5 +17,28 @@ class RemoteUserRepository: UserRepositoryProtocol {
         self.apiClient = apiClient
     }
     
-    // Protocol methods for fetching and updating the user profile will be implemented here.
+    func getCurrentUserProfile() async throws -> UserProfile {
+        // TODO: Add API endpoint for getting user profile
+        fatalError("Not implemented yet")
+    }
+    
+    func updateUserProfile(_ profile: UserProfile) async throws -> UserProfile {
+        // TODO: Add API endpoint for updating user profile
+        fatalError("Not implemented yet")
+    }
+    
+    func deleteUserAccount() async throws {
+        // TODO: Add API endpoint for deleting user account
+        fatalError("Not implemented yet")
+    }
+    
+    func getPrivacyPreferences() async throws -> UserPrivacyPreferencesDTO {
+        // TODO: Add API endpoint for getting privacy preferences
+        fatalError("Not implemented yet")
+    }
+    
+    func updatePrivacyPreferences(_ preferences: UserPrivacyPreferencesDTO) async throws {
+        // TODO: Add API endpoint for updating privacy preferences
+        fatalError("Not implemented yet")
+    }
 } 

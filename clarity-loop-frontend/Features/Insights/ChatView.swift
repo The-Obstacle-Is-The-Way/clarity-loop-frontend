@@ -33,7 +33,7 @@ struct ChatView: View {
                             MessageBubbleView(message: message)
                         }
                     }
-                    .onChange(of: viewModel.messages.count) { old, new in
+                    .onChange(of: viewModel.messages.count) { _, _ in
                         // Scroll to the bottom when a new message arrives
                         if let lastMessage = viewModel.messages.last {
                             withAnimation {
