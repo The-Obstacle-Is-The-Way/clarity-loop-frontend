@@ -20,5 +20,14 @@ struct ValidationErrorDTO: Codable {
     let field: String
     let message: String
     let code: String
-} 
- 
+}
+
+/// A DTO for user privacy preferences.
+struct UserPrivacyPreferencesDTO: Codable {
+    let shareDataForResearch: Bool
+    let enableAnalytics: Bool
+    let marketingEmails: Bool
+    let pushNotifications: Bool
+    let dataRetentionPeriod: Int // in days
+    let allowThirdPartyIntegrations: Bool
+}
