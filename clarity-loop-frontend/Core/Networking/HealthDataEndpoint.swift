@@ -26,7 +26,7 @@ extension HealthDataEndpoint: Endpoint {
         }
     }
 
-    var body: Data? {
+    func body(encoder: JSONEncoder) throws -> Data? {
         // GET requests typically don't have a body.
         return nil
     }

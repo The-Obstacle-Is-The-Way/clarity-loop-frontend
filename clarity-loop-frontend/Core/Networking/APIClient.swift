@@ -139,7 +139,9 @@ final class APIClient: APIClientProtocol {
 protocol Endpoint {
     var path: String { get }
     var method: HTTPMethod { get }
-    var body: Data? { get }
+    
+    // The body is now a function that takes an encoder.
+    func body(encoder: JSONEncoder) throws -> Data?
 }
 
 extension Endpoint {
@@ -147,7 +149,7 @@ extension Endpoint {
         var request = URLRequest(url: baseURL.appendingPathComponent(path))
         request.httpMethod = method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = body
+        request.httpBody = try body(encoder: encoder)
         return request
     }
 }

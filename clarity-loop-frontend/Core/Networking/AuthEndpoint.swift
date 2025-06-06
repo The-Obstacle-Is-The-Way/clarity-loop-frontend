@@ -35,12 +35,14 @@ enum AuthEndpoint: Endpoint {
         }
     }
 
-    var body: Data? {
+    func body(encoder: JSONEncoder) throws -> Data? {
         switch self {
         case .register(let dto):
-            return try? encoder.encode(dto)
+            return try encoder.encode(dto)
         case .login(let dto):
-            return try? encoder.encode(dto)
+            return try encoder.encode(dto)
+        case .refreshToken(let dto):
+            return try encoder.encode(dto)
         default:
             return nil
         }

@@ -31,12 +31,12 @@ extension InsightEndpoint: Endpoint {
         }
     }
 
-    var body: Data? {
+    func body(encoder: JSONEncoder) throws -> Data? {
         switch self {
         case .getHistory:
             return nil
         case .generate(let dto):
-            return try? JSONEncoder().encode(dto)
+            return try encoder.encode(dto)
         }
     }
     
@@ -54,7 +54,7 @@ extension InsightEndpoint: Endpoint {
             request.url = components?.url
         
         case .generate:
-            // The body is already handled in the `body` property.
+            // The body is already handled in the `body(encoder:)` function.
             break
         }
         
