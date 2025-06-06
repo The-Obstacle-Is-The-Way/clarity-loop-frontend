@@ -6,7 +6,7 @@ import SwiftData
 /// This model caches the user data received from the backend to provide offline access
 /// and reduce network requests. It corresponds to the `UserSessionResponseDTO`.
 @Model
-final class User {
+final class UserProfile {
     /// The unique identifier for the user, matching the backend UUID.
     @Attribute(.unique) let id: UUID
 

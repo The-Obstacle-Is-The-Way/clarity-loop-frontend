@@ -16,7 +16,7 @@ final class PersistenceController {
     private init() {
         // Define the schema with all @Model classes that need to be persisted.
         let schema = Schema([
-            User.self,
+            UserProfile.self,
             HealthMetricEntity.self,
             InsightEntity.self,
             PATAnalysisEntity.self,
