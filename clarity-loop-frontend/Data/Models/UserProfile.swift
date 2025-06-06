@@ -1,10 +1,9 @@
 import Foundation
 import SwiftData
 
-/// Represents a user's profile information stored locally.
-///
-/// This model caches the user data received from the backend to provide offline access
-/// and reduce network requests. It corresponds to the `UserSessionResponseDTO`.
+/// The SwiftData model for storing the user's profile information locally.
+/// This entity allows for offline access to user data and reduces network requests.
+/// It corresponds to the `UserSessionResponseDTO`.
 @Model
 final class UserProfile {
     /// The unique identifier for the user, matching the backend UUID.
@@ -29,10 +28,10 @@ final class UserProfile {
     var status: String
 
     /// A flag indicating if the user has verified their email address.
-    var isEmailVerified: Bool
+    var emailVerified: Bool
 
     /// A flag indicating if Multi-Factor Authentication is enabled for the user.
-    var isMfaEnabled: Bool
+    var mfaEnabled: Bool
 
     /// The timestamp when the user account was created.
     var createdAt: Date
@@ -51,11 +50,11 @@ final class UserProfile {
         role: String,
         permissions: [String],
         status: String,
-        isEmailVerified: Bool,
-        isMfaEnabled: Bool,
+        emailVerified: Bool,
+        mfaEnabled: Bool,
         createdAt: Date,
         lastLogin: Date?,
-        lastSyncedAt: Date
+        lastSyncedAt: Date = Date()
     ) {
         self.id = id
         self.email = email
@@ -64,11 +63,28 @@ final class UserProfile {
         self.role = role
         self.permissions = permissions
         self.status = status
-        self.isEmailVerified = isEmailVerified
-        self.isMfaEnabled = isMfaEnabled
+        self.emailVerified = emailVerified
+        self.mfaEnabled = mfaEnabled
         self.createdAt = createdAt
         self.lastLogin = lastLogin
         self.lastSyncedAt = lastSyncedAt
+    }
+    
+    /// A convenience initializer to create a `UserProfile` from a `UserSessionResponseDTO`.
+    convenience init(from dto: UserSessionResponseDTO) {
+        self.init(
+            id: dto.userId,
+            email: dto.email,
+            firstName: dto.firstName,
+            lastName: dto.lastName,
+            role: dto.role,
+            permissions: dto.permissions,
+            status: dto.status,
+            emailVerified: dto.emailVerified,
+            mfaEnabled: dto.mfaEnabled,
+            createdAt: dto.createdAt,
+            lastLogin: dto.lastLogin
+        )
     }
 } 
  
