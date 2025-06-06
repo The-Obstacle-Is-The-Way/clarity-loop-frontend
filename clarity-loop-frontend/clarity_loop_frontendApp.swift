@@ -5,8 +5,10 @@
 //  Created by Raymond Jung on 6/6/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
+import FirebaseCore
+import FirebaseAuth
 
 @main
 struct clarity_loop_frontendApp: App {
@@ -22,6 +24,10 @@ struct clarity_loop_frontendApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+
+    init() {
+        // ... existing code ...
+    }
 
     var body: some Scene {
         WindowGroup {

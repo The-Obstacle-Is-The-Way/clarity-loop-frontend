@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		713955552DF384690087EC97 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 713955542DF384690087EC97 /* FirebaseAuth */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		71B2A8DB2DF35EBB00F2784F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7139552F2DF383390087EC97 /* clarity-loop-frontend.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "clarity-loop-frontend.xcodeproj"; sourceTree = "<group>"; };
 		71B2A8CB2DF35EB800F2784F /* clarity-loop-frontend.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "clarity-loop-frontend.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		71B2A8DA2DF35EBB00F2784F /* clarity-loop-frontendTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "clarity-loop-frontendTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		71B2A8E42DF35EBB00F2784F /* clarity-loop-frontendUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "clarity-loop-frontendUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				713955552DF384690087EC97 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +83,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		713955322DF383390087EC97 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		713955532DF384690087EC97 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		71B2A8C22DF35EB800F2784F = {
 			isa = PBXGroup;
 			children = (
@@ -84,6 +102,7 @@
 				71B2A8CD2DF35EB800F2784F /* clarity-loop-frontend */,
 				71B2A8DD2DF35EBB00F2784F /* clarity-loop-frontendTests */,
 				71B2A8E72DF35EBB00F2784F /* clarity-loop-frontendUITests */,
+				713955532DF384690087EC97 /* Frameworks */,
 				71B2A8CC2DF35EB800F2784F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -119,6 +138,7 @@
 			);
 			name = "clarity-loop-frontend";
 			packageProductDependencies = (
+				713955542DF384690087EC97 /* FirebaseAuth */,
 			);
 			productName = "clarity-loop-frontend";
 			productReference = 71B2A8CB2DF35EB800F2784F /* clarity-loop-frontend.app */;
@@ -202,9 +222,18 @@
 			);
 			mainGroup = 71B2A8C22DF35EB800F2784F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				713955522DF383870087EC97 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 71B2A8CC2DF35EB800F2784F /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 713955322DF383390087EC97 /* Products */;
+					ProjectRef = 7139552F2DF383390087EC97 /* clarity-loop-frontend.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				71B2A8CA2DF35EB800F2784F /* clarity-loop-frontend */,
@@ -565,6 +594,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		713955522DF383870087EC97 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		713955542DF384690087EC97 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 713955522DF383870087EC97 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 71B2A8C32DF35EB800F2784F /* Project object */;
 }
