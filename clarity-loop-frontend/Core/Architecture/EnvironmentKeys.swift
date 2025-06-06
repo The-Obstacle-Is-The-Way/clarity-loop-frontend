@@ -114,6 +114,9 @@ class MockHealthKitService: HealthKitServiceProtocol {
     func fetchAllDailyMetrics(for date: Date) async throws -> DailyHealthMetrics {
         .init(date: Date(), stepCount: 5000, restingHeartRate: 60, sleepData: nil)
     }
+    func uploadHealthKitData(_ uploadRequest: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO {
+        return HealthKitUploadResponseDTO(success: true, uploadId: "mock-upload-id", processedSamples: uploadRequest.samples.count, skippedSamples: 0, errors: nil, message: "Mock upload successful")
+    }
 }
 #endif
 

@@ -40,6 +40,8 @@ protocol HealthKitServiceProtocol {
     /// - Returns: A `DailyHealthMetrics` object containing all the fetched data.
     func fetchAllDailyMetrics(for date: Date) async throws -> DailyHealthMetrics
     
-    // Methods for fetching specific data types will be added here.
-    // e.g., func fetchDailySteps(for date: Date) async throws -> Int
+    /// Uploads HealthKit data to the backend
+    /// - Parameter uploadRequest: The HealthKit upload request containing samples to upload
+    /// - Returns: A response indicating the upload status
+    func uploadHealthKitData(_ uploadRequest: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO
 } 

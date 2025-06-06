@@ -45,7 +45,7 @@ struct ClarityPulseApp: App {
         
         let service = AuthService(apiClient: apiClient)
         self.authService = service
-        self.healthKitService = HealthKitService()
+        self.healthKitService = HealthKitService(apiClient: apiClient)
         
         // The AuthViewModel is created with the concrete AuthService instance.
         _authViewModel = StateObject(wrappedValue: AuthViewModel(authService: service))

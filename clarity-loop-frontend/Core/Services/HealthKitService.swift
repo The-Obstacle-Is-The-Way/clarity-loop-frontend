@@ -11,6 +11,11 @@ import HealthKit
 class HealthKitService: HealthKitServiceProtocol {
     
     private let healthStore = HKHealthStore()
+    private let apiClient: APIClientProtocol
+    
+    init(apiClient: APIClientProtocol) {
+        self.apiClient = apiClient
+    }
     
     /// The set of `HKObjectType`s the app will request permission to read.
     private var readTypes: Set<HKObjectType> {
@@ -193,6 +198,10 @@ class HealthKitService: HealthKitServiceProtocol {
             restingHeartRate: restingHeartRate,
             sleepData: sleepData
         )
+    }
+    
+    func uploadHealthKitData(_ uploadRequest: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO {
+        return try await apiClient.uploadHealthKitData(requestDTO: uploadRequest)
     }
 }
 
