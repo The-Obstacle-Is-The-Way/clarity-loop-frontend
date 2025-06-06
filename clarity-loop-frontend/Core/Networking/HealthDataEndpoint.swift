@@ -68,6 +68,9 @@ extension HealthDataEndpoint: Endpoint {
                 URLQueryItem(name: "limit", value: "\(limit)"),
             ]
             request.url = components?.url
+        case .uploadHealthKit, .syncHealthKit, .getSyncStatus:
+            // These endpoints don't need query parameters
+            break
         }
         
         return request
