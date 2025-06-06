@@ -7,6 +7,7 @@
 
 import FirebaseAuth
 import FirebaseCore
+import SwiftData
 import SwiftUI
 
 @main
