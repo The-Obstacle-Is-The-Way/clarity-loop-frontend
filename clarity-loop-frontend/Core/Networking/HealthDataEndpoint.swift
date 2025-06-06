@@ -9,6 +9,9 @@ import Foundation
 
 enum HealthDataEndpoint {
     case getMetrics(page: Int, limit: Int)
+    case uploadHealthKit(dto: HealthKitUploadRequestDTO)
+    case syncHealthKit(dto: HealthKitSyncRequestDTO)
+    case getSyncStatus(syncId: String)
 }
 
 extension HealthDataEndpoint: Endpoint {
@@ -16,19 +19,33 @@ extension HealthDataEndpoint: Endpoint {
         switch self {
         case .getMetrics:
             return "/health-data"
+        case .uploadHealthKit:
+            return "/health-data/upload"
+        case .syncHealthKit:
+            return "/health-data/sync"
+        case .getSyncStatus(let syncId):
+            return "/health-data/sync/\(syncId)"
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .getMetrics:
+        case .getMetrics, .getSyncStatus:
             return .get
+        case .uploadHealthKit, .syncHealthKit:
+            return .post
         }
     }
 
     func body(encoder: JSONEncoder) throws -> Data? {
-        // GET requests typically don't have a body.
-        return nil
+        switch self {
+        case .getMetrics, .getSyncStatus:
+            return nil
+        case .uploadHealthKit(let dto):
+            return try encoder.encode(dto)
+        case .syncHealthKit(let dto):
+            return try encoder.encode(dto)
+        }
     }
     
     // We can extend this to handle query parameters.

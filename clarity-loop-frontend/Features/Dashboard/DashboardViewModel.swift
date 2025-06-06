@@ -56,7 +56,8 @@ class DashboardViewModel: ObservableObject {
             let data = DashboardData(metrics: dailyMetrics, insightOfTheDay: insights.data.insights.first)
             
             // The view is considered "empty" only if both metrics and insights are empty.
-            if data.metrics.isEmpty && data.insightOfTheDay == nil {
+            let hasMetrics = data.metrics.stepCount > 0 || data.metrics.restingHeartRate != nil || data.metrics.sleepData != nil
+            if !hasMetrics && data.insightOfTheDay == nil {
                 viewState = .empty
             } else {
                 viewState = .loaded(data)

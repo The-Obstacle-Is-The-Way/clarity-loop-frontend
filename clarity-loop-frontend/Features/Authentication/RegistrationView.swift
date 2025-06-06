@@ -33,6 +33,28 @@ struct RegistrationView: View {
             SecureField("Password", text: $viewModel.password)
             SecureField("Confirm Password", text: $viewModel.confirmPassword)
             
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Button(action: { viewModel.termsAccepted.toggle() }) {
+                        Image(systemName: viewModel.termsAccepted ? "checkmark.square.fill" : "square")
+                            .foregroundColor(viewModel.termsAccepted ? .blue : .gray)
+                    }
+                    Text("I accept the Terms of Service")
+                        .font(.footnote)
+                    Spacer()
+                }
+                
+                HStack {
+                    Button(action: { viewModel.privacyPolicyAccepted.toggle() }) {
+                        Image(systemName: viewModel.privacyPolicyAccepted ? "checkmark.square.fill" : "square")
+                            .foregroundColor(viewModel.privacyPolicyAccepted ? .blue : .gray)
+                    }
+                    Text("I accept the Privacy Policy")
+                        .font(.footnote)
+                    Spacer()
+                }
+            }
+            
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
                     .foregroundColor(.red)

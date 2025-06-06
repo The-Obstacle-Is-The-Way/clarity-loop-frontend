@@ -18,6 +18,8 @@ fileprivate class MockAPIClient: APIClientProtocol {
     // Unused methods for this test case
     func register(requestDTO: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO { fatalError("Not implemented") }
     func login(requestDTO: UserLoginRequestDTO) async throws -> LoginResponseDTO { fatalError("Not implemented") }
+    func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO { fatalError("Not implemented") }
+    func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO { fatalError("Not implemented") }
 }
 
 

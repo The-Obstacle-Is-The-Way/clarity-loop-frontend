@@ -37,7 +37,7 @@ struct ClarityPulseApp: App {
             // though in the normal app flow the main one will be used.
             // A better solution will be to inject this dependency more cleanly.
             // For now, this is a placeholder to satisfy initialization order.
-            // TODO: Refactor dependency injection for tokenProvider
+            // TODO: Clean dependency injection - replace with proper DI container
             return try? await Auth.auth().currentUser?.getIDToken()
         }) else {
             fatalError("Failed to initialize APIClient with a valid URL.")

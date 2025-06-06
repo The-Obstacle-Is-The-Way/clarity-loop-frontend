@@ -56,7 +56,7 @@ class HealthKitService: HealthKitServiceProtocol {
         let endDate = calendar.endOfDay(for: date)
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
         
-        let query = HKStatisticsQuery(
+        _ = HKStatisticsQuery(
             quantityType: stepType,
             quantitySamplePredicate: predicate,
             options: .cumulativeSum

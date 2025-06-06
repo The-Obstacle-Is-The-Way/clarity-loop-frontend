@@ -16,7 +16,7 @@ protocol InsightsRepositoryProtocol {
     /// Generates a new insight based on the provided data.
     func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO
     
-    /// Fetches the "Insight of the Day" for the dashboard.
+    // TODO: Add "Insight of the Day" functionality for the dashboard
     // func getInsightOfTheDay() async throws -> InsightEntity?
     
     // Additional methods for fetching insight history or generating new insights

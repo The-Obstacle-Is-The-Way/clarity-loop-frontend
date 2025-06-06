@@ -59,11 +59,16 @@ struct LoginView: View {
 
             Spacer()
             
-            NavigationLink(destination: RegistrationView(authService: authService), isActive: $isRegistrationPresented) {
+            NavigationLink(value: "registration") {
                 Text("Don't have an account? Sign Up")
             }
         }
         .padding()
         .navigationTitle("Login")
+        .navigationDestination(for: String.self) { destination in
+            if destination == "registration" {
+                RegistrationView(authService: authService)
+            }
+        }
     }
 } 

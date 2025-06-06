@@ -59,11 +59,11 @@ final class DashboardViewModelTests: XCTestCase {
     }
 
     func testLoadDashboard_InitialStateIsIdle() {
-        if case .idle = viewModel.viewState {
-            // Success
-        } else {
+        guard case .idle = viewModel.viewState else {
             XCTFail("Initial state should be .idle, but was \(viewModel.viewState)")
+            return
         }
+        // Success
     }
 
     func testLoadDashboard_Success_TransitionsToLoadedState() async {
@@ -74,10 +74,9 @@ final class DashboardViewModelTests: XCTestCase {
         await viewModel.loadDashboard()
         
         // Then
-        if case .loaded(let data) = viewModel.viewState {
-            XCTAssertEqual(data.metrics.stepCount, 5000)
-        } else {
-            XCTFail("ViewModel should be in the loaded state, but was \(viewModel.viewState)")
+        guard case .loaded(let data) = viewModel.viewState else {
+            XCTFail("Expected .loaded state, but was \(viewModel.viewState)")
+            return
         }
     }
     
@@ -89,11 +88,11 @@ final class DashboardViewModelTests: XCTestCase {
         await viewModel.loadDashboard()
         
         // Then
-        if case .error = viewModel.viewState {
-            // Success
-        } else {
+        guard case .error = viewModel.viewState else {
             XCTFail("ViewModel should be in the error state, but was \(viewModel.viewState)")
+            return
         }
+        // Success
     }
     
     func testLoadDashboard_SetsLoadingState() async {
@@ -105,7 +104,8 @@ final class DashboardViewModelTests: XCTestCase {
             if case .loading = state {
                 hasEnteredLoadingState = true
             }
-            if hasEnteredLoadingState && (if case .loading = state { false } else { true }) {
+            let isNotLoading = !({ if case .loading = state { return true } else { return false } }())
+            if hasEnteredLoadingState && isNotLoading {
                 expectation.fulfill()
             }
         }

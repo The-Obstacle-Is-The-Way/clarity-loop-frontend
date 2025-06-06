@@ -1,10 +1,11 @@
 import XCTest
+import FirebaseAuth
 @testable import clarity_loop_frontend
 
 // A mock implementation of AuthServiceProtocol for testing purposes.
 fileprivate class MockAuthService: AuthServiceProtocol {
-    var authState: AsyncStream<User?> { AsyncStream { $0.yield(nil) } }
-    var currentUser: User? { nil }
+    var authState: AsyncStream<FirebaseAuth.User?> { AsyncStream { $0.yield(nil) } }
+    var currentUser: FirebaseAuth.User? { nil }
 
     var signInShouldSucceed = true
     var sendPasswordResetShouldSucceed = true

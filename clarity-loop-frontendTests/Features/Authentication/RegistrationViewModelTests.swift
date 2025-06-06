@@ -1,4 +1,5 @@
 import XCTest
+import FirebaseAuth
 @testable import clarity_loop_frontend
 
 // A mock implementation of AuthServiceProtocol for testing RegistrationViewModel.
@@ -8,8 +9,8 @@ fileprivate class MockAuthService: AuthServiceProtocol {
     var registrationError: APIError?
     
     // Unused properties for this test case
-    var authState: AsyncStream<User?> { AsyncStream { $0.yield(nil) } }
-    var currentUser: User? { nil }
+    var authState: AsyncStream<FirebaseAuth.User?> { AsyncStream { $0.yield(nil) } }
+    var currentUser: FirebaseAuth.User? { nil }
     
     func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
         fatalError("Not implemented for these tests")

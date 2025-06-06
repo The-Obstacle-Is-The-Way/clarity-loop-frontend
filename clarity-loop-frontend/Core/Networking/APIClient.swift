@@ -9,6 +9,9 @@ protocol APIClientProtocol {
     
     // Endpoints for Health Data
     func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO
+    func uploadHealthKitData(requestDTO: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO
+    func syncHealthKitData(requestDTO: HealthKitSyncRequestDTO) async throws -> HealthKitSyncResponseDTO
+    func getHealthKitSyncStatus(syncId: String) async throws -> HealthKitSyncStatusDTO
     
     // Endpoints for Insights
     func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO
@@ -65,6 +68,21 @@ final class APIClient: APIClientProtocol {
     
     func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
         let endpoint = HealthDataEndpoint.getMetrics(page: page, limit: limit)
+        return try await performRequest(for: endpoint)
+    }
+    
+    func uploadHealthKitData(requestDTO: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO {
+        let endpoint = HealthDataEndpoint.uploadHealthKit(dto: requestDTO)
+        return try await performRequest(for: endpoint)
+    }
+    
+    func syncHealthKitData(requestDTO: HealthKitSyncRequestDTO) async throws -> HealthKitSyncResponseDTO {
+        let endpoint = HealthDataEndpoint.syncHealthKit(dto: requestDTO)
+        return try await performRequest(for: endpoint)
+    }
+    
+    func getHealthKitSyncStatus(syncId: String) async throws -> HealthKitSyncStatusDTO {
+        let endpoint = HealthDataEndpoint.getSyncStatus(syncId: syncId)
         return try await performRequest(for: endpoint)
     }
 
