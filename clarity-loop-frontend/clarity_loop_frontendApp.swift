@@ -21,6 +21,7 @@ struct ClarityPulseApp: App {
     // The APIClient and AuthService are instantiated here. The AuthService is then
     // passed to the AuthViewModel and also injected into the SwiftUI environment.
     private let authService: AuthServiceProtocol
+    private let healthKitService: HealthKitServiceProtocol
 
     // MARK: - Initializer
     
@@ -43,6 +44,7 @@ struct ClarityPulseApp: App {
         
         let service = AuthService(apiClient: apiClient)
         self.authService = service
+        self.healthKitService = HealthKitService()
         
         // The AuthViewModel is created with the concrete AuthService instance.
         _authViewModel = StateObject(wrappedValue: AuthViewModel(authService: service))
@@ -55,6 +57,7 @@ struct ClarityPulseApp: App {
             ContentView()
                 .environmentObject(authViewModel)
                 .environment(\.authService, authService)
+                .environment(\.healthKitService, healthKitService)
         }
     }
 }

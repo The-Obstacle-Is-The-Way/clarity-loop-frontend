@@ -40,6 +40,10 @@ private struct UserRepositoryKey: EnvironmentKey {
     static let defaultValue: UserRepositoryProtocol = MockUserRepository()
 }
 
+private struct HealthKitServiceKey: EnvironmentKey {
+    static let defaultValue: HealthKitServiceProtocol = HealthKitService()
+}
+
 extension EnvironmentValues {
     var healthDataRepository: HealthDataRepositoryProtocol {
         get { self[HealthDataRepositoryKey.self] }
@@ -55,6 +59,11 @@ extension EnvironmentValues {
         get { self[UserRepositoryKey.self] }
         set { self[UserRepositoryKey.self] = newValue }
     }
+    
+    var healthKitService: HealthKitServiceProtocol {
+        get { self[HealthKitServiceKey.self] }
+        set { self[HealthKitServiceKey.self] = newValue }
+    }
 }
 
 #if DEBUG
@@ -63,6 +72,12 @@ extension EnvironmentValues {
 class MockHealthDataRepository: HealthDataRepositoryProtocol {}
 class MockInsightsRepository: InsightsRepositoryProtocol {}
 class MockUserRepository: UserRepositoryProtocol {}
+
+// A mock service can be used for previews that need to simulate HealthKit responses.
+class MockHealthKitService: HealthKitServiceProtocol {
+    func isHealthDataAvailable() -> Bool { return true }
+    func requestAuthorization() async throws {}
+}
 #endif
 
 // NOTE: Add other service keys here as needed (e.g., for HealthKit, Networking, etc.) 

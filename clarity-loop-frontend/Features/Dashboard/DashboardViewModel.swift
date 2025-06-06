@@ -26,15 +26,18 @@ class DashboardViewModel: ObservableObject {
     
     private let healthDataRepo: HealthDataRepositoryProtocol
     private let insightsRepo: InsightsRepositoryProtocol
+    private let healthKitService: HealthKitServiceProtocol
     
     // MARK: - Initializer
     
     init(
         healthDataRepo: HealthDataRepositoryProtocol,
-        insightsRepo: InsightsRepositoryProtocol
+        insightsRepo: InsightsRepositoryProtocol,
+        healthKitService: HealthKitServiceProtocol
     ) {
         self.healthDataRepo = healthDataRepo
         self.insightsRepo = insightsRepo
+        self.healthKitService = healthKitService
     }
     
     // MARK: - Public Methods
@@ -44,6 +47,9 @@ class DashboardViewModel: ObservableObject {
         viewState = .loading
         
         do {
+            // Request HealthKit authorization before fetching data.
+            try await healthKitService.requestAuthorization()
+            
             // Fetch health metrics and insights in parallel
             async let metricsResponse = healthDataRepo.getHealthData(page: 1, limit: 20)
             async let insightsResponse = insightsRepo.getInsightHistory(userId: "current_user_id_placeholder", limit: 1, offset: 0) // Placeholder user ID

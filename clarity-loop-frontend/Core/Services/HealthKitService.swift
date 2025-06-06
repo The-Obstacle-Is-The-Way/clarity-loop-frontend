@@ -27,7 +27,7 @@ class HealthKitService: HealthKitServiceProtocol {
         return HKHealthStore.isHealthDataAvailable()
     }
     
-    func requestAuthorization() async throws -> Bool {
+    func requestAuthorization() async throws {
         try await healthStore.requestAuthorization(toShare: [], read: readTypes)
     }
 } 

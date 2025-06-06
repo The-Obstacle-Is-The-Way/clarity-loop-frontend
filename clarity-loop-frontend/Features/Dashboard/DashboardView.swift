@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DashboardView: View {
     @StateObject private var viewModel: DashboardViewModel
+    @Environment(\.healthKitService) private var healthKitService
     
     // Custom initializer to inject dependencies
     init() {
@@ -22,7 +23,7 @@ struct DashboardView: View {
         }
         let healthDataRepo = RemoteHealthDataRepository(apiClient: apiClient)
         let insightsRepo = RemoteInsightsRepository(apiClient: apiClient)
-        _viewModel = StateObject(wrappedValue: DashboardViewModel(healthDataRepo: healthDataRepo, insightsRepo: insightsRepo))
+        _viewModel = StateObject(wrappedValue: DashboardViewModel(healthDataRepo: healthDataRepo, insightsRepo: insightsRepo, healthKitService: HealthKitService()))
     }
 
     var body: some View {
@@ -79,6 +80,8 @@ struct DashboardView: View {
 struct DashboardView_Previews: PreviewProvider {
     static var previews: some View {
         // The preview will use the mock repository by default
+        let mockHealthKit = MockHealthKitService()
         DashboardView()
+            .environment(\.healthKitService, mockHealthKit)
     }
 } 
