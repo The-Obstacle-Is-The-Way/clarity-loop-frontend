@@ -8,7 +8,7 @@ import SwiftData
 @Model
 final class UserProfile {
     /// The unique identifier for the user, matching the backend UUID.
-    @Attribute(.unique) let id: UUID
+    @Attribute(.unique) var id: UUID
 
     /// The user's email address.
     var email: String
@@ -35,7 +35,7 @@ final class UserProfile {
     var isMfaEnabled: Bool
 
     /// The timestamp when the user account was created.
-    let createdAt: Date
+    var createdAt: Date
 
     /// The timestamp of the user's last login.
     var lastLogin: Date?

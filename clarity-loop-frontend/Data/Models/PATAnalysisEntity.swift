@@ -8,7 +8,7 @@ import SwiftData
 @Model
 final class PATAnalysisEntity {
     /// The unique identifier for the analysis job.
-    @Attribute(.unique) let id: String
+    @Attribute(.unique) var id: String
 
     /// The processing status of the analysis (e.g., "completed", "failed").
     var status: String

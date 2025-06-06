@@ -4,11 +4,11 @@ import Foundation
 /// Defines the contract for a service that manages user authentication.
 /// This protocol allows for dependency injection and mocking for testing purposes.
 protocol AuthServiceProtocol {
-    /// The current authentication state of the user.
-    var authState: AsyncStream<User?> { get }
+    /// An async stream that emits the current Firebase user whenever the auth state changes.
+    var authState: AsyncStream<FirebaseAuth.User?> { get }
     
     /// The currently authenticated Firebase user, if one exists.
-    var currentUser: User? { get }
+    var currentUser: FirebaseAuth.User? { get }
 
     /// Signs in a user with the given email and password.
     func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO
@@ -35,10 +35,10 @@ final class AuthService: AuthServiceProtocol {
     private let apiClient: APIClientProtocol
 
     /// A continuation to drive the `authState` async stream.
-    private var authStateContinuation: AsyncStream<User?>.Continuation?
+    private var authStateContinuation: AsyncStream<FirebaseAuth.User?>.Continuation?
 
     /// An async stream that emits the current Firebase user whenever the auth state changes.
-    lazy var authState: AsyncStream<User?> = {
+    lazy var authState: AsyncStream<FirebaseAuth.User?> = {
         AsyncStream { continuation in
             self.authStateContinuation = continuation
             continuation.yield(Auth.auth().currentUser)
@@ -49,7 +49,7 @@ final class AuthService: AuthServiceProtocol {
         }
     }()
     
-    var currentUser: User? {
+    var currentUser: FirebaseAuth.User? {
         Auth.auth().currentUser
     }
 

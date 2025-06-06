@@ -8,7 +8,7 @@ import SwiftData
 @Model
 final class HealthMetricEntity {
     /// The unique identifier for the metric, matching the backend `metricId`.
-    @Attribute(.unique) let id: UUID
+    @Attribute(.unique) var id: UUID
 
     /// The type of metric (e.g., "heart_rate", "sleep_analysis").
     var type: String

@@ -8,7 +8,7 @@ import SwiftData
 @Model
 final class InsightEntity {
     /// The unique identifier for the insight, matching the backend ID.
-    @Attribute(.unique) let id: String
+    @Attribute(.unique) var id: String
 
     /// The ID of the user this insight belongs to.
     var userId: String
