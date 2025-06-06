@@ -1,8 +1,9 @@
 import SwiftUI
+import FirebaseAuth
 
 struct LoginView: View {
     
-    // Using @State for the ViewModel as this view is the root of the login flow.
+    // The ViewModel is now initialized directly with the service from the environment.
     @State private var viewModel: LoginViewModel
     
     // Access the shared AuthService via the environment.
@@ -11,11 +12,8 @@ struct LoginView: View {
     // State for navigation to the registration view.
     @State private var showRegistration = false
     
-    init() {
-        // Initialize the ViewModel with the authService from the environment.
-        // Note: This is a simplified DI pattern. In a larger app, you might use a more robust factory.
-        // This initialization will be completed properly once the environment is fully set up.
-        _viewModel = State(initialValue: LoginViewModel(authService: AuthService(apiClient: APIClient(tokenProvider: { return nil })))) // Placeholder
+    init(authService: AuthServiceProtocol) {
+        _viewModel = State(initialValue: LoginViewModel(authService: authService))
     }
     
     var body: some View {
@@ -97,46 +95,8 @@ struct LoginView: View {
             }
             .padding(30)
             .navigationDestination(isPresented: $showRegistration) {
-                RegistrationView()
+                RegistrationView(authService: authService)
             }
-        }
-        .onAppear {
-            // Re-initialize the ViewModel with the proper environment-provided service.
-            // This ensures the view uses the real auth service set up at the app's root.
-            _viewModel.wrappedValue = LoginViewModel(authService: authService)
-        }
-    }
-}
-
-
-// MARK: - Preview
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView()
-            // Provide a mock auth service for the preview
-            .environment(\.authService, MockAuthService())
-    }
-    
-    // A mock service for SwiftUI previews
-    private struct MockAuthService: AuthServiceProtocol {
-        var authState: AsyncStream<User?> { AsyncStream { $0.yield(nil) } }
-        var currentUser: User? { nil }
-        func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO { throw APIError.unauthorized }
-        func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO { throw APIError.unauthorized }
-        func signOut() throws {}
-        func sendPasswordReset(to email: String) async throws {}
-        func getCurrentUserToken() async throws -> String { "mockToken" }
-    }
-    
-    // Mock environment key for previews
-    private struct MockAuthServiceKey: EnvironmentKey {
-        static let defaultValue: AuthServiceProtocol = MockAuthService()
-    }
-    
-    private extension EnvironmentValues {
-        var authService: AuthServiceProtocol {
-            get { self[MockAuthServiceKey.self] }
-            set { self[MockAuthServiceKey.self] = newValue }
         }
     }
 } 

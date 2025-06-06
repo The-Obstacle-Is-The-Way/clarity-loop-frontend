@@ -1,14 +1,13 @@
 import SwiftUI
+import FirebaseAuth
 
 struct RegistrationView: View {
     
     @State private var viewModel: RegistrationViewModel
-    @Environment(\.authService) private var authService
     @Environment(\.dismiss) private var dismiss
     
-    init() {
-        // This will be properly initialized via onAppear
-        _viewModel = State(initialValue: RegistrationViewModel(authService: MockAuthService()))
+    init(authService: AuthServiceProtocol) {
+        _viewModel = State(initialValue: RegistrationViewModel(authService: authService))
     }
 
     var body: some View {
@@ -98,46 +97,6 @@ struct RegistrationView: View {
             }
         } message: {
             Text("Please check your email to verify your account before logging in.")
-        }
-        .onAppear {
-            // Properly initialize the ViewModel with the environment's auth service
-            _viewModel.wrappedValue = RegistrationViewModel(authService: authService)
-        }
-    }
-}
-
-// MARK: - Preview
-struct RegistrationView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            RegistrationView()
-                .environment(\.authService, MockAuthService())
-        }
-    }
-    
-    // A mock service for SwiftUI previews
-    private struct MockAuthService: AuthServiceProtocol {
-        var authState: AsyncStream<User?> { AsyncStream { $0.yield(nil) } }
-        var currentUser: User? { nil }
-        func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO { throw APIError.unauthorized }
-        func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO {
-            // Simulate a successful registration for preview purposes
-            return RegistrationResponseDTO(userId: UUID(), email: email, status: "pending_verification", verificationEmailSent: true, createdAt: Date())
-        }
-        func signOut() throws {}
-        func sendPasswordReset(to email: String) async throws {}
-        func getCurrentUserToken() async throws -> String { "mockToken" }
-    }
-    
-    // Mock environment key for previews
-    private struct MockAuthServiceKey: EnvironmentKey {
-        static let defaultValue: AuthServiceProtocol = MockAuthService()
-    }
-    
-    private extension EnvironmentValues {
-        var authService: AuthServiceProtocol {
-            get { self[MockAuthServiceKey.self] }
-            set { self[MockAuthServiceKey.self] = newValue }
         }
     }
 } 
