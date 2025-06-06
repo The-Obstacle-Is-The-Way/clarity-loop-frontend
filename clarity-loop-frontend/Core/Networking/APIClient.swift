@@ -7,6 +7,9 @@ protocol APIClientProtocol {
     func register(requestDTO: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO
     func login(requestDTO: UserLoginRequestDTO) async throws -> LoginResponseDTO
     
+    // Endpoints for Health Data
+    func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO
+    
     // Other endpoint methods will be added here later.
 }
 
@@ -52,6 +55,13 @@ final class APIClient: APIClientProtocol {
     func login(requestDTO: UserLoginRequestDTO) async throws -> LoginResponseDTO {
         let endpoint = AuthEndpoint.login(dto: requestDTO)
         return try await performRequest(for: endpoint, requiresAuth: false)
+    }
+
+    // MARK: - Health Data Methods
+    
+    func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
+        let endpoint = HealthDataEndpoint.getMetrics(page: page, limit: limit)
+        return try await performRequest(for: endpoint)
     }
 
     // MARK: - Private Request Helper
