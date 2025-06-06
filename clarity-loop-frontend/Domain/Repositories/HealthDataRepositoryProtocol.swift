@@ -14,10 +14,10 @@ protocol HealthDataRepositoryProtocol {
     
     /// Fetches a paginated list of health metrics.
     /// - Parameters:
-    //    - page: The page number to retrieve.
-    //    - limit: The number of items per page.
+    ///   - page: The page number to retrieve.
+    ///   - limit: The number of items per page.
     /// - Returns: A `PaginatedMetricsResponseDTO` containing the health data.
-    // func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO
+    func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO
     
     // For the dashboard, we might want a higher-level summary.
     // This will be defined later. For now, the protocol is a placeholder.

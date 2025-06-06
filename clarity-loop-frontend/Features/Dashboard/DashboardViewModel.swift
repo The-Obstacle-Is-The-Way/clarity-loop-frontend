@@ -11,9 +11,7 @@ import SwiftUI
 /// A struct to hold all the necessary data for the dashboard.
 /// This will be expanded as more data sources are integrated.
 struct DashboardData {
-    // For now, this is empty. It will later hold things like:
-    // let dailySummary: HealthSummary
-    // let insightOfTheDay: InsightEntity?
+    let metrics: [HealthMetricDTO]
 }
 
 @MainActor
@@ -26,16 +24,13 @@ class DashboardViewModel: ObservableObject {
     // MARK: - Dependencies
     
     private let healthDataRepo: HealthDataRepositoryProtocol
-    private let insightsRepo: InsightsRepositoryProtocol
     
     // MARK: - Initializer
     
     init(
-        healthDataRepo: HealthDataRepositoryProtocol = MockHealthDataRepository(),
-        insightsRepo: InsightsRepositoryProtocol = MockInsightsRepository()
+        healthDataRepo: HealthDataRepositoryProtocol
     ) {
         self.healthDataRepo = healthDataRepo
-        self.insightsRepo = insightsRepo
     }
     
     // MARK: - Public Methods
@@ -44,20 +39,17 @@ class DashboardViewModel: ObservableObject {
     func loadDashboard() async {
         viewState = .loading
         
-        // Simulate a network request
-        try? await Task.sleep(nanoseconds: 2_000_000_000)
-        
-        // In the future, this is where we would fetch real data:
-        // do {
-        //     async let summary = healthDataRepo.fetchSummary()
-        //     async let insight = insightsRepo.fetchInsightOfTheDay()
-        //     let data = try await DashboardData(dailySummary: summary, insightOfTheDay: insight)
-        //     viewState = data.isEmpty ? .empty : .loaded(data)
-        // } catch {
-        //     viewState = .error(error.localizedDescription)
-        // }
-        
-        // For now, we'll just move to the empty state.
-        viewState = .empty
+        do {
+            let response = try await healthDataRepo.getHealthData(page: 1, limit: 20)
+            let data = DashboardData(metrics: response.data)
+            
+            if data.metrics.isEmpty {
+                viewState = .empty
+            } else {
+                viewState = .loaded(data)
+            }
+        } catch {
+            viewState = .error(error.localizedDescription)
+        }
     }
 } 

@@ -17,6 +17,10 @@ class RemoteHealthDataRepository: HealthDataRepositoryProtocol {
         self.apiClient = apiClient
     }
     
+    func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
+        return try await apiClient.getHealthData(page: page, limit: limit)
+    }
+    
     // Protocol methods will be implemented here later.
     // For example:
     // func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
