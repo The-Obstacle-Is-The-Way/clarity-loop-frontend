@@ -1,5 +1,7 @@
 import SwiftUI
+#if DEBUG
 import FirebaseAuth
+#endif
 
 // MARK: - AuthService
 
@@ -84,19 +86,39 @@ class MockAuthService: AuthServiceProtocol {
         }
     }
     
-    func signIn(withEmail email: String, password: String) async throws {
+    func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
         // Mock implementation
+        return UserSessionResponseDTO(
+            userId: UUID(),
+            firstName: "Mock",
+            lastName: "User",
+            email: email,
+            role: "user",
+            permissions: [],
+            status: "active",
+            mfaEnabled: false,
+            emailVerified: true,
+            createdAt: Date(),
+            lastLogin: Date()
+        )
     }
     
-    func signUp(withEmail email: String, password: String) async throws {
+    func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO {
         // Mock implementation
+        return RegistrationResponseDTO(
+            userId: UUID(),
+            email: email,
+            status: "pending_verification",
+            verificationEmailSent: true,
+            createdAt: Date()
+        )
     }
     
     func signOut() throws {
         // Mock implementation
     }
     
-    func sendPasswordReset(withEmail email: String) async throws {
+    func sendPasswordReset(to email: String) async throws {
         // Mock implementation
     }
     

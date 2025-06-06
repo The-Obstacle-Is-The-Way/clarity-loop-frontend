@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
-    @Environment(\.authService) private var authService
 
     var body: some View {
         if authViewModel.isLoggedIn {
@@ -17,7 +16,7 @@ struct ContentView: View {
         } else {
             // The LoginView should be wrapped in a NavigationView for proper UI flow.
             NavigationView {
-                LoginView(authService: authService)
+                LoginView()
             }
         }
     }

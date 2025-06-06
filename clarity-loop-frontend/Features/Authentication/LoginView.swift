@@ -8,13 +8,13 @@ struct LoginView: View {
     
     // MARK: - State
     
-    @State private var viewModel: LoginViewModel
+    @State private var viewModel: LoginViewModel?
     @State private var isRegistrationPresented = false
     
     // MARK: - Initializer
     
-    init(authService: AuthServiceProtocol) {
-        _viewModel = State(initialValue: LoginViewModel(authService: authService))
+    init() {
+        // ViewModel will be initialized in onAppear when authService is available
     }
 
     // MARK: - Body
