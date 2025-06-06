@@ -58,7 +58,7 @@ class ChatViewModel: ObservableObject {
         Task {
             do {
                 // Placeholder for real analysis data
-                let analysisResults: [String: AnyCodable] = ["steps": .int(10000)]
+                let analysisResults: [String: AnyCodable] = ["steps": .double(10000)]
                 
                 let request = InsightGenerationRequestDTO(
                     analysisResults: analysisResults,
