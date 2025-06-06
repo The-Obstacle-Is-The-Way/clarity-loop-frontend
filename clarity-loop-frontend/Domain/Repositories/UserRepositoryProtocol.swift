@@ -9,7 +9,6 @@ import Foundation
 
 /// A protocol defining the contract for a repository that manages user profile data.
 protocol UserRepositoryProtocol {
-    
     /// Fetches the current user's profile from the backend.
     // func getCurrentUserProfile() async throws -> UserProfile
     

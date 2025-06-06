@@ -11,7 +11,7 @@ import SwiftUI
 /// A struct to hold all the necessary data for the dashboard.
 /// This will be expanded as more data sources are integrated.
 struct DashboardData {
-    let metrics: [HealthMetricDTO]
+    let metrics: DailyHealthMetrics
     let insightOfTheDay: InsightPreviewDTO?
 }
 
@@ -24,18 +24,15 @@ class DashboardViewModel: ObservableObject {
     
     // MARK: - Dependencies
     
-    private let healthDataRepo: HealthDataRepositoryProtocol
     private let insightsRepo: InsightsRepositoryProtocol
     private let healthKitService: HealthKitServiceProtocol
     
     // MARK: - Initializer
     
     init(
-        healthDataRepo: HealthDataRepositoryProtocol,
         insightsRepo: InsightsRepositoryProtocol,
         healthKitService: HealthKitServiceProtocol
     ) {
-        self.healthDataRepo = healthDataRepo
         self.insightsRepo = insightsRepo
         self.healthKitService = healthKitService
     }
@@ -51,12 +48,12 @@ class DashboardViewModel: ObservableObject {
             try await healthKitService.requestAuthorization()
             
             // Fetch health metrics and insights in parallel
-            async let metricsResponse = healthDataRepo.getHealthData(page: 1, limit: 20)
+            async let metrics = healthKitService.fetchAllDailyMetrics(for: Date())
             async let insightsResponse = insightsRepo.getInsightHistory(userId: "current_user_id_placeholder", limit: 1, offset: 0) // Placeholder user ID
             
-            let (metrics, insights) = try await (metricsResponse, insightsResponse)
+            let (dailyMetrics, insights) = try await (metrics, insightsResponse)
             
-            let data = DashboardData(metrics: metrics.data, insightOfTheDay: insights.data.insights.first)
+            let data = DashboardData(metrics: dailyMetrics, insightOfTheDay: insights.data.insights.first)
             
             // The view is considered "empty" only if both metrics and insights are empty.
             if data.metrics.isEmpty && data.insightOfTheDay == nil {

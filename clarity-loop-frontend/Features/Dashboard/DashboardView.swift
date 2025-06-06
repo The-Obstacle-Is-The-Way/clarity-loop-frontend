@@ -21,9 +21,8 @@ struct DashboardView: View {
         }) else {
             fatalError("Failed to initialize APIClient")
         }
-        let healthDataRepo = RemoteHealthDataRepository(apiClient: apiClient)
         let insightsRepo = RemoteInsightsRepository(apiClient: apiClient)
-        _viewModel = StateObject(wrappedValue: DashboardViewModel(healthDataRepo: healthDataRepo, insightsRepo: insightsRepo, healthKitService: HealthKitService()))
+        _viewModel = StateObject(wrappedValue: DashboardViewModel(insightsRepo: insightsRepo, healthKitService: HealthKitService()))
     }
 
     var body: some View {
@@ -41,8 +40,26 @@ struct DashboardView: View {
                                 InsightCardView(insight: insight)
                             }
                             
-                            ForEach(data.metrics) { metric in
-                                HealthMetricCardView(metric: metric)
+                            HealthMetricCardView(
+                                title: "Steps",
+                                value: String(format: "%.0f", data.metrics.stepCount),
+                                systemImageName: "figure.walk"
+                            )
+                            
+                            if let rhr = data.metrics.restingHeartRate {
+                                HealthMetricCardView(
+                                    title: "Resting Heart Rate",
+                                    value: String(format: "%.0f", rhr) + " BPM",
+                                    systemImageName: "heart.fill"
+                                )
+                            }
+                            
+                            if let sleep = data.metrics.sleepData {
+                                HealthMetricCardView(
+                                    title: "Time Asleep",
+                                    value: String(format: "%.1f", sleep.totalTimeAsleep / 3600) + " hr",
+                                    systemImageName: "bed.double.fill"
+                                )
                             }
                         }
                         .padding()

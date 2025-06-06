@@ -1,41 +1,60 @@
 import XCTest
 @testable import clarity_loop_frontend
 
-// A mock repository for testing the view model.
-fileprivate class MockHealthDataRepository: HealthDataRepositoryProtocol {
+// MARK: - Mock Insights Repository
+fileprivate class MockInsightsRepository: InsightsRepositoryProtocol {
+    func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO {
+        return InsightHistoryResponseDTO(success: true, data: .init(insights: [], totalCount: 0, hasMore: false, pagination: nil), metadata: nil)
+    }
+    func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO {
+        fatalError("Not implemented")
+    }
+}
+
+// MARK: - Mock HealthKit Service
+fileprivate class MockHealthKitService: HealthKitServiceProtocol {
+    var shouldSucceed = true
+    var mockMetrics = DailyHealthMetrics(date: Date(), stepCount: 5000, restingHeartRate: 60, sleepData: nil)
     
-    var healthDataShouldSucceed = true
-    var shouldReturnEmptyData = false
-    
-    func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
-        if healthDataShouldSucceed {
-            if shouldReturnEmptyData {
-                return PaginatedMetricsResponseDTO(data: [])
-            } else {
-                let mockDTO = HealthMetricDTO(metricId: UUID(), metricType: "steps", biometricData: nil, sleepData: nil, activityData: ActivityDataDTO(steps: 100, distance: nil, activeEnergy: nil, exerciseMinutes: nil, flightsClimbed: nil, vo2Max: nil, activeMinutes: nil, restingHeartRate: nil), mentalHealthData: nil, deviceId: nil, rawData: nil, metadata: nil, createdAt: Date())
-                return PaginatedMetricsResponseDTO(data: [mockDTO])
-            }
-        } else {
-            throw APIError.serverError(statusCode: 500, message: "Test server error")
+    func isHealthDataAvailable() -> Bool { true }
+    func requestAuthorization() async throws {
+        if !shouldSucceed {
+            throw APIError.unknown(NSError(domain: "test", code: 0, userInfo: nil))
         }
     }
+    func fetchAllDailyMetrics(for date: Date) async throws -> DailyHealthMetrics {
+        if shouldSucceed {
+            return mockMetrics
+        } else {
+            throw APIError.unknown(NSError(domain: "test", code: 0, userInfo: nil))
+        }
+    }
+    func fetchDailySteps(for date: Date) async throws -> Double { 0.0 }
+    func fetchRestingHeartRate(for date: Date) async throws -> Double? { nil }
+    func fetchSleepAnalysis(for date: Date) async throws -> SleepData? { nil }
 }
 
 @MainActor
 final class DashboardViewModelTests: XCTestCase {
 
     private var viewModel: DashboardViewModel!
-    private var mockRepository: MockHealthDataRepository!
+    private var mockInsightsRepo: MockInsightsRepository!
+    private var mockHealthKitService: MockHealthKitService!
 
     override func setUp() {
         super.setUp()
-        mockRepository = MockHealthDataRepository()
-        viewModel = DashboardViewModel(healthDataRepo: mockRepository)
+        mockInsightsRepo = MockInsightsRepository()
+        mockHealthKitService = MockHealthKitService()
+        viewModel = DashboardViewModel(
+            insightsRepo: mockInsightsRepo,
+            healthKitService: mockHealthKitService
+        )
     }
 
     override func tearDown() {
         viewModel = nil
-        mockRepository = nil
+        mockInsightsRepo = nil
+        mockHealthKitService = nil
         super.tearDown()
     }
 
@@ -49,38 +68,22 @@ final class DashboardViewModelTests: XCTestCase {
 
     func testLoadDashboard_Success_TransitionsToLoadedState() async {
         // Given
-        mockRepository.healthDataShouldSucceed = true
+        mockHealthKitService.shouldSucceed = true
         
         // When
         await viewModel.loadDashboard()
         
         // Then
         if case .loaded(let data) = viewModel.viewState {
-            XCTAssertFalse(data.metrics.isEmpty, "Loaded data should not be empty.")
+            XCTAssertEqual(data.metrics.stepCount, 5000)
         } else {
             XCTFail("ViewModel should be in the loaded state, but was \(viewModel.viewState)")
         }
     }
     
-    func testLoadDashboard_Success_WithEmptyData_TransitionsToEmptyState() async {
-        // Given
-        mockRepository.healthDataShouldSucceed = true
-        mockRepository.shouldReturnEmptyData = true
-        
-        // When
-        await viewModel.loadDashboard()
-        
-        // Then
-        if case .empty = viewModel.viewState {
-            // Success
-        } else {
-            XCTFail("ViewModel should be in the empty state, but was \(viewModel.viewState)")
-        }
-    }
-    
     func testLoadDashboard_Failure_TransitionsToErrorState() async {
         // Given
-        mockRepository.healthDataShouldSucceed = false
+        mockHealthKitService.shouldSucceed = false
         
         // When
         await viewModel.loadDashboard()

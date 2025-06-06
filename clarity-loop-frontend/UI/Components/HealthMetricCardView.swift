@@ -8,22 +8,25 @@
 import SwiftUI
 
 struct HealthMetricCardView: View {
-    let metric: HealthMetricDTO
+    let title: String
+    let value: String
+    let systemImageName: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(metric.metricType.capitalized)
-                .font(.headline)
-            
-            // This is a simplified display. We'll need to format
-            // the different data types (biometric, sleep, etc.) more elegantly later.
-            if let biometric = metric.biometricData {
-                Text("HR: \(biometric.heartRate ?? 0, specifier: "%.0f")")
+            HStack {
+                if let systemImageName = systemImageName {
+                    Image(systemName: systemImageName)
+                        .font(.headline)
+                        .foregroundColor(.accentColor)
+                }
+                Text(title)
+                    .font(.headline)
             }
             
-            Text(metric.createdAt, style: .date)
-                .font(.caption)
-                .foregroundColor(.secondary)
+            Text(value)
+                .font(.title)
+                .fontWeight(.semibold)
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
