@@ -6,11 +6,11 @@ This document outlines the steps to integrate HealthKit into the CLARITY Pulse a
 
 A dedicated service will encapsulate all HealthKit logic, abstracting its complexity from the rest of the app.
 
-- [ ] **Create `HealthKitService.swift`:** Place this file in `Core/Services`.
-- [ ] **Create `HealthKitServiceProtocol.swift`:** Define the public interface for the service.
-- [ ] **Initialize `HKHealthStore`:** The service should hold a single, private instance of `HKHealthStore`.
-- [ ] **Check for Availability:** Add a method `isHealthDataAvailable()` that returns `HKHealthStore.isHealthDataAvailable()`. The UI should use this to determine if HealthKit-related features should be shown at all (e.g., on an iPad, which doesn't have the Health app).
-- [ ] **Define Data Types:** Create a private property to hold the set of `HKObjectType`s the app needs to read.
+- [x] **Create `HealthKitService.swift`:** Place this file in `Core/Services`.
+- [x] **Create `HealthKitServiceProtocol.swift`:** Define the public interface for the service.
+- [x] **Initialize `HKHealthStore`:** The service should hold a single, private instance of `HKHealthStore`.
+- [x] **Check for Availability:** Add a method `isHealthDataAvailable()` that returns `HKHealthStore.isHealthDataAvailable()`. The UI should use this to determine if HealthKit-related features should be shown at all (e.g., on an iPad, which doesn't have the Health app).
+- [x] **Define Data Types:** Create a private property to hold the set of `HKObjectType`s the app needs to read.
     ```swift
     private let readTypes: Set<HKObjectType> = [
         HKObjectType.quantityType(forIdentifier: .stepCount)!,
@@ -26,11 +26,11 @@ A dedicated service will encapsulate all HealthKit logic, abstracting its comple
 
 ## 2. Permissions Flow
 
-- [ ] **Implement `requestAuthorization()` method:**
+- [x] **Implement `requestAuthorization()` method:**
     - [ ] Create an `async throws` method in `HealthKitService` to request user permission.
     - [ ] Call `healthStore.requestAuthorization(toShare:read:)` with an empty `share` set and the `readTypes` set.
     - [ ] Wrap the completion handler-based API with an `async` continuation to return a `Bool` indicating success or throw an error.
-- [ ] **Trigger Authorization Request:**
+- [x] **Trigger Authorization Request:**
     - [ ] The request should be triggered at an appropriate time in the user flow, for example:
         - During an initial onboarding sequence.
         - When the user first navigates to the Dashboard.
@@ -43,14 +43,14 @@ A dedicated service will encapsulate all HealthKit logic, abstracting its comple
 
 Implement methods in `HealthKitService` to fetch the specific metrics required by the application. These methods should be `async throws` and return either custom domain models or the DTOs needed for the backend.
 
-- [ ] **Wrap HealthKit Queries:** Since many HealthKit queries are still completion-based, create a generic helper to wrap them in an `async` call using `withCheckedThrowingContinuation`.
-- [ ] **Fetch Daily Step Count:**
+- [x] **Wrap HealthKit Queries:** Since many HealthKit queries are still completion-based, create a generic helper to wrap them in an `async` call using `withCheckedThrowingContinuation`.
+- [x] **Fetch Daily Step Count:**
     - [ ] Implement `fetchDailySteps(for date: Date) async throws -> Int`.
     - [ ] Use an `HKStatisticsQuery` to get the `.cumulativeSum` of `stepCount` for the given day (from midnight to midnight).
-- [ ] **Fetch Resting Heart Rate:**
+- [x] **Fetch Resting Heart Rate:**
     - [ ] Implement `fetchRestingHeartRate(for date: Date) async throws -> Double?`.
     - [ ] Query for `restingHeartRate` samples. This is typically one sample per day. Find the most recent sample for the given day.
-- [ ] **Fetch Sleep Analysis:**
+- [x] **Fetch Sleep Analysis:**
     - [ ] Implement `fetchSleepAnalysis(for date: Date) async throws -> SleepData`. (*`SleepData` would be a custom struct holding total time, efficiency, etc.*)
     - [ ] Use an `HKSampleQuery` to fetch `HKCategorySample`s with the type `.sleepAnalysis`.
     - [ ] The query's predicate should cover the previous night (e.g., from noon yesterday to noon today).
@@ -58,7 +58,7 @@ Implement methods in `HealthKitService` to fetch the specific metrics required b
         - Total time in bed.
         - Total time asleep (sum of `.asleepUnspecified`, `.asleepCore`, `.asleepDeep`, `.asleepREM`).
         - Breakdown of time in each stage.
-- [ ] **Create a Unified Fetch Method:**
+- [x] **Create a Unified Fetch Method:**
     - [ ] Implement a method like `fetchLatestMetrics() async throws -> HealthDataBatch`.
     - [ ] This method will use `async let` or a `TaskGroup` to concurrently execute the individual fetch methods (steps, heart rate, sleep, etc.).
     - [ ] It will aggregate the results into a single, structured object (`HealthDataBatch`) that can be easily used by the ViewModel or sent to the backend.

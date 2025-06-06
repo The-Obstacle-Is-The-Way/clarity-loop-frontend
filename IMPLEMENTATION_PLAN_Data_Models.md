@@ -14,14 +14,14 @@ These structs are used for encoding and decoding data for network requests. They
 
 ### 1.1. Utility DTOs
 
-- [ ] **Create `AnyCodable.swift`:** Implement a generic `AnyCodable` wrapper to handle `[String: Any]` or dynamic JSON objects in responses, especially for `metadata` fields. There are standard open-source implementations available.
-- [ ] **Create `MessageResponseDTO.swift`:** For simple `{"message": "..."}` responses.
+- [x] **Create `AnyCodable.swift`:** Implement a generic `AnyCodable` wrapper to handle `[String: Any]` or dynamic JSON objects in responses, especially for `metadata` fields. There are standard open-source implementations available.
+- [x] **Create `MessageResponseDTO.swift`:** For simple `{"message": "..."}` responses.
     ```swift
     struct MessageResponseDTO: Codable {
         let message: String
     }
     ```
-- [ ] **Create `ValidationErrorDTO.swift`:**
+- [x] **Create `ValidationErrorDTO.swift`:**
     ```swift
     struct ValidationErrorDTO: Codable {
         let field: String
@@ -32,7 +32,7 @@ These structs are used for encoding and decoding data for network requests. They
 
 ### 1.2. Authentication DTOs (`/api/v1/auth`)
 
-- [ ] **`UserRegistrationRequestDTO.swift`**
+- [x] **`UserRegistrationRequestDTO.swift`**
     - `email: String`
     - `password: String`
     - `firstName: String`
@@ -40,21 +40,21 @@ These structs are used for encoding and decoding data for network requests. They
     - `phoneNumber: String?`
     - `termsAccepted: Bool`
     - `privacyPolicyAccepted: Bool`
-- [ ] **`RegistrationResponseDTO.swift`**
+- [x] **`RegistrationResponseDTO.swift`**
     - `userId: UUID`
     - `email: String`
     - `status: String`
     - `verificationEmailSent: Bool`
     - `createdAt: Date`
-- [ ] **`UserLoginRequestDTO.swift`**
+- [x] **`UserLoginRequestDTO.swift`**
     - `email: String`
     - `password: String`
     - `rememberMe: Bool`
     - `deviceInfo: [String: AnyCodable]?`
-- [ ] **`LoginResponseDTO.swift`**
+- [x] **`LoginResponseDTO.swift`**
     - `user: UserSessionResponseDTO`
     - `tokens: TokenResponseDTO`
-- [ ] **`UserSessionResponseDTO.swift`**
+- [x] **`UserSessionResponseDTO.swift`**
     - `userId: UUID`
     - `firstName: String`
     - `lastName: String`
@@ -66,51 +66,24 @@ These structs are used for encoding and decoding data for network requests. They
     - `emailVerified: Bool`
     - `createdAt: Date`
     - `lastLogin: Date?`
-- [ ] **`TokenResponseDTO.swift`**
+- [x] **`TokenResponseDTO.swift`**
     - `accessToken: String`
     - `refreshToken: String`
     - `tokenType: String`
     - `expiresIn: Int`
-- [ ] **`RefreshTokenRequestDTO.swift`**
+- [x] **`RefreshTokenRequestDTO.swift`**
     - `refreshToken: String`
 
 ### 1.3. HealthKit Upload DTOs (`/api/v1/healthkit_upload`)
 
 - [ ] **`HealthKitSampleDTO.swift`**
-    - `identifier: String`
-    - `type: String`
-    - `value: AnyCodable` // Flexible to handle numbers or objects
-    - `unit: String?`
-    - `startDate: Date`
-    - `endDate: Date`
-    - `sourceName: String?`
-    - `device: [String: AnyCodable]?`
-    - `metadata: [String: AnyCodable]`
 - [ ] **`HealthKitUploadRequestDTO.swift`**
-    - `userId: String`
-    - `quantitySamples: [HealthKitSampleDTO]`
-    - `categorySamples: [HealthKitSampleDTO]`
-    - `workouts: [AnyCodable]`
-    - `correlationSamples: [AnyCodable]`
-    - `uploadMetadata: [String: AnyCodable]`
-    - `syncToken: String?`
 - [ ] **`HealthKitUploadResponseDTO.swift`**
-    - `uploadId: String`
-    - `status: String`
-    - `queuedAt: Date`
-    - `samplesReceived: [String: Int]`
-    - `message: String`
 - [ ] **`HealthKitUploadStatusDTO.swift`**
-    - `uploadId: String`
-    - `status: String`
-    - `progress: Double` // 0-1
-    - `message: String`
-    - `lastUpdated: Date`
-
 
 ### 1.4. Health Data DTOs (`/api/v1/health-data`)
 
-- [ ] **`HealthMetricDTO.swift`**
+- [x] **`HealthMetricDTO.swift`**
     - `metricId: UUID`
     - `metricType: String` // Or create an enum `HealthMetricType: String, Codable`
     - `biometricData: BiometricDataDTO?`
@@ -121,7 +94,7 @@ These structs are used for encoding and decoding data for network requests. They
     - `rawData: [String: AnyCodable]?`
     - `metadata: [String: AnyCodable]?`
     - `createdAt: Date`
-- [ ] **`BiometricDataDTO.swift`**
+- [x] **`BiometricDataDTO.swift`**
     - `heartRate: Double?`
     - `bloodPressureSystolic: Int?`
     - `bloodPressureDiastolic: Int?`
@@ -130,7 +103,7 @@ These structs are used for encoding and decoding data for network requests. They
     - `respiratoryRate: Double?`
     - `bodyTemperature: Double?`
     - `bloodGlucose: Double?`
-- [ ] **`SleepDataDTO.swift`**
+- [x] **`SleepDataDTO.swift`**
     - `totalSleepMinutes: Int`
     - `sleepEfficiency: Double`
     - `timeToSleepMinutes: Int?`
@@ -138,7 +111,7 @@ These structs are used for encoding and decoding data for network requests. They
     - `sleepStages: [String: Int]?`
     - `sleepStart: Date`
     - `sleepEnd: Date`
-- [ ] **`ActivityDataDTO.swift`**
+- [x] **`ActivityDataDTO.swift`**
     - `steps: Int?`
     - `distance: Double?`
     - `activeEnergy: Double?`
@@ -147,7 +120,7 @@ These structs are used for encoding and decoding data for network requests. They
     - `vo2Max: Double?`
     - `activeMinutes: Int?`
     - `restingHeartRate: Double?`
-- [ ] **`MentalHealthIndicatorDTO.swift`**
+- [x] **`MentalHealthIndicatorDTO.swift`**
     - `moodScore: String?`
     - `stressLevel: Double?`
     - `anxietyLevel: Double?`
@@ -173,83 +146,55 @@ These structs are used for encoding and decoding data for network requests. They
     - `syncToken: String?`
     - `message: String`
     - `timestamp: Date`
-- [ ] **`PaginatedMetricsResponseDTO.swift`** (for `GET /health-data`)
+- [x] **`PaginatedMetricsResponseDTO.swift`** (for `GET /health-data`)
     - `data: [HealthMetricDTO]`
     - `// Add pagination fields like 'links', 'meta' etc. as per final API spec`
 
 ### 1.5. PAT Analysis DTOs (`/api/v1/pat`)
 
 - [ ] **`StepDataRequestDTO.swift`**
-    - `stepCounts: [Int]`
-    - `timestamps: [Date]`
-    - `userMetadata: [String: AnyCodable]?`
 - [ ] **`ActigraphyDataPointDTO.swift`**
-    - `timestamp: Date`
-    - `value: Double`
 - [ ] **`DirectActigraphyRequestDTO.swift`**
-    - `dataPoints: [ActigraphyDataPointDTO]`
-    - `samplingRate: Double`
-    - `durationHours: Int`
 - [ ] **`AnalysisResponseDTO.swift`** (Generic wrapper)
-    - `analysisId: String`
-    - `status: String`
-    - `analysis: T?` // Generic payload
-    - `processingTimeMs: Double?`
-    - `message: String?`
-    - `cached: Bool`
 - [ ] **`PATAnalysisResponseDTO.swift`** (for `GET /pat/analysis/{id}`)
-    - `processingId: String`
-    - `status: String`
-    - `message: String?`
-    - `analysisDate: Date?`
-    - `patFeatures: [String: Double]?`
-    - `activityEmbedding: [Double]?`
-    - `metadata: [String: AnyCodable]?`
 - [ ] **`PATServiceHealthDTO.swift`**
-    - `service: String`
-    - `status: String`
-    - `timestamp: Date`
-    - `version: String`
-    - `inferenceEngine: [String: AnyCodable]`
-    - `patModel: [String: AnyCodable]`
-
 
 ### 1.6. Gemini Insights DTOs (`/api/v1/insights`)
 
-- [ ] **`InsightGenerationRequestDTO.swift`**
+- [x] **`InsightGenerationRequestDTO.swift`**
     - `analysisResults: [String: AnyCodable]`
     - `context: String?`
     - `insightType: String`
     - `includeRecommendations: Bool`
     - `language: String`
-- [ ] **`InsightGenerationResponseDTO.swift`**
+- [x] **`InsightGenerationResponseDTO.swift`**
     - `success: Bool`
     - `data: HealthInsightDTO`
     - `metadata: [String: AnyCodable]`
-- [ ] **`HealthInsightDTO.swift`**
+- [x] **`HealthInsightDTO.swift`**
     - `userId: String`
     - `narrative: String`
     - `keyInsights: [String]`
     - `recommendations: [String]`
     - `confidenceScore: Double`
     - `generatedAt: Date`
-- [ ] **`InsightHistoryResponseDTO.swift`**
+- [x] **`InsightHistoryResponseDTO.swift`**
     - `success: Bool`
     - `data: InsightHistoryDataDTO`
     - `metadata: [String: AnyCodable]`
-- [ ] **`InsightHistoryDataDTO.swift`**
+- [x] **`InsightHistoryDataDTO.swift`**
     - `insights: [InsightPreviewDTO]`
     - `totalCount: Int`
     - `hasMore: Bool`
     - `pagination: PaginationMetaDTO`
-- [ ] **`InsightPreviewDTO.swift`**
+- [x] **`InsightPreviewDTO.swift`**
     - `id: String`
     - `narrative: String`
     - `generatedAt: Date`
     - `confidenceScore: Double`
     - `keyInsightsCount: Int`
     - `recommendationsCount: Int`
-- [ ] **`PaginationMetaDTO.swift`**
+- [x] **`PaginationMetaDTO.swift`**
     - `page: Int`
     - `limit: Int`
     - `// etc.`
@@ -274,20 +219,8 @@ These structs are used for encoding and decoding data for network requests. They
 
 These classes are for local persistence using SwiftData. They should be placed in the `Data/Models` group.
 
-- [ ] **`User.swift`**
-    - `@Attribute(.unique) id: UUID`
-    - `email: String`
-    - `firstName: String`
-    - `lastName: String`
-    - `role: String`
-    - `permissions: [String]`
-    - `status: String`
-    - `emailVerified: Bool`
-    - `mfaEnabled: Bool`
-    - `createdAt: Date`
-    - `lastLogin: Date?`
-    - `lastSyncedAt: Date` (local-only metadata)
-- [ ] **`HealthMetricEntity.swift`** (Flattened structure for easy querying)
+- [x] **`UserProfile.swift`**
+- [x] **`HealthMetricEntity.swift`** (Flattened structure for easy querying)
     - `@Attribute(.unique) id: UUID`
     - `type: String`
     - `date: Date` (Primary timestamp for sorting/querying)
@@ -326,7 +259,7 @@ These classes are for local persistence using SwiftData. They should be placed i
         - `deviceId: String?`
         - `rawJson: Data?` (To store the original, full DTO as a JSON blob for completeness)
         - `lastSyncedAt: Date`
-- [ ] **`InsightEntity.swift`**
+- [x] **`InsightEntity.swift`**
     - `@Attribute(.unique) id: String`
     - `userId: String`
     - `narrative: String`
@@ -335,14 +268,14 @@ These classes are for local persistence using SwiftData. They should be placed i
     - `confidenceScore: Double`
     - `generatedAt: Date`
     - `lastViewedAt: Date?` (local-only metadata)
-- [ ] **`PATAnalysisEntity.swift`** (Optional, if caching raw PAT results is desired)
+- [x] **`PATAnalysisEntity.swift`** (Optional, if caching raw PAT results is desired)
     - `@Attribute(.unique) id: String`
     - `status: String`
     - `completedAt: Date?`
     - `patFeatures: Data?` (JSON-encoded dictionary)
     - `activityEmbedding: Data?` (JSON-encoded array)
     - `lastSyncedAt: Date`
-- [ ] **Implement Mappings:** Create convenience initializers or mapping functions to convert between DTOs and SwiftData `@Model` entities. This logic should reside within a Repository or a dedicated Mapper class.
+- [x] **Implement Mappings:** Create convenience initializers or mapping functions to convert between DTOs and SwiftData `@Model` entities. This logic should reside within a Repository or a dedicated Mapper class.
     - [ ] `HealthMetricEntity(from dto: HealthMetricDTO)`
-    - [ ] `InsightEntity(from dto: HealthInsightDTO)`
-    - [ ] `User(from dto: UserSessionResponseDTO)` 
+    - [x] `InsightEntity(from dto: HealthInsightDTO)`
+    - [x] `UserProfile(from dto: UserSessionResponseDTO)` 

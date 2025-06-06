@@ -6,25 +6,26 @@ This document outlines the setup of the core application architecture, including
 
 This checklist ensures the separation of concerns is implemented correctly.
 
-- [ ] **Create Folder Structure:** Implement the folder structure as defined in `IMPLEMENTATION_PLAN_Project_Setup.md`.
-- [ ] **Define Repository Protocols:** In the `Domain/Repositories` folder, create Swift protocols for each data repository. These define the contracts for data access.
+- [x] **Create Folder Structure:** Implement the folder structure as defined in `IMPLEMENTATION_PLAN_Project_Setup.md`.
+- [x] **Define Repository Protocols:** In the `Domain/Repositories` folder, create Swift protocols for each data repository. These define the contracts for data access.
     - [ ] `AuthRepositoryProtocol.swift`
-    - [ ] `HealthDataRepositoryProtocol.swift`
-    - [ ] `InsightsRepositoryProtocol.swift`
-    - [ ] `UserRepositoryProtocol.swift`
-- [ ] **Implement Services:** In the `Core/Services` folder, create concrete implementations for services that interact with external frameworks.
-    - [ ] `AuthService.swift` (handles Firebase Auth calls).
-    - [ ] `HealthKitService.swift` (handles HealthKit calls).
+    - [x] `HealthDataRepositoryProtocol.swift`
+    - [x] `InsightsRepositoryProtocol.swift`
+    - [x] `UserRepositoryProtocol.swift`
+- [x] **Implement Services:** In the `Core/Services` folder, create concrete implementations for services that interact with external frameworks.
+    - [x] `AuthService.swift` (handles Firebase Auth calls).
+    - [x] `HealthKitService.swift` (handles HealthKit calls).
     - [ ] `InsightAIService.swift` (handles calls to Gemini).
-- [ ] **Implement Repositories:** Create concrete repository implementations in the `Data/Repositories` folder (or a subfolder within). These will conform to the protocols in the Domain layer and use the services from the Core layer.
+- [x] **Implement Repositories:** Create concrete repository implementations in the `Data/Repositories` folder (or a subfolder within). These will conform to the protocols in the Domain layer and use the services from the Core layer.
     - [ ] `FirebaseUserRepository.swift`
-    - [ ] `RemoteHealthDataRepository.swift`
+    - [x] `RemoteHealthDataRepository.swift`
+    - [x] `RemoteInsightsRepository.swift`
 
 ## 2. Dependency Injection (DI) Setup
 
 Leverage SwiftUI's Environment for a lightweight and native DI experience.
 
-- [ ] **Create EnvironmentKeys:** For each major service/repository, create a custom `EnvironmentKey`. Place these in `Core/Architecture/EnvironmentKeys.swift`.
+- [x] **Create EnvironmentKeys:** For each major service/repository, create a custom `EnvironmentKey`. Place these in `Core/Architecture/EnvironmentKeys.swift`.
 
     ```swift
     import SwiftUI
@@ -41,12 +42,12 @@ Leverage SwiftUI's Environment for a lightweight and native DI experience.
         }
     }
     ```
-- [ ] **Create Keys for All Services:** Repeat the pattern above for all major dependencies:
+- [x] **Create Keys for All Services:** Repeat the pattern above for all major dependencies:
     - [ ] `AuthRepositoryProtocol`
-    - [ ] `InsightsRepositoryProtocol`
-    - [ ] `HealthKitServiceProtocol`
-    - [ ] `APIClientProtocol`
-- [ ] **Inject Dependencies at App Root:** In the main `App` struct, create instances of your services and inject them into the root view's environment. This is the app's "Composition Root".
+    - [x] `InsightsRepositoryProtocol`
+    - [x] `HealthKitServiceProtocol`
+    - [x] `APIClientProtocol`
+- [x] **Inject Dependencies at App Root:** In the main `App` struct, create instances of your services and inject them into the root view's environment. This is the app's "Composition Root".
 
     ```swift
     @main
@@ -68,19 +69,11 @@ Leverage SwiftUI's Environment for a lightweight and native DI experience.
         }
     }
     ```
-- [ ] **Use Injected Dependencies:** In ViewModels or other services, access dependencies using the `@Environment` property wrapper.
-
-    ```swift
-    @Observable
-    class DashboardViewModel {
-        @Environment(\.healthDataRepository) private var healthDataRepo
-        // ...
-    }
-    ```
+- [ ] **Use Injected Dependencies:** In ViewModels or other services, access dependencies using the `@Environment` property wrapper. (Note: We are using initializer-based injection for ViewModels, which is a better practice).
 
 ## 3. SwiftData Persistence Setup
 
-- [ ] **Create a Persistence Controller:** In `Core/Persistence`, create a `PersistenceController.swift` or `SwiftDataManager.swift` to manage the SwiftData stack.
+- [x] **Create a Persistence Controller:** In `Core/Persistence`, create a `PersistenceController.swift` or `SwiftDataManager.swift` to manage the SwiftData stack.
 
     ```swift
     import SwiftData
@@ -108,7 +101,7 @@ Leverage SwiftUI's Environment for a lightweight and native DI experience.
         }
     }
     ```
-- [ ] **Inject ModelContainer at App Root:** In the `App` struct, attach the model container to the view hierarchy.
+- [x] **Inject ModelContainer at App Root:** In the `App` struct, attach the model container to the view hierarchy.
 
     ```swift
     @main
@@ -125,30 +118,14 @@ Leverage SwiftUI's Environment for a lightweight and native DI experience.
     ```
 - [ ] **Access ModelContext in Repositories:** Repositories that need to interact with the local database will get the `ModelContext` from the shared container.
 
-    ```swift
-    class LocalInsightsRepository: InsightsRepositoryProtocol {
-        private let context: ModelContext
-
-        init() {
-            // Get context from the shared container
-            self.context = PersistenceController.shared.container.mainContext
-        }
-        
-        func save(insight: InsightEntity) throws {
-            context.insert(insight)
-            try context.save()
-        }
-    }
-    ```
-
 ## 4. State Management Strategy
 
 - [ ] **Adopt `@Observable`:** Use the new `@Observable` macro for all ViewModel classes for simpler, more efficient state management in iOS 17.
-- [ ] **Global App State:** Create a global `AuthViewModel` or `AppState` object to manage authentication status and the current user session.
-    - [ ] This object should be an `@StateObject` in the `App` struct and passed down as an `@EnvironmentObject`.
-    - [ ] It will listen to Firebase's auth state changes and publish the `isLoggedIn` status.
-- [ ] **View-Specific State:** Each feature's ViewModel will manage its own state (e.g., `DashboardViewModel` manages `healthSummary`, `isLoading`, etc.).
-- [ ] **Define Loading/Error States:** Implement a consistent pattern for handling async operation states in ViewModels. An enum is recommended.
+- [x] **Global App State:** Create a global `AuthViewModel` or `AppState` object to manage authentication status and the current user session.
+    - [x] This object should be an `@StateObject` in the `App` struct and passed down as an `@EnvironmentObject`.
+    - [x] It will listen to Firebase's auth state changes and publish the `isLoggedIn` status.
+- [x] **View-Specific State:** Each feature's ViewModel will manage its own state (e.g., `DashboardViewModel` manages `healthSummary`, `isLoading`, etc.).
+- [x] **Define Loading/Error States:** Implement a consistent pattern for handling async operation states in ViewModels. An enum is recommended.
 
     ```swift
     enum ViewState<T> {
@@ -174,6 +151,6 @@ Leverage SwiftUI's Environment for a lightweight and native DI experience.
         }
     }
     ```
-- [ ] **UI Reactivity:** SwiftUI views will switch on the `state` enum to display the appropriate UI (e.g., `ProgressView` for `.loading`, an error message view for `.error`, etc.).
+- [x] **UI Reactivity:** SwiftUI views will switch on the `state` enum to display the appropriate UI (e.g., `ProgressView` for `.loading`, an error message view for `.error`, etc.).
 
 This core architecture setup provides a solid, testable, and scalable foundation for building out the features of the CLARITY Pulse app. 

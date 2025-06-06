@@ -50,4 +50,17 @@ final class InsightEntity {
         self.generatedAt = generatedAt
         self.lastViewedAt = lastViewedAt
     }
+    
+    /// A convenience initializer to create an `InsightEntity` from a `HealthInsightDTO`.
+    convenience init(from dto: HealthInsightDTO) {
+        self.init(
+            id: dto.id,
+            userId: dto.userId,
+            narrative: dto.narrative,
+            keyInsights: dto.keyInsights,
+            recommendations: dto.recommendations,
+            confidenceScore: dto.confidenceScore,
+            generatedAt: dto.generatedAt
+        )
+    }
 } 

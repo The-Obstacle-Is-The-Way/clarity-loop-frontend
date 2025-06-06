@@ -58,6 +58,7 @@ struct ClarityPulseApp: App {
                 .environmentObject(authViewModel)
                 .environment(\.authService, authService)
                 .environment(\.healthKitService, healthKitService)
+                .modelContainer(PersistenceController.shared.container)
         }
     }
 }

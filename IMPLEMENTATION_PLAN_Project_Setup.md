@@ -4,21 +4,21 @@ This document provides a detailed checklist for setting up the greenfield SwiftU
 
 ## 1. Xcode Project Initialization
 
-- [ ] Create a new Xcode project.
-- [ ] **Platform:** iOS
-- [ ] **Application Template:** App
-- [ ] **Product Name:** `ClarityPulse` (or as per final naming decision)
-- [ ] **Interface:** SwiftUI
-- [ ] **Language:** Swift
-- [ ] **Storage:** SwiftData
-- [ ] **Include Tests:** Checked. This will create `ClarityPulseTests` and `ClarityPulseUITests` targets.
-- [ ] **Target iOS Version:** Set the deployment target to **iOS 17.0** or later to leverage the latest SwiftUI, SwiftData, and Observation framework features.
+- [x] Create a new Xcode project.
+- [x] **Platform:** iOS
+- [x] **Application Template:** App
+- [x] **Product Name:** `ClarityPulse` (or as per final naming decision)
+- [x] **Interface:** SwiftUI
+- [x] **Language:** Swift
+- [x] **Storage:** SwiftData
+- [x] **Include Tests:** Checked. This will create `ClarityPulseTests` and `ClarityPulseUITests` targets.
+- [x] **Target iOS Version:** Set the deployment target to **iOS 17.0** or later to leverage the latest SwiftUI, SwiftData, and Observation framework features.
 
 ## 2. Dependency Management (Swift Package Manager)
 
 The project will use Swift Package Manager (SPM) for all external dependencies.
 
-- [ ] **Add Firebase SDK:**
+- [x] **Add Firebase SDK:**
     - In Xcode, navigate to `File > Add Packages...`.
     - Enter the Firebase Apple SDK package URL: `https://github.com/firebase/firebase-ios-sdk.git`.
     - Select the following Firebase libraries required for the project:
@@ -29,14 +29,14 @@ The project will use Swift Package Manager (SPM) for all external dependencies.
 
 ## 3. Firebase Integration
 
-- [ ] **Create Firebase Project:**
+- [x] **Create Firebase Project:**
     - Go to the [Firebase Console](https://console.firebase.google.com/).
     - Create a new project for CLARITY.
     - Add an iOS app to the project, using the bundle identifier from your Xcode project.
-- [ ] **Download Configuration File:**
+- [x] **Download Configuration File:**
     - Download the `GoogleService-Info.plist` file from the Firebase project settings.
     - Add this file to the root of your Xcode project target. Ensure it's included in the "Copy Bundle Resources" build phase.
-- [ ] **Initialize Firebase in App:**
+- [x] **Initialize Firebase in App:**
     - In your main SwiftUI `App` struct (e.g., `ClarityPulseApp.swift`), import Firebase and configure it in the initializer.
 
     ```swift
@@ -60,7 +60,7 @@ The project will use Swift Package Manager (SPM) for all external dependencies.
 
 ## 4. Project Capabilities and Security Setup
 
-- [ ] **Enable Keychain Sharing:**
+- [x] **Enable Keychain Sharing:**
     - In the project settings, go to the `Signing & Capabilities` tab for your app target.
     - Click `+ Capability` and select **Keychain Sharing**. This is required for Firebase Auth to securely persist credentials.
 - [ ] **Enable Push Notifications (for future use):**
@@ -78,23 +78,23 @@ The project will use Swift Package Manager (SPM) for all external dependencies.
 
 Organize the project files into a clean, layered architecture. Create the following groups (folders) in Xcode:
 
-- [ ] **Application:**
+- [x] **Application:**
     - `ClarityPulseApp.swift` (App entry point)
     - `Assets.xcassets`
     - `GoogleService-Info.plist`
-- [ ] **Core:**
+- [x] **Core:**
     - **Architecture:** (DI setup, EnvironmentKeys, etc.)
     - **Networking:** (`APIClient`, `APIError`, endpoint definitions)
     - **Persistence:** (`SwiftDataManager`, persistence logic)
     - **Services:** (`AuthService`, `HealthKitService`, `InsightAIService`)
     - **Utilities:** (Extensions, helpers, etc.)
-- [ ] **Data:**
+- [x] **Data:**
     - **Models:** (SwiftData `@Model` classes like `HealthMetricEntity`, `InsightEntity`, `User`)
     - **DTOs:** (Network Data Transfer Objects like `HealthMetricDTO`, `LoginRequestDTO`)
-- [ ] **Domain:**
+- [x] **Domain:**
     - **UseCases:** (e.g., `FetchDailyHealthSummaryUseCase`)
     - **Repositories:** (Protocols for data access, e.g., `HealthDataRepositoryProtocol`)
-- [ ] **Features:** (Each feature gets its own folder with View, ViewModel)
+- [x] **Features:** (Each feature gets its own folder with View, ViewModel)
     - **Authentication:**
         - `LoginView.swift`
         - `LoginViewModel.swift`
@@ -108,7 +108,7 @@ Organize the project files into a clean, layered architecture. Create the follow
         - `InsightsViewModel.swift`
         - `ChatView.swift`
         - `ChatViewModel.swift`
-- [ ] **UI:**
+- [x] **UI:**
     - **Components:** (Reusable views like `HealthMetricCard`, `PrimaryButtonStyle`, `MessageBubbleView`)
     - **Modifiers:** (Custom view modifiers)
     - **Theme:** (Color palette, font styles)

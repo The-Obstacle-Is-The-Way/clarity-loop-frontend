@@ -33,11 +33,18 @@ extension HealthDataEndpoint: Endpoint {
     
     // We can extend this to handle query parameters.
     func asURLRequest(baseURL: URL, encoder: JSONEncoder) throws -> URLRequest {
-        var request = try Endpoint.super.asURLRequest(baseURL: baseURL, encoder: encoder)
+        // First, create the basic request.
+        var request = URLRequest(url: baseURL.appendingPathComponent(path))
+        request.httpMethod = method.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try body(encoder: encoder)
         
+        // Then, add query parameters if necessary.
         switch self {
         case .getMetrics(let page, let limit):
-            guard let url = request.url else { break }
+            guard let url = request.url else {
+                throw APIError.invalidURL
+            }
             var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
             components?.queryItems = [
                 URLQueryItem(name: "page", value: "\(page)"),

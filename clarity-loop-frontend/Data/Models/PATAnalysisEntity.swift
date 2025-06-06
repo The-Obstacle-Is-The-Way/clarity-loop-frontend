@@ -1,10 +1,8 @@
 import Foundation
 import SwiftData
 
-/// Represents the cached results of a PAT (Pretrained Actigraphy Transformer) analysis.
-///
-/// This model is optional and should be used if the app needs to display raw PAT
-/// analysis results frequently without re-fetching from the server.
+/// The SwiftData model for caching raw PAT (Pretrained Actigraphy Transformer) analysis results.
+/// Storing this locally can prevent re-running expensive analyses on the backend.
 @Model
 final class PATAnalysisEntity {
     /// The unique identifier for the analysis job.
@@ -24,14 +22,14 @@ final class PATAnalysisEntity {
 
     /// A local-only timestamp indicating when this record was last synced.
     var lastSyncedAt: Date
-    
+
     init(
         id: String,
         status: String,
         completedAt: Date?,
         patFeatures: Data?,
         activityEmbedding: Data?,
-        lastSyncedAt: Date
+        lastSyncedAt: Date = Date()
     ) {
         self.id = id
         self.status = status

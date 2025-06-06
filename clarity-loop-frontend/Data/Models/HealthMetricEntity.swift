@@ -1,10 +1,8 @@
 import Foundation
 import SwiftData
 
-/// Represents a unified, flattened record of a health metric for local persistence.
-///
-/// This model is designed to store various types of health data from different sources
-/// in a single table, which simplifies querying for dashboard and analysis views.
+/// A SwiftData model representing a single, flattened health metric record for local persistence.
+/// This structure is optimized for efficient querying and display in the UI.
 @Model
 final class HealthMetricEntity {
     /// The unique identifier for the metric, matching the backend `metricId`.
@@ -65,7 +63,7 @@ final class HealthMetricEntity {
         id: UUID,
         type: String,
         date: Date,
-        lastSyncedAt: Date
+        lastSyncedAt: Date = Date()
     ) {
         self.id = id
         self.type = type
