@@ -85,6 +85,13 @@ struct DashboardView: View {
                 }
             }
             .navigationTitle("Your Pulse")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: ChatView()) {
+                        Image(systemName: "sparkles.bubble.fill")
+                    }
+                }
+            }
             .task {
                 if case .idle = viewModel.viewState {
                     await viewModel.loadDashboard()

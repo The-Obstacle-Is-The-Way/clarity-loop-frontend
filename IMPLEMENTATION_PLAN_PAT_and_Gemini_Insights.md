@@ -50,6 +50,8 @@ This feature displays a list of previously generated insights.
     - [ ] **Insight Row:** Create a reusable `InsightRowView` that displays the `narrative` preview and `generatedAt` date.
     - [ ] **Navigation:** Each row should be a `NavigationLink` that navigates to a detail view for that insight.
 
+(Note: The "Insight of the Day" card, a component of this feature, has been implemented on the main dashboard.)
+
 ## 3. On-Demand Gemini Chat Interface
 
 This feature provides a conversational UI for users to ask questions about their health data.
