@@ -82,7 +82,27 @@ class MockInsightsRepository: InsightsRepositoryProtocol {
         fatalError("Not implemented for mock")
     }
 }
-class MockUserRepository: UserRepositoryProtocol {}
+class MockUserRepository: UserRepositoryProtocol {
+    func getCurrentUserProfile() async throws -> UserProfile {
+        fatalError("Not implemented for mock")
+    }
+    
+    func updateUserProfile(_ profile: UserProfile) async throws -> UserProfile {
+        fatalError("Not implemented for mock")
+    }
+    
+    func deleteUserAccount() async throws {
+        fatalError("Not implemented for mock")
+    }
+    
+    func getPrivacyPreferences() async throws -> UserPrivacyPreferencesDTO {
+        fatalError("Not implemented for mock")
+    }
+    
+    func updatePrivacyPreferences(_ preferences: UserPrivacyPreferencesDTO) async throws {
+        fatalError("Not implemented for mock")
+    }
+}
 
 // A mock service can be used for previews that need to simulate HealthKit responses.
 class MockHealthKitService: HealthKitServiceProtocol {
