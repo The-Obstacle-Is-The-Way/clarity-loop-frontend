@@ -1,27 +1,21 @@
 import SwiftUI
 
-// MARK: - AuthService Environment Key
+// MARK: - AuthService
 
 /// The key for accessing the `AuthServiceProtocol` in the SwiftUI Environment.
-private struct AuthServiceKey: EnvironmentKey {
-    /// The default value for the key. In a real app, this might be a mock service
-    /// or a placeholder, but for simplicity, we can use the real implementation.
-    /// The value will be replaced at the app's root.
-    static let defaultValue: AuthServiceProtocol = AuthService(
-        apiClient: APIClient(tokenProvider: {
-            // This default token provider will not work for real calls,
-            // but is sufficient for the DI setup. The real one is injected.
-            return nil
-        })
-    )
+struct AuthServiceKey: EnvironmentKey {
+    static var defaultValue: AuthServiceProtocol {
+        fatalError("AuthService not found. Did you forget to inject it?")
+    }
 }
 
-extension EnvironmentValues {
-    /// Provides access to the `AuthService` throughout the SwiftUI environment.
-    var authService: AuthServiceProtocol {
-        get { self[AuthServiceKey.self] }
-        set { self[AuthServiceKey.self] = newValue }
-    }
+private struct APIClientKey: EnvironmentKey {
+    static let defaultValue: APIClientProtocol = {
+        guard let client = APIClient(tokenProvider: { nil }) else {
+            fatalError("Failed to create default APIClient")
+        }
+        return client
+    }()
 }
 
 // MARK: - Repository Protocols
@@ -41,10 +35,16 @@ private struct UserRepositoryKey: EnvironmentKey {
 }
 
 private struct HealthKitServiceKey: EnvironmentKey {
-    static let defaultValue: HealthKitServiceProtocol = HealthKitService()
+    static let defaultValue: HealthKitServiceProtocol = MockHealthKitService()
 }
 
 extension EnvironmentValues {
+    /// Provides access to the `AuthService` throughout the SwiftUI environment.
+    var authService: AuthServiceProtocol {
+        get { self[AuthServiceKey.self] }
+        set { self[AuthServiceKey.self] = newValue }
+    }
+    
     var healthDataRepository: HealthDataRepositoryProtocol {
         get { self[HealthDataRepositoryKey.self] }
         set { self[HealthDataRepositoryKey.self] = newValue }
@@ -69,14 +69,31 @@ extension EnvironmentValues {
 #if DEBUG
 // MARK: - Mock Implementations for Previews
 
-class MockHealthDataRepository: HealthDataRepositoryProtocol {}
-class MockInsightsRepository: InsightsRepositoryProtocol {}
+class MockHealthDataRepository: HealthDataRepositoryProtocol {
+    func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
+        return .init(data: [])
+    }
+}
+class MockInsightsRepository: InsightsRepositoryProtocol {
+    func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO {
+        return .init(success: true, data: .init(insights: [], totalCount: 0, hasMore: false, pagination: nil), metadata: nil)
+    }
+    func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO {
+        fatalError("Not implemented for mock")
+    }
+}
 class MockUserRepository: UserRepositoryProtocol {}
 
 // A mock service can be used for previews that need to simulate HealthKit responses.
 class MockHealthKitService: HealthKitServiceProtocol {
-    func isHealthDataAvailable() -> Bool { return true }
+    func isHealthDataAvailable() -> Bool { true }
     func requestAuthorization() async throws {}
+    func fetchDailySteps(for date: Date) async throws -> Double { 5000 }
+    func fetchRestingHeartRate(for date: Date) async throws -> Double? { 60 }
+    func fetchSleepAnalysis(for date: Date) async throws -> SleepData? { nil }
+    func fetchAllDailyMetrics(for date: Date) async throws -> DailyHealthMetrics {
+        .init(date: Date(), stepCount: 5000, restingHeartRate: 60, sleepData: nil)
+    }
 }
 #endif
 
