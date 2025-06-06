@@ -33,6 +33,7 @@ final class AuthService: AuthServiceProtocol {
     // MARK: - Properties
     
     private let apiClient: APIClientProtocol
+    private var authStateHandle: AuthStateDidChangeListenerHandle?
 
     /// A continuation to drive the `authState` async stream.
     private var authStateContinuation: AsyncStream<FirebaseAuth.User?>.Continuation?
@@ -43,7 +44,8 @@ final class AuthService: AuthServiceProtocol {
             self.authStateContinuation = continuation
             continuation.yield(Auth.auth().currentUser)
             
-            Auth.auth().addStateDidChangeListener { _, user in
+            // Store the handle to keep the listener active.
+            self.authStateHandle = Auth.auth().addStateDidChangeListener { _, user in
                 continuation.yield(user)
             }
         }
