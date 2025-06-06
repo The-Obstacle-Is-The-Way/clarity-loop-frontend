@@ -23,10 +23,20 @@ class DashboardViewModel: ObservableObject {
     
     @Published var viewState: ViewState<DashboardData> = .idle
     
-    // MARK: - Dependencies (To be injected)
+    // MARK: - Dependencies
     
-    // @Environment(\.healthDataRepository) private var healthDataRepo
-    // @Environment(\.insightsRepository) private var insightsRepo
+    private let healthDataRepo: HealthDataRepositoryProtocol
+    private let insightsRepo: InsightsRepositoryProtocol
+    
+    // MARK: - Initializer
+    
+    init(
+        healthDataRepo: HealthDataRepositoryProtocol = MockHealthDataRepository(),
+        insightsRepo: InsightsRepositoryProtocol = MockInsightsRepository()
+    ) {
+        self.healthDataRepo = healthDataRepo
+        self.insightsRepo = insightsRepo
+    }
     
     // MARK: - Public Methods
     

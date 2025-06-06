@@ -24,4 +24,45 @@ extension EnvironmentValues {
     }
 }
 
+// MARK: - Repository Protocols
+
+private struct HealthDataRepositoryKey: EnvironmentKey {
+    // For previews and testing, a default mock can be useful.
+    // For production, a real implementation will be injected.
+    static let defaultValue: HealthDataRepositoryProtocol = MockHealthDataRepository()
+}
+
+private struct InsightsRepositoryKey: EnvironmentKey {
+    static let defaultValue: InsightsRepositoryProtocol = MockInsightsRepository()
+}
+
+private struct UserRepositoryKey: EnvironmentKey {
+    static let defaultValue: UserRepositoryProtocol = MockUserRepository()
+}
+
+extension EnvironmentValues {
+    var healthDataRepository: HealthDataRepositoryProtocol {
+        get { self[HealthDataRepositoryKey.self] }
+        set { self[HealthDataRepositoryKey.self] = newValue }
+    }
+    
+    var insightsRepository: InsightsRepositoryProtocol {
+        get { self[InsightsRepositoryKey.self] }
+        set { self[InsightsRepositoryKey.self] = newValue }
+    }
+    
+    var userRepository: UserRepositoryProtocol {
+        get { self[UserRepositoryKey.self] }
+        set { self[UserRepositoryKey.self] = newValue }
+    }
+}
+
+#if DEBUG
+// MARK: - Mock Implementations for Previews
+
+class MockHealthDataRepository: HealthDataRepositoryProtocol {}
+class MockInsightsRepository: InsightsRepositoryProtocol {}
+class MockUserRepository: UserRepositoryProtocol {}
+#endif
+
 // NOTE: Add other service keys here as needed (e.g., for HealthKit, Networking, etc.) 
