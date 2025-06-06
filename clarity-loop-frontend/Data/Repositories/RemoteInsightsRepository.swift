@@ -17,5 +17,13 @@ class RemoteInsightsRepository: InsightsRepositoryProtocol {
         self.apiClient = apiClient
     }
     
+    func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO {
+        return try await apiClient.getInsightHistory(userId: userId, limit: limit, offset: offset)
+    }
+    
+    func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO {
+        return try await apiClient.generateInsight(requestDTO: requestDTO)
+    }
+    
     // Protocol methods for fetching and generating insights will be implemented here.
 } 

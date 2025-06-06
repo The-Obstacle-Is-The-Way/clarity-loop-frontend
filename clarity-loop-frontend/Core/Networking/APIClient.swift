@@ -10,6 +10,10 @@ protocol APIClientProtocol {
     // Endpoints for Health Data
     func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO
     
+    // Endpoints for Insights
+    func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO
+    func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO
+    
     // Other endpoint methods will be added here later.
 }
 
@@ -61,6 +65,18 @@ final class APIClient: APIClientProtocol {
     
     func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
         let endpoint = HealthDataEndpoint.getMetrics(page: page, limit: limit)
+        return try await performRequest(for: endpoint)
+    }
+
+    // MARK: - Insights Methods
+    
+    func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO {
+        let endpoint = InsightEndpoint.getHistory(userId: userId, limit: limit, offset: offset)
+        return try await performRequest(for: endpoint)
+    }
+    
+    func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO {
+        let endpoint = InsightEndpoint.generate(dto: requestDTO)
         return try await performRequest(for: endpoint)
     }
 

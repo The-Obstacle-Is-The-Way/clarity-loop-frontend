@@ -5,6 +5,7 @@
 //  Created by Raymond Jung on 6/7/25.
 //
 
+import FirebaseAuth
 import SwiftUI
 
 struct DashboardView: View {
@@ -20,7 +21,8 @@ struct DashboardView: View {
             fatalError("Failed to initialize APIClient")
         }
         let healthDataRepo = RemoteHealthDataRepository(apiClient: apiClient)
-        _viewModel = StateObject(wrappedValue: DashboardViewModel(healthDataRepo: healthDataRepo))
+        let insightsRepo = RemoteInsightsRepository(apiClient: apiClient)
+        _viewModel = StateObject(wrappedValue: DashboardViewModel(healthDataRepo: healthDataRepo, insightsRepo: insightsRepo))
     }
 
     var body: some View {
@@ -34,6 +36,10 @@ struct DashboardView: View {
                 case .loaded(let data):
                     ScrollView {
                         LazyVStack(spacing: 16) {
+                            if let insight = data.insightOfTheDay {
+                                InsightCardView(insight: insight)
+                            }
+                            
                             ForEach(data.metrics) { metric in
                                 HealthMetricCardView(metric: metric)
                             }

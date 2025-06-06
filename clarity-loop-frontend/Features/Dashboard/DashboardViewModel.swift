@@ -12,6 +12,7 @@ import SwiftUI
 /// This will be expanded as more data sources are integrated.
 struct DashboardData {
     let metrics: [HealthMetricDTO]
+    let insightOfTheDay: InsightPreviewDTO?
 }
 
 @MainActor
@@ -24,13 +25,16 @@ class DashboardViewModel: ObservableObject {
     // MARK: - Dependencies
     
     private let healthDataRepo: HealthDataRepositoryProtocol
+    private let insightsRepo: InsightsRepositoryProtocol
     
     // MARK: - Initializer
     
     init(
-        healthDataRepo: HealthDataRepositoryProtocol
+        healthDataRepo: HealthDataRepositoryProtocol,
+        insightsRepo: InsightsRepositoryProtocol
     ) {
         self.healthDataRepo = healthDataRepo
+        self.insightsRepo = insightsRepo
     }
     
     // MARK: - Public Methods
@@ -40,10 +44,16 @@ class DashboardViewModel: ObservableObject {
         viewState = .loading
         
         do {
-            let response = try await healthDataRepo.getHealthData(page: 1, limit: 20)
-            let data = DashboardData(metrics: response.data)
+            // Fetch health metrics and insights in parallel
+            async let metricsResponse = healthDataRepo.getHealthData(page: 1, limit: 20)
+            async let insightsResponse = insightsRepo.getInsightHistory(userId: "current_user_id_placeholder", limit: 1, offset: 0) // Placeholder user ID
             
-            if data.metrics.isEmpty {
+            let (metrics, insights) = try await (metricsResponse, insightsResponse)
+            
+            let data = DashboardData(metrics: metrics.data, insightOfTheDay: insights.data.insights.first)
+            
+            // The view is considered "empty" only if both metrics and insights are empty.
+            if data.metrics.isEmpty && data.insightOfTheDay == nil {
                 viewState = .empty
             } else {
                 viewState = .loaded(data)
