@@ -8,7 +8,7 @@
 import Foundation
 
 /// A custom domain model to represent processed sleep analysis data.
-struct SleepData {
+struct SleepData: Equatable {
     let totalTimeInBed: TimeInterval
     let totalTimeAsleep: TimeInterval
     let sleepEfficiency: Double
@@ -20,9 +20,9 @@ struct SleepData {
 }
 
 /// A container for all the daily health metrics fetched from HealthKit.
-struct DailyHealthMetrics {
+struct DailyHealthMetrics: Equatable {
     let date: Date
-    let stepCount: Double
+    let stepCount: Int
     let restingHeartRate: Double?
     let sleepData: SleepData?
     

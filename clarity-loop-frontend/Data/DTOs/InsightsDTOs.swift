@@ -54,7 +54,7 @@ struct InsightHistoryDataDTO: Codable {
     let pagination: PaginationMetaDTO?
 }
 
-struct InsightPreviewDTO: Codable, Identifiable {
+struct InsightPreviewDTO: Codable, Identifiable, Equatable {
     let id: String
     let narrative: String
     let generatedAt: Date

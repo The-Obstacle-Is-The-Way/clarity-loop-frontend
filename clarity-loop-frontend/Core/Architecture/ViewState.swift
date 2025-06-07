@@ -9,7 +9,7 @@ import Foundation
 
 /// A generic enum to represent the state of a view that loads data asynchronously.
 /// This provides a consistent way to handle loading, error, and content states across different features.
-enum ViewState<T> {
+enum ViewState<T: Equatable>: Equatable {
     /// The view is idle and has not yet started loading.
     case idle
     

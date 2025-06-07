@@ -12,7 +12,7 @@ import Observation
 
 /// A struct to hold all the necessary data for the dashboard.
 /// This will be expanded as more data sources are integrated.
-struct DashboardData {
+struct DashboardData: Equatable {
     let metrics: DailyHealthMetrics
     let insightOfTheDay: InsightPreviewDTO?
 }

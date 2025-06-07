@@ -173,7 +173,7 @@ final class AnalyzePATDataUseCase {
     }
 }
 
-struct PATAnalysisResult {
+struct PATAnalysisResult: Equatable {
     let analysisId: String
     let status: String
     let patFeatures: [String: AnyCodable]?
