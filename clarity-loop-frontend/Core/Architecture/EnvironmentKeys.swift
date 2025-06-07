@@ -117,8 +117,8 @@ class MockAPIClient: APIClientProtocol {
 }
 
 class MockAuthService: AuthServiceProtocol {
-    var currentUser: FirebaseAuth.User? = nil
-    var authState: AsyncStream<FirebaseAuth.User?> {
+    var currentUser: AuthUser? = AuthUser(uid: "mock-uid", email: "mock@example.com", isEmailVerified: true)
+    var authState: AsyncStream<AuthUser?> {
         AsyncStream { continuation in
             continuation.yield(currentUser)
             continuation.finish()

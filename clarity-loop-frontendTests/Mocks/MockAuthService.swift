@@ -1,34 +1,77 @@
 import Foundation
 import Combine
+@testable import clarity_loop_frontend
 
-// Simple mock without importing the main module first
-class MockAuthService: ObservableObject {
-    @Published var isAuthenticated = false
-    @Published var currentUser: String?
-    @Published var authError: String?
-    
+class MockAuthService: AuthServiceProtocol {
     var shouldSucceed = true
+    var mockUserSession = UserSessionResponseDTO(
+        userId: UUID(),
+        firstName: "Test",
+        lastName: "User",
+        email: "test@example.com",
+        role: "user",
+        permissions: [],
+        status: "active",
+        mfaEnabled: false,
+        emailVerified: true,
+        createdAt: Date(),
+        lastLogin: Date()
+    )
     
-    func signIn(email: String, password: String) async throws {
-        if shouldSucceed {
-            currentUser = "test@example.com"
-            isAuthenticated = true
-        } else {
-            throw NSError(domain: "AuthError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid credentials"])
+    // Mock user state
+    var mockCurrentUser: AuthUser? = AuthUser(uid: "test-uid", email: "test@example.com", isEmailVerified: true)
+    
+    // MARK: - AuthServiceProtocol Implementation
+    
+    var authState: AsyncStream<AuthUser?> {
+        AsyncStream { continuation in
+            continuation.yield(mockCurrentUser)
+            continuation.finish()
         }
     }
     
-    func signUp(email: String, password: String, name: String) async throws {
+    var currentUser: AuthUser? {
+        mockCurrentUser
+    }
+    
+    func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
         if shouldSucceed {
-            currentUser = email
-            isAuthenticated = true
+            mockCurrentUser = AuthUser(uid: "signed-in-uid", email: email, isEmailVerified: true)
+            return mockUserSession
         } else {
-            throw NSError(domain: "AuthError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Email already in use"])
+            throw APIError.unauthorized
         }
     }
     
-    func signOut() async throws {
-        currentUser = nil
-        isAuthenticated = false
+    func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO {
+        if shouldSucceed {
+            return RegistrationResponseDTO(
+                userId: UUID(),
+                email: email,
+                status: "pending_verification",
+                verificationEmailSent: true,
+                createdAt: Date()
+            )
+        } else {
+            throw APIError.serverError(statusCode: 400, message: "Registration failed")
+        }
+    }
+    
+    func signOut() throws {
+        mockCurrentUser = nil
+    }
+    
+    func sendPasswordReset(to email: String) async throws {
+        if !shouldSucceed {
+            throw APIError.serverError(statusCode: 400, message: "Password reset failed")
+        }
+    }
+    
+    func getCurrentUserToken() async throws -> String {
+        if shouldSucceed {
+            return "mock-jwt-token"
+        } else {
+            throw APIError.unauthorized
+        }
     }
 } 

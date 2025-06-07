@@ -4,11 +4,11 @@ import Foundation
 /// Defines the contract for a service that manages user authentication.
 /// This protocol allows for dependency injection and mocking for testing purposes.
 protocol AuthServiceProtocol {
-    /// An async stream that emits the current Firebase user whenever the auth state changes.
-    var authState: AsyncStream<FirebaseAuth.User?> { get }
+    /// An async stream that emits the current user whenever the auth state changes.
+    var authState: AsyncStream<AuthUser?> { get }
     
-    /// The currently authenticated Firebase user, if one exists.
-    var currentUser: FirebaseAuth.User? { get }
+    /// The currently authenticated user, if one exists.
+    var currentUser: AuthUser? { get }
 
     /// Signs in a user with the given email and password.
     func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO
@@ -36,23 +36,23 @@ final class AuthService: AuthServiceProtocol {
     private var authStateHandle: AuthStateDidChangeListenerHandle?
 
     /// A continuation to drive the `authState` async stream.
-    private var authStateContinuation: AsyncStream<FirebaseAuth.User?>.Continuation?
+    private var authStateContinuation: AsyncStream<AuthUser?>.Continuation?
 
-    /// An async stream that emits the current Firebase user whenever the auth state changes.
-    lazy var authState: AsyncStream<FirebaseAuth.User?> = {
+    /// An async stream that emits the current user whenever the auth state changes.
+    lazy var authState: AsyncStream<AuthUser?> = {
         AsyncStream { continuation in
             self.authStateContinuation = continuation
-            continuation.yield(Auth.auth().currentUser)
+            continuation.yield(Auth.auth().currentUser.map(AuthUser.init))
             
             // Store the handle to keep the listener active.
             self.authStateHandle = Auth.auth().addStateDidChangeListener { _, user in
-                continuation.yield(user)
+                continuation.yield(user.map(AuthUser.init))
             }
         }
     }()
     
-    var currentUser: FirebaseAuth.User? {
-        Auth.auth().currentUser
+    var currentUser: AuthUser? {
+        Auth.auth().currentUser.map(AuthUser.init)
     }
 
     // MARK: - Initializer
