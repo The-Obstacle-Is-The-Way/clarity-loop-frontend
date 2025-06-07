@@ -5,7 +5,7 @@ struct OnboardingView: View {
     @Environment(\.healthKitService) private var healthKitService
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             OnboardingContentView(
                 viewModel: OnboardingViewModel(
                     authService: authService,

@@ -44,10 +44,10 @@ struct AutoFillCompatibleSecureField: View {
 }
 
 #Preview {
+    @Previewable @State var password1 = ""
+    @Previewable @State var password2 = ""
+    
     VStack {
-        @State var password1 = ""
-        @State var password2 = ""
-        
         CustomSecureField(text: $password1, placeholder: "Basic SecureField")
             .padding()
             .background(Color(.systemGray6))

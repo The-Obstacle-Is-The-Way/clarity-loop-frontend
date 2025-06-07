@@ -41,7 +41,9 @@ final class OnboardingViewModel {
     var totalSteps: Int { 5 }
     
     var progressPercentage: Double {
-        Double(currentStep) / Double(totalSteps - 1)
+        guard totalSteps > 1 else { return 0.0 }
+        let percentage = Double(currentStep) / Double(totalSteps - 1)
+        return percentage.isNaN || percentage.isInfinite ? 0.0 : percentage
     }
     
     // MARK: - Initializer

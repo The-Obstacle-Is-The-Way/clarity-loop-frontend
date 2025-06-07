@@ -14,7 +14,7 @@ struct SettingsView: View {
     @State private var viewModel: SettingsViewModel?
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             if let viewModel = viewModel {
                 SettingsContentView(viewModel: viewModel)
             } else {

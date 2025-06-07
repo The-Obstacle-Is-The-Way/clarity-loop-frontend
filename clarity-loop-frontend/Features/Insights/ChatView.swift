@@ -66,7 +66,7 @@ struct ChatView: View {
 }
 
 #Preview {
-    NavigationView {
+                NavigationStack {
         ChatView()
     }
 } 

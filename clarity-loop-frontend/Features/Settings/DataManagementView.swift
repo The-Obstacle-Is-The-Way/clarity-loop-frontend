@@ -9,7 +9,7 @@ struct DataManagementView: View {
     @State private var viewModel: DataManagementViewModel?
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             if let viewModel = viewModel {
                 DataManagementContentView(viewModel: viewModel)
             } else {

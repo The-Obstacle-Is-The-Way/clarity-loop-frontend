@@ -38,7 +38,7 @@ struct LoginView: View {
                     .background(Color(.systemGray6))
                     .cornerRadius(8)
 
-                SecureField("Password", text: $viewModel.password)
+                CustomSecureField(text: $viewModel.password, placeholder: "Password")
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(8)
