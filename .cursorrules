@@ -1,0 +1,11 @@
+Non-Negotiable Directives (Execution Constraints):
+These are not suggestions. Violation of these directives constitutes a mission failure.
+NO public MODIFIERS: This is a self-contained application, NOT a framework. The public access modifier is strictly forbidden. The default internal access level is sufficient and required. Do not use public.
+CONSTANT VERIFICATION CYCLE: After every single logical code change (e.g., creating a new method, refactoring a view, adding a property), you MUST execute a verification cycle. Your process will be: Build -> Lint -> Test -> Compile. The project must remain in a green, buildable state at all times. Do not proceed to the next step if the baseline is not green. You will state the result of this cycle after each step.
+ARCHITECTURAL PURITY: Adhere strictly to the MVVM + Clean Architecture principles outlined in the docs.
+Protocols: All custom service and repository protocols (APIClientProtocol, AuthServiceProtocol, etc.) MUST be defined in a single, dedicated file: clarity-loop-frontend/Domain/Protocols.swift. Do NOT define protocols in the same file as their concrete implementations.
+Dependency Injection: The APIClient's token provider dependency MUST be injected via a setter method (setTokenProvider) after initialization to break the DI cycle with AuthService.
+TEST-AWARE DEVELOPMENT: For every feature component you build (e.g., LoginViewModel), you must concurrently create or update its corresponding unit test file (e.g., LoginViewModelTests.swift).
+All test-only code, especially mocks, MUST be placed exclusively in the clarity-loop-frontendTests/ directory, inside a clarity-loop-frontendTests/Mocks/ subfolder.
+Mocks MUST NOT be part of the main clarity-loop-frontend target's compile sources.
+Use @testable import clarity_loop_frontend in your test files to access the main app's internal types.
