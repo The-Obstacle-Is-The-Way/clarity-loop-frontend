@@ -35,6 +35,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		716D97602DF4DFFA0068C70F /* Exceptions for "clarity-loop-frontend" folder in "clarity-loop-frontend" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 71B2A8CA2DF35EB800F2784F /* clarity-loop-frontend */;
+		};
 		7171570C2DF3DE8600F8B4D7 /* Exceptions for "clarity-loop-frontendUITests" folder in "clarity-loop-frontendUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			platformFiltersByRelativePath = {
@@ -81,6 +88,9 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		71B2A8CD2DF35EB800F2784F /* clarity-loop-frontend */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				716D97602DF4DFFA0068C70F /* Exceptions for "clarity-loop-frontend" folder in "clarity-loop-frontend" target */,
+			);
 			path = "clarity-loop-frontend";
 			sourceTree = "<group>";
 		};
@@ -408,6 +418,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				"INFOPLIST_FILE[sdk=*]" = "clarity-loop-frontend/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -466,6 +477,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				"INFOPLIST_FILE[sdk=*]" = "clarity-loop-frontend/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
