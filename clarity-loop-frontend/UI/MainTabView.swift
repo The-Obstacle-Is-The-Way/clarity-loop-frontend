@@ -47,5 +47,5 @@ struct MainTabView: View {
     
     MainTabView()
         .environment(\.authService, AuthService(apiClient: previewAPIClient))
-        .environment(\.healthKitService, HealthKitService())
+        .environment(\.healthKitService, HealthKitService(apiClient: previewAPIClient))
 }

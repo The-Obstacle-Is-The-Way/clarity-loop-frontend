@@ -12,15 +12,13 @@ struct DashboardView: View {
     @Environment(\.healthKitService) private var healthKitService
     @Environment(\.insightsRepository) private var insightsRepository
     
-    @StateObject private var viewModel = DashboardViewModel(
-        insightsRepo: MockInsightsRepository(),
-        healthKitService: MockHealthKitService()
-    )
+    @State private var viewModel: DashboardViewModel?
 
     var body: some View {
         NavigationStack {
             Group {
-                switch viewModel.viewState {
+                if let viewModel = viewModel {
+                    switch viewModel.viewState {
                 case .idle:
                     Color.clear // Nothing shown
                 case .loading:
@@ -107,6 +105,9 @@ struct DashboardView: View {
                         .padding(.top)
                     }
                     .padding()
+                    }
+                } else {
+                    ProgressView("Loading...")
                 }
             }
             .navigationTitle("Your Pulse")
@@ -118,19 +119,28 @@ struct DashboardView: View {
                 }
             }
             .task {
-                if case .idle = viewModel.viewState {
-                    await viewModel.loadDashboard()
+                if viewModel == nil {
+                    viewModel = DashboardViewModel(
+                        insightsRepo: insightsRepository,
+                        healthKitService: healthKitService
+                    )
+                }
+                
+                if let vm = viewModel, case .idle = vm.viewState {
+                    await vm.loadDashboard()
                 }
             }
         }
     }
 }
 
-struct DashboardView_Previews: PreviewProvider {
-    static var previews: some View {
-        // The preview will use the mock repository by default
-        let mockHealthKit = MockHealthKitService()
-        DashboardView()
-            .environment(\.healthKitService, mockHealthKit)
-    }
+#Preview {
+    let previewAPIClient = APIClient(
+        baseURLString: "https://api.example.com",
+        tokenProvider: { nil }
+    )!
+    
+    DashboardView()
+        .environment(\.healthKitService, HealthKitService(apiClient: previewAPIClient))
+        .environment(\.insightsRepository, RemoteInsightsRepository(apiClient: previewAPIClient))
 } 

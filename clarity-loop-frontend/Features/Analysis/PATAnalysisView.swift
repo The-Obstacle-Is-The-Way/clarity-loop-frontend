@@ -196,7 +196,7 @@ private struct ConfidenceScoreView: View {
                         .font(.title2)
                         .fontWeight(.semibold)
                 }
-                .gaugeStyle(.circular)
+                .gaugeStyle(.accessoryCircular)
                 .tint(confidenceColor(for: confidence))
                 .frame(width: 80, height: 80)
                 
@@ -341,7 +341,7 @@ private struct SleepStageHypnogramView: View {
                 RectangleMark(
                     x: .value("Time", stage.timestamp),
                     y: .value("Stage", stage.stage.numericValue),
-                    width: .value("Duration", stage.duration * 1000), // Convert to milliseconds for chart
+                    width: .fixed(stage.duration * 100), // Convert to appropriate pixel width
                     height: 0.8
                 )
                 .foregroundStyle(stage.stage.color)
@@ -468,14 +468,19 @@ enum SleepStage: String, CaseIterable {
 // MARK: - Preview
 
 #Preview {
+    let previewAPIClient = APIClient(
+        baseURLString: "https://api.example.com",
+        tokenProvider: { nil }
+    )!
+    
     PATAnalysisView(
         analysisId: nil,
         viewModel: PATAnalysisViewModel(
             analyzePATDataUseCase: AnalyzePATDataUseCase(
-                apiClient: MockAPIClient(),
-                healthKitService: MockHealthKitService()
+                apiClient: previewAPIClient,
+                healthKitService: HealthKitService(apiClient: previewAPIClient)
             ),
-            apiClient: MockAPIClient()
+            apiClient: previewAPIClient
         )
     )
 }

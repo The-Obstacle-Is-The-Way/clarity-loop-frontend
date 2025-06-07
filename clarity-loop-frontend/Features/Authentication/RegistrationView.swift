@@ -103,5 +103,10 @@ struct RegistrationView: View {
 }
 
 #Preview {
-    RegistrationView(authService: MockAuthService())
+    let previewAPIClient = APIClient(
+        baseURLString: "https://api.example.com",
+        tokenProvider: { nil }
+    )!
+    
+    RegistrationView(authService: AuthService(apiClient: previewAPIClient))
 } 
