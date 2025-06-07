@@ -147,7 +147,7 @@ final class AuthService: AuthServiceProtocol {
     private func mapFirebaseError(_ error: Error) -> Error {
         guard let authError = error as? AuthErrorCode else {
             // Handle non-Firebase errors
-            if let urlError = error as? URLError {
+            if error is URLError {
                 return AuthenticationError.networkError
             }
             return AuthenticationError.unknown(error.localizedDescription)
