@@ -46,9 +46,17 @@
 		71EC91292DF481EE00226717 /* Exceptions for "clarity-loop-frontendTests" folder in "clarity-loop-frontendTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			platformFiltersByRelativePath = {
+				Core/Architecture/ViewStateTests.swift = (ios, );
+				Core/Services/AuthServiceTests.swift = (ios, );
+				Core/Services/BiometricAuthServiceTests.swift = (ios, );
+				Features/Authentication/LoginViewModelTests.swift = (ios, );
+				Features/Authentication/RegistrationViewModelTests.swift = (ios, );
+				Integration/AuthenticationIntegrationTests.swift = (ios, );
 				IntegrationTests.swift = (ios, );
 				Mocks/MockAPIClient.swift = (ios, );
 				Mocks/MockAuthService.swift = (ios, );
+				UI/Authentication/SecureFieldRenderingTests.swift = (ios, );
+				UI/Layout/ConstraintValidationTests.swift = (ios, );
 			};
 			target = 71B2A8D92DF35EBB00F2784F /* clarity-loop-frontendTests */;
 		};
