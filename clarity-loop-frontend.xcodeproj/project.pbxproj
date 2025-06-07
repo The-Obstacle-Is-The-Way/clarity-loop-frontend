@@ -43,6 +43,15 @@
 			};
 			target = 71B2A8E32DF35EBB00F2784F /* clarity-loop-frontendUITests */;
 		};
+		71EC91292DF481EE00226717 /* Exceptions for "clarity-loop-frontendTests" folder in "clarity-loop-frontendTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			platformFiltersByRelativePath = {
+				IntegrationTests.swift = (ios, );
+				Mocks/MockAPIClient.swift = (ios, );
+				Mocks/MockAuthService.swift = (ios, );
+			};
+			target = 71B2A8D92DF35EBB00F2784F /* clarity-loop-frontendTests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -53,6 +62,9 @@
 		};
 		71B2A8DD2DF35EBB00F2784F /* clarity-loop-frontendTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				71EC91292DF481EE00226717 /* Exceptions for "clarity-loop-frontendTests" folder in "clarity-loop-frontendTests" target */,
+			);
 			path = "clarity-loop-frontendTests";
 			sourceTree = "<group>";
 		};
