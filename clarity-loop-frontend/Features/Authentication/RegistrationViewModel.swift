@@ -19,6 +19,85 @@ final class RegistrationViewModel {
     var errorMessage: String?
     var registrationComplete = false
 
+    // MARK: - Computed Validation Properties
+    
+    /// Real-time password matching validation
+    var isPasswordMatching: Bool {
+        return password == confirmPassword && !password.isEmpty
+    }
+    
+    /// Password mismatch error message
+    var passwordMismatchError: String? {
+        if password.isEmpty || confirmPassword.isEmpty {
+            return nil
+        }
+        return password == confirmPassword ? nil : "Passwords do not match"
+    }
+    
+    /// Password strength validation
+    var isPasswordValid: Bool {
+        return password.count >= 8 && 
+               password.contains(where: { $0.isUppercase }) &&
+               password.contains(where: { $0.isLowercase }) &&
+               password.contains(where: { $0.isNumber })
+    }
+    
+    /// Password validation error messages
+    var passwordErrors: [String] {
+        var errors: [String] = []
+        
+        if password.count < 8 {
+            errors.append("Password must be at least 8 characters long")
+        }
+        
+        if !password.contains(where: { $0.isUppercase }) {
+            errors.append("Password must contain at least one uppercase letter")
+        }
+        
+        if !password.contains(where: { $0.isLowercase }) {
+            errors.append("Password must contain at least one lowercase letter")
+        }
+        
+        if !password.contains(where: { $0.isNumber }) {
+            errors.append("Password must contain at least one number")
+        }
+        
+        return errors
+    }
+    
+    /// Email validation
+    var isEmailValid: Bool {
+        return !email.isEmpty && isValidEmail(email)
+    }
+    
+    /// Complete form validation
+    var isFormValid: Bool {
+        return !firstName.isEmpty &&
+               !lastName.isEmpty &&
+               isEmailValid &&
+               isPasswordValid &&
+               isPasswordMatching &&
+               hasAcceptedTerms &&
+               hasAcceptedPrivacy
+    }
+    
+    /// Terms acceptance (alias for compatibility)
+    var hasAcceptedTerms: Bool {
+        get { termsAccepted }
+        set { termsAccepted = newValue }
+    }
+    
+    /// Privacy policy acceptance (alias for compatibility)
+    var hasAcceptedPrivacy: Bool {
+        get { privacyPolicyAccepted }
+        set { privacyPolicyAccepted = newValue }
+    }
+    
+    /// Registration success status (alias for compatibility)
+    var isRegistrationSuccessful: Bool {
+        return registrationComplete
+    }
+
     // MARK: - Private Properties
     private let authService: AuthServiceProtocol
     

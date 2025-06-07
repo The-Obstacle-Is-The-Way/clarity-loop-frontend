@@ -38,6 +38,7 @@
 		7171570C2DF3DE8600F8B4D7 /* Exceptions for "clarity-loop-frontendUITests" folder in "clarity-loop-frontendUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			platformFiltersByRelativePath = {
+				Features/Authentication/AuthenticationUITests.swift = (ios, );
 				clarity_loop_frontendUITests.swift = (ios, );
 				clarity_loop_frontendUITestsLaunchTests.swift = (ios, );
 			};
@@ -47,15 +48,19 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			platformFiltersByRelativePath = {
 				Core/Architecture/ViewStateTests.swift = (ios, );
+				Core/Networking/APIClientTests.swift = (ios, );
 				Core/Services/AuthServiceTests.swift = (ios, );
 				Core/Services/BiometricAuthServiceTests.swift = (ios, );
+				Data/DTOs/DTOValidationTests.swift = (ios, );
 				Features/Authentication/LoginViewModelTests.swift = (ios, );
 				Features/Authentication/RegistrationViewModelTests.swift = (ios, );
 				Integration/AuthenticationIntegrationTests.swift = (ios, );
 				IntegrationTests.swift = (ios, );
 				Mocks/MockAPIClient.swift = (ios, );
 				Mocks/MockAuthService.swift = (ios, );
+				Performance/MemoryLeakTests.swift = (ios, );
 				UI/Authentication/SecureFieldRenderingTests.swift = (ios, );
+				UI/Components/ComponentRenderingTests.swift = (ios, );
 				UI/Layout/ConstraintValidationTests.swift = (ios, );
 			};
 			target = 71B2A8D92DF35EBB00F2784F /* clarity-loop-frontendTests */;
