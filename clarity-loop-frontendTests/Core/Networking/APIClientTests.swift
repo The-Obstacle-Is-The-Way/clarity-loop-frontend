@@ -37,8 +37,8 @@ final class APIClientTests: XCTestCase {
         // Test handling of malformed JSON responses
         
         let invalidJSONData = "{ invalid json }".data(using: .utf8)!
-        MockURLProtocol.mockResponses["/auth/login"] = (invalidJSONData, HTTPURLResponse(
-            url: URL(string: "https://test.example.com/auth/login")!,
+        MockURLProtocol.mockResponses["/api/v1/auth/login"] = (invalidJSONData, HTTPURLResponse(
+            url: URL(string: "https://test.example.com/api/v1/auth/login")!,
             statusCode: 200,
             httpVersion: nil,
             headerFields: nil
@@ -112,8 +112,8 @@ final class APIClientTests: XCTestCase {
         }
         """.data(using: .utf8)!
         
-        MockURLProtocol.mockResponses["/health-data"] = (validJSONData, HTTPURLResponse(
-            url: URL(string: "https://test.example.com/health-data")!,
+        MockURLProtocol.mockResponses["/api/v1/health-data"] = (validJSONData, HTTPURLResponse(
+            url: URL(string: "https://test.example.com/api/v1/health-data")!,
             statusCode: 200,
             httpVersion: nil,
             headerFields: nil

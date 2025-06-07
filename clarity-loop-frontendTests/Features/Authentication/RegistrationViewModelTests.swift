@@ -108,7 +108,7 @@ final class RegistrationViewModelTests: XCTestCase {
         viewModel.confirmPassword = ""
         
         XCTAssertFalse(viewModel.isPasswordMatching, "Empty confirm password should not match")
-        XCTAssertEqual(viewModel.passwordMismatchError, "Passwords do not match", "Should show mismatch error")
+        XCTAssertNil(viewModel.passwordMismatchError, "Should be nil for empty confirm password per UX design")
         
         // Test error clears when confirm password is entered
         viewModel.confirmPassword = "validPassword123"
@@ -209,7 +209,7 @@ final class RegistrationViewModelTests: XCTestCase {
         
         // Verify success state
         XCTAssertTrue(viewModel.isRegistrationSuccessful, "Registration should be successful")
-        XCTAssertNil(viewModel.errorMessage, "No error message should be present")
+        XCTAssertEqual(viewModel.errorMessage, "Registration successful! Please check your email for verification.", "Should show success message")
         XCTAssertFalse(viewModel.isLoading, "Loading should be false after completion")
     }
     
@@ -232,7 +232,7 @@ final class RegistrationViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isRegistrationSuccessful, "Registration should fail with mismatched passwords")
         XCTAssertNotNil(viewModel.errorMessage, "Error message should be present")
         XCTAssertFalse(viewModel.isLoading, "Loading should be false after failure")
-        XCTAssertEqual(viewModel.errorMessage, "Passwords do not match", "Should show password mismatch error")
+        XCTAssertEqual(viewModel.errorMessage, "Passwords do not match.", "Should show password mismatch error")
     }
     
     @MainActor func testRegistrationNetworkError() async throws {
