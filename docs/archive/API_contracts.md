@@ -476,7 +476,7 @@ We will implement a dedicated networking service (API client) using modern Swift
 
 We define an `APIClient` class (or a set of classes grouped by feature) responsible for constructing requests, performing HTTP calls, and decoding responses. This client will handle **authentication**, **JSON encoding/decoding**, and **error handling** centrally:
 
-* Use a base URL for the backend (e.g. `https://api.clarity.health/api/v1`). We can store this in one place so if the version or domain changes, it’s easy to update.
+* Use a base URL for the backend (e.g. `https://crave-trinity--clarity-backend-fastapi-app.modal.run/api/v1`). We can store this in one place so if the version or domain changes, it’s easy to update.
 * Inject an auth token provider – for example, a closure or delegate that returns the latest Firebase JWT. The APIClient will attach the `Authorization: Bearer <token>` header to authenticated requests. All endpoints except registration/login and health checks require this JWT, so the client will automatically include it when calling those methods.
 * Utilize a single `URLSession` (or `URLSession.shared`) for requests. Because we target iOS 17+, `URLSession` supports async `data(for:)` which we will use for clarity.
 
