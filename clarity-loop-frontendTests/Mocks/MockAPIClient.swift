@@ -49,6 +49,43 @@ class MockAPIClient: APIClientProtocol {
         }
     }
     
+    func refreshToken(requestDTO: RefreshTokenRequestDTO) async throws -> TokenResponseDTO {
+        if shouldSucceed {
+            return TokenResponseDTO(
+                accessToken: "mock-refreshed-access-token",
+                refreshToken: "mock-refreshed-refresh-token",
+                tokenType: "Bearer",
+                expiresIn: 3600
+            )
+        } else {
+            throw APIError.unauthorized
+        }
+    }
+    
+    func logout() async throws -> MessageResponseDTO {
+        if shouldSucceed {
+            return MessageResponseDTO(message: "Successfully logged out")
+        } else {
+            throw APIError.serverError(statusCode: 500, message: "Logout failed")
+        }
+    }
+    
+    func getCurrentUser() async throws -> UserSessionResponseDTO {
+        if shouldSucceed {
+            return mockUserSession
+        } else {
+            throw APIError.unauthorized
+        }
+    }
+    
+    func verifyEmail(code: String) async throws -> MessageResponseDTO {
+        if shouldSucceed {
+            return MessageResponseDTO(message: "Email verified successfully")
+        } else {
+            throw APIError.serverError(statusCode: 400, message: "Invalid verification code")
+        }
+    }
+    
     // MARK: - Health Data Methods
     
     func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
@@ -106,6 +143,23 @@ class MockAPIClient: APIClientProtocol {
         }
     }
     
+    func getHealthKitUploadStatus(uploadId: String) async throws -> HealthKitUploadStatusDTO {
+        if shouldSucceed {
+            return HealthKitUploadStatusDTO(
+                uploadId: uploadId,
+                status: "completed",
+                progress: 1.0,
+                processedSamples: 100,
+                totalSamples: 100,
+                errors: nil,
+                completedAt: Date(),
+                message: "Upload completed successfully"
+            )
+        } else {
+            throw APIError.serverError(statusCode: 404, message: "Upload status not found")
+        }
+    }
+    
     // MARK: - Insights Methods
     
     func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO {
@@ -135,8 +189,8 @@ class MockAPIClient: APIClientProtocol {
                 data: HealthInsightDTO(
                     userId: "mock-user-id",
                     narrative: "Mock insight content",
-                    keyInsights: ["Key insight 1"],
-                    recommendations: ["Recommendation 1"],
+                    keyInsights: ["Key insight 1", "Key insight 2"],
+                    recommendations: ["Recommendation 1", "Recommendation 2"],
                     confidenceScore: 0.85,
                     generatedAt: Date()
                 ),
@@ -144,6 +198,49 @@ class MockAPIClient: APIClientProtocol {
             )
         } else {
             throw APIError.serverError(statusCode: 500, message: "Failed to generate insight")
+        }
+    }
+    
+    func getInsight(id: String) async throws -> InsightGenerationResponseDTO {
+        if shouldSucceed {
+            return InsightGenerationResponseDTO(
+                success: true,
+                data: HealthInsightDTO(
+                    userId: "mock-user-id",
+                    narrative: "Mock insight content for ID: \(id)",
+                    keyInsights: ["Key insight 1", "Key insight 2"],
+                    recommendations: ["Recommendation 1", "Recommendation 2"],
+                    confidenceScore: 0.85,
+                    generatedAt: Date()
+                ),
+                metadata: nil
+            )
+        } else {
+            throw APIError.serverError(statusCode: 404, message: "Insight not found")
+        }
+    }
+    
+    func getInsightsServiceStatus() async throws -> ServiceStatusResponseDTO {
+        if shouldSucceed {
+            return ServiceStatusResponseDTO(
+                success: true,
+                data: ServiceStatusDataDTO(
+                    service: "insights-service",
+                    status: "healthy",
+                    modelInfo: ModelInfoDTO(
+                        modelName: "test-model",
+                        projectId: "test-project",
+                        initialized: true,
+                        capabilities: ["insights", "recommendations"]
+                    ),
+                    timestamp: Date(),
+                    uptime: 86400,
+                    version: "1.0.0"
+                ),
+                metadata: nil
+            )
+        } else {
+            throw APIError.serverError(statusCode: 503, message: "Service unavailable")
         }
     }
     
@@ -268,6 +365,30 @@ class MockAPIClient: APIClientProtocol {
             )
         } else {
             throw APIError.serverError(statusCode: 404, message: "PAT analysis not found")
+        }
+    }
+    
+    func getPATServiceHealth() async throws -> ServiceStatusResponseDTO {
+        if shouldSucceed {
+            return ServiceStatusResponseDTO(
+                success: true,
+                data: ServiceStatusDataDTO(
+                    service: "pat-analysis-service",
+                    status: "healthy",
+                    modelInfo: ModelInfoDTO(
+                        modelName: "pat-model",
+                        projectId: "pat-project",
+                        initialized: true,
+                        capabilities: ["pat-analysis", "sleep-analysis"]
+                    ),
+                    timestamp: Date(),
+                    uptime: 86400,
+                    version: "1.0.0"
+                ),
+                metadata: nil
+            )
+        } else {
+            throw APIError.serverError(statusCode: 503, message: "PAT service unavailable")
         }
     }
 } 
