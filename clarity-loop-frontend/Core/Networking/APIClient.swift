@@ -6,18 +6,30 @@ protocol APIClientProtocol {
     // Endpoints for Authentication
     func register(requestDTO: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO
     func login(requestDTO: UserLoginRequestDTO) async throws -> LoginResponseDTO
+    func refreshToken(requestDTO: RefreshTokenRequestDTO) async throws -> TokenResponseDTO
+    func logout() async throws -> MessageResponseDTO
+    func getCurrentUser() async throws -> UserSessionResponseDTO
+    func verifyEmail(code: String) async throws -> MessageResponseDTO
     
     // Endpoints for Health Data
     func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO
     func uploadHealthKitData(requestDTO: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO
     func syncHealthKitData(requestDTO: HealthKitSyncRequestDTO) async throws -> HealthKitSyncResponseDTO
     func getHealthKitSyncStatus(syncId: String) async throws -> HealthKitSyncStatusDTO
+    func getHealthKitUploadStatus(uploadId: String) async throws -> HealthKitUploadStatusDTO
+    func getProcessingStatus(id: UUID) async throws -> ProcessingStatusDTO
     
     // Endpoints for Insights
     func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO
     func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO
+    func getInsight(id: String) async throws -> InsightGenerationResponseDTO
+    func getInsightsServiceStatus() async throws -> ServiceStatusResponseDTO
     
-    // Other endpoint methods will be added here later.
+    // Endpoints for PAT Analysis
+    func analyzeStepData(requestDTO: StepDataRequestDTO) async throws -> AnalysisResponseDTO
+    func analyzeActigraphy(requestDTO: DirectActigraphyRequestDTO) async throws -> AnalysisResponseDTO
+    func getPATAnalysis(id: String) async throws -> PATAnalysisResponseDTO
+    func getPATServiceHealth() async throws -> ServiceStatusResponseDTO
 }
 
 /// The concrete implementation of the API client.
@@ -95,6 +107,74 @@ final class APIClient: APIClientProtocol {
     
     func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO {
         let endpoint = InsightEndpoint.generate(dto: requestDTO)
+        return try await performRequest(for: endpoint)
+    }
+    
+    // MARK: - Additional Auth Methods
+    
+    func refreshToken(requestDTO: RefreshTokenRequestDTO) async throws -> TokenResponseDTO {
+        let endpoint = AuthEndpoint.refreshToken(dto: requestDTO)
+        return try await performRequest(for: endpoint, requiresAuth: false)
+    }
+    
+    func logout() async throws -> MessageResponseDTO {
+        let endpoint = AuthEndpoint.logout
+        return try await performRequest(for: endpoint)
+    }
+    
+    func getCurrentUser() async throws -> UserSessionResponseDTO {
+        let endpoint = AuthEndpoint.getCurrentUser
+        return try await performRequest(for: endpoint)
+    }
+    
+    func verifyEmail(code: String) async throws -> MessageResponseDTO {
+        let endpoint = AuthEndpoint.verifyEmail(code: code)
+        return try await performRequest(for: endpoint)
+    }
+    
+    // MARK: - Additional Health Data Methods
+    
+    func getHealthKitUploadStatus(uploadId: String) async throws -> HealthKitUploadStatusDTO {
+        let endpoint = HealthDataEndpoint.getUploadStatus(uploadId: uploadId)
+        return try await performRequest(for: endpoint)
+    }
+    
+    func getProcessingStatus(id: UUID) async throws -> ProcessingStatusDTO {
+        let endpoint = HealthDataEndpoint.getProcessingStatus(id: id)
+        return try await performRequest(for: endpoint)
+    }
+    
+    // MARK: - Additional Insights Methods
+    
+    func getInsight(id: String) async throws -> InsightGenerationResponseDTO {
+        let endpoint = InsightEndpoint.getInsight(id: id)
+        return try await performRequest(for: endpoint)
+    }
+    
+    func getInsightsServiceStatus() async throws -> ServiceStatusResponseDTO {
+        let endpoint = InsightEndpoint.getServiceStatus
+        return try await performRequest(for: endpoint)
+    }
+    
+    // MARK: - PAT Analysis Methods
+    
+    func analyzeStepData(requestDTO: StepDataRequestDTO) async throws -> AnalysisResponseDTO {
+        let endpoint = PATEndpoint.analyzeStepData(dto: requestDTO)
+        return try await performRequest(for: endpoint)
+    }
+    
+    func analyzeActigraphy(requestDTO: DirectActigraphyRequestDTO) async throws -> AnalysisResponseDTO {
+        let endpoint = PATEndpoint.analyzeActigraphy(dto: requestDTO)
+        return try await performRequest(for: endpoint)
+    }
+    
+    func getPATAnalysis(id: String) async throws -> PATAnalysisResponseDTO {
+        let endpoint = PATEndpoint.getAnalysis(id: id)
+        return try await performRequest(for: endpoint)
+    }
+    
+    func getPATServiceHealth() async throws -> ServiceStatusResponseDTO {
+        let endpoint = PATEndpoint.getServiceHealth
         return try await performRequest(for: endpoint)
     }
 

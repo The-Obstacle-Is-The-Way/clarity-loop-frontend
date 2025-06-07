@@ -10,6 +10,8 @@ import Foundation
 enum InsightEndpoint {
     case getHistory(userId: String, limit: Int, offset: Int)
     case generate(dto: InsightGenerationRequestDTO)
+    case getInsight(id: String)
+    case getServiceStatus
 }
 
 extension InsightEndpoint: Endpoint {
@@ -19,12 +21,16 @@ extension InsightEndpoint: Endpoint {
             return "/insights/history/\(userId)"
         case .generate:
             return "/insights/generate"
+        case .getInsight(let id):
+            return "/insights/\(id)"
+        case .getServiceStatus:
+            return "/insights/status"
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .getHistory:
+        case .getHistory, .getInsight, .getServiceStatus:
             return .get
         case .generate:
             return .post
@@ -33,7 +39,7 @@ extension InsightEndpoint: Endpoint {
 
     func body(encoder: JSONEncoder) throws -> Data? {
         switch self {
-        case .getHistory:
+        case .getHistory, .getInsight, .getServiceStatus:
             return nil
         case .generate(let dto):
             return try encoder.encode(dto)
@@ -60,8 +66,8 @@ extension InsightEndpoint: Endpoint {
             ]
             request.url = components?.url
         
-        case .generate:
-            // The body is already handled in the `body(encoder:)` function.
+        case .generate, .getInsight, .getServiceStatus:
+            // These endpoints don't need query parameters
             break
         }
         

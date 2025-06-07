@@ -12,6 +12,8 @@ enum HealthDataEndpoint {
     case uploadHealthKit(dto: HealthKitUploadRequestDTO)
     case syncHealthKit(dto: HealthKitSyncRequestDTO)
     case getSyncStatus(syncId: String)
+    case getUploadStatus(uploadId: String)
+    case getProcessingStatus(id: UUID)
 }
 
 extension HealthDataEndpoint: Endpoint {
@@ -25,12 +27,16 @@ extension HealthDataEndpoint: Endpoint {
             return "/health-data/sync"
         case .getSyncStatus(let syncId):
             return "/health-data/sync/\(syncId)"
+        case .getUploadStatus(let uploadId):
+            return "/health-data/upload/\(uploadId)/status"
+        case .getProcessingStatus(let id):
+            return "/health-data/processing/\(id.uuidString)"
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .getMetrics, .getSyncStatus:
+        case .getMetrics, .getSyncStatus, .getUploadStatus, .getProcessingStatus:
             return .get
         case .uploadHealthKit, .syncHealthKit:
             return .post
@@ -39,7 +45,7 @@ extension HealthDataEndpoint: Endpoint {
 
     func body(encoder: JSONEncoder) throws -> Data? {
         switch self {
-        case .getMetrics, .getSyncStatus:
+        case .getMetrics, .getSyncStatus, .getUploadStatus, .getProcessingStatus:
             return nil
         case .uploadHealthKit(let dto):
             return try encoder.encode(dto)
@@ -68,7 +74,7 @@ extension HealthDataEndpoint: Endpoint {
                 URLQueryItem(name: "limit", value: "\(limit)"),
             ]
             request.url = components?.url
-        case .uploadHealthKit, .syncHealthKit, .getSyncStatus:
+        case .uploadHealthKit, .syncHealthKit, .getSyncStatus, .getUploadStatus, .getProcessingStatus:
             // These endpoints don't need query parameters
             break
         }

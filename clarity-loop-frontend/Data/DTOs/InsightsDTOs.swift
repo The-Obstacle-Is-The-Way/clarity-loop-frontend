@@ -82,8 +82,26 @@ struct ServiceStatusResponseDTO: Codable {
 struct ServiceStatusDataDTO: Codable {
     let service: String
     let status: String // "healthy", "degraded", "unhealthy"
-    let modelInfo: [String: AnyCodable] // Simplified to avoid duplication
+    let modelInfo: ModelInfoDTO
     let timestamp: Date
     let uptime: Double? // in seconds
     let version: String?
+}
+
+struct ModelInfoDTO: Codable {
+    let modelName: String
+    let projectId: String
+    let initialized: Bool
+    let capabilities: [String]
+}
+
+struct ProcessingStatusDTO: Codable {
+    let processingId: UUID
+    let status: String // "pending", "processing", "completed", "failed"
+    let progress: Double? // 0.0 to 1.0
+    let estimatedCompletion: Date?
+    let message: String?
+    let error: String?
+    let createdAt: Date
+    let updatedAt: Date
 } 
