@@ -24,6 +24,7 @@ final class GenerateInsightUseCase {
         case .dailySummary:
             return try await insightAIService.generateInsightFromHealthData(
                 metrics: healthData.data,
+                patAnalysis: nil,
                 customContext: context ?? "Generate a daily health summary with actionable insights."
             )
         case .chatResponse(let userMessage, let conversationHistory):
