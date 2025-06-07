@@ -4,16 +4,19 @@ import XCTest
 final class HealthKitServiceTests: XCTestCase {
 
     var healthKitService: HealthKitService!
+    var mockAPIClient: MockAPIClient!
     // TODO: Add mock for HKHealthStore
 
     override func setUpWithError() throws {
         try super.setUpWithError()
+        mockAPIClient = MockAPIClient()
         // TODO: Initialize HealthKitService with a mock health store
-        healthKitService = HealthKitService()
+        healthKitService = HealthKitService(apiClient: mockAPIClient)
     }
 
     override func tearDownWithError() throws {
         healthKitService = nil
+        mockAPIClient = nil
         try super.tearDownWithError()
     }
 

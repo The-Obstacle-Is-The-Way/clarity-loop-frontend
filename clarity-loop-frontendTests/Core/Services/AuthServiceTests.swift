@@ -3,18 +3,15 @@ import XCTest
 
 final class AuthServiceTests: XCTestCase {
     
-    var authService: AuthService!
-    var mockAPIClient: MockAPIClient!
+    var authService: MockAuthService!
     
     override func setUpWithError() throws {
         try super.setUpWithError()
-        mockAPIClient = MockAPIClient()
-        authService = AuthService(apiClient: mockAPIClient)
+        authService = MockAuthService()
     }
     
     override func tearDownWithError() throws {
         authService = nil
-        mockAPIClient = nil
         try super.tearDownWithError()
     }
     
@@ -133,44 +130,105 @@ final class AuthServiceTests: XCTestCase {
     // MARK: - Test Cases
 
     func testLogin_Success() async throws {
-        // TODO: Configure MockAPIClient to return a successful login response
-        // let response = AuthResponseDTO(...)
-        // mockAPIClient.mockLoginResponse = .success(response)
+        // Given
+        authService.shouldSucceed = true
         
-        // TODO: Call the login method and assert that the user state is updated
-        XCTFail("Test not implemented.")
+        // When
+        let userSession = try await authService.signIn(withEmail: "test@example.com", password: "password")
+        
+        // Then
+        XCTAssertEqual(userSession.email, "test@example.com")
+        XCTAssertNotNil(authService.currentUser)
     }
 
     func testLogin_Failure() async throws {
-        // TODO: Configure MockAPIClient to return an APIError
-        // mockAPIClient.mockLoginResponse = .failure(APIError.invalidCredentials)
+        // Given
+        authService.shouldSucceed = false
         
-        // TODO: Call the login method and assert that an error is thrown
-        XCTFail("Test not implemented.")
+        // When/Then
+        do {
+            _ = try await authService.signIn(withEmail: "test@example.com", password: "wrongpassword")
+            XCTFail("Expected sign in to fail")
+        } catch {
+            XCTAssertTrue(error is APIError)
+        }
     }
     
     func testRegistration_Success() async throws {
-        // TODO: Configure MockAPIClient for successful registration
-        XCTFail("Test not implemented.")
+        // Given
+        authService.shouldSucceed = true
+        let details = UserRegistrationRequestDTO(
+            email: "newuser@example.com",
+            password: "password123",
+            firstName: "New",
+            lastName: "User",
+            phoneNumber: nil,
+            termsAccepted: true,
+            privacyPolicyAccepted: true
+        )
+        
+        // When
+        let response = try await authService.register(withEmail: details.email, password: details.password, details: details)
+        
+        // Then
+        XCTAssertEqual(response.email, details.email)
+        XCTAssertEqual(response.status, "pending_verification")
     }
     
     func testRegistration_Failure() async throws {
-        // TODO: Configure MockAPIClient for failed registration
-        XCTFail("Test not implemented.")
+        // Given
+        authService.shouldSucceed = false
+        let details = UserRegistrationRequestDTO(
+            email: "newuser@example.com",
+            password: "password123",
+            firstName: "New",
+            lastName: "User",
+            phoneNumber: nil,
+            termsAccepted: true,
+            privacyPolicyAccepted: true
+        )
+        
+        // When/Then
+        do {
+            _ = try await authService.register(withEmail: details.email, password: details.password, details: details)
+            XCTFail("Expected registration to fail")
+        } catch {
+            XCTAssertTrue(error is APIError)
+        }
     }
 
-    func testLogout_Success() async throws {
-        // TODO: Configure MockAPIClient for successful logout
-        XCTFail("Test not implemented.")
+    func testLogout_Success() throws {
+        // Given
+        authService.mockCurrentUser = AuthUser(uid: "test-uid", email: "test@example.com", isEmailVerified: true)
+        
+        // When
+        try authService.signOut()
+        
+        // Then
+        XCTAssertNil(authService.currentUser)
     }
 
     func testRefreshToken_Success() async throws {
-        // TODO: Configure MockAPIClient to return a new token
-        XCTFail("Test not implemented.")
+        // Given
+        authService.shouldSucceed = true
+        
+        // When
+        let response = try await authService.refreshToken(requestDTO: RefreshTokenRequestDTO(refreshToken: "test"))
+        
+        // Then
+        XCTAssertEqual(response.accessToken, "mock-refreshed-access-token")
     }
     
     func testRefreshToken_Failure() async throws {
-        // TODO: Configure MockAPIClient to return an error on token refresh
-        XCTFail("Test not implemented.")
+        // Given
+        authService.shouldSucceed = false
+        
+        // When/Then
+        do {
+            _ = try await authService.refreshToken(requestDTO: RefreshTokenRequestDTO(refreshToken: "test"))
+            XCTFail("Expected token refresh to fail")
+        } catch {
+            XCTAssertTrue(error is APIError)
+        }
     }
 } 

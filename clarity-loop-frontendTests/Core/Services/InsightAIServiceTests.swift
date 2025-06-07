@@ -44,8 +44,3 @@ final class InsightAIServiceTests: XCTestCase {
         XCTFail("Test not implemented")
     }
 }
-
-// TODO: Create a MockAPIClient if one doesn't already exist
-class MockAPIClient: APIClientProtocol {
-    // Implement protocol methods to return mock data or errors
-} 

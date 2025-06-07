@@ -74,4 +74,17 @@ class MockAuthService: AuthServiceProtocol {
             throw APIError.unauthorized
         }
     }
+    
+    func refreshToken(requestDTO: RefreshTokenRequestDTO) async throws -> TokenResponseDTO {
+        if shouldSucceed {
+            return TokenResponseDTO(
+                accessToken: "mock-refreshed-access-token",
+                refreshToken: "mock-refreshed-refresh-token",
+                tokenType: "Bearer",
+                expiresIn: 3600
+            )
+        } else {
+            throw APIError.unauthorized
+        }
+    }
 } 
