@@ -9,22 +9,13 @@ import FirebaseAuth
 import SwiftUI
 
 struct DashboardView: View {
-    @StateObject private var viewModel: DashboardViewModel
     @Environment(\.healthKitService) private var healthKitService
+    @Environment(\.insightsRepository) private var insightsRepository
     
-    // Custom initializer to inject dependencies
-    init() {
-        // This is a temporary solution for dependency injection.
-        // A proper composition root will be established later.
-        guard let apiClient = APIClient(tokenProvider: {
-            try? await Auth.auth().currentUser?.getIDToken()
-        }) else {
-            fatalError("Failed to initialize APIClient")
-        }
-        let insightsRepo = RemoteInsightsRepository(apiClient: apiClient)
-        let healthKitService = HealthKitService(apiClient: apiClient)
-        _viewModel = StateObject(wrappedValue: DashboardViewModel(insightsRepo: insightsRepo, healthKitService: healthKitService))
-    }
+    @StateObject private var viewModel = DashboardViewModel(
+        insightsRepo: MockInsightsRepository(),
+        healthKitService: MockHealthKitService()
+    )
 
     var body: some View {
         NavigationStack {
