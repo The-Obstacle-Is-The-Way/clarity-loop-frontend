@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(AuthViewModel.self) private var authViewModel
+    @Environment(\.authViewModel) private var authViewModel
     @Environment(\.authService) private var authService
 
     var body: some View {

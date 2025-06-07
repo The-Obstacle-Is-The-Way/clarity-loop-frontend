@@ -4,6 +4,7 @@ import SwiftUI
 
 /// The key for accessing the `AuthServiceProtocol` in the SwiftUI Environment.
 struct AuthServiceKey: EnvironmentKey {
+    typealias Value = AuthServiceProtocol
     static var defaultValue: AuthServiceProtocol {
         // Create a default APIClient for the default AuthService
         let defaultAPIClient: APIClientProtocol = {
@@ -22,12 +23,14 @@ struct AuthServiceKey: EnvironmentKey {
 
 /// The key for accessing the `AuthViewModel` in the SwiftUI Environment.
 struct AuthViewModelKey: EnvironmentKey {
+    typealias Value = AuthViewModel
     static var defaultValue: AuthViewModel {
         fatalError("AuthViewModel must be explicitly provided in the environment")
     }
 }
 
 private struct APIClientKey: EnvironmentKey {
+    typealias Value = APIClientProtocol
     static let defaultValue: APIClientProtocol = {
         guard let client = APIClient(
             baseURLString: "https://api.example.com",
@@ -42,6 +45,7 @@ private struct APIClientKey: EnvironmentKey {
 // MARK: - Repository Protocols
 
 private struct HealthDataRepositoryKey: EnvironmentKey {
+    typealias Value = HealthDataRepositoryProtocol
     // Use real implementation since mocks are maintained in test target only
     static let defaultValue: HealthDataRepositoryProtocol = RemoteHealthDataRepository(
         apiClient: APIClient(baseURLString: "https://crave-trinity--clarity-backend-fastapi-app.modal.run", tokenProvider: { nil })!
@@ -49,18 +53,21 @@ private struct HealthDataRepositoryKey: EnvironmentKey {
 }
 
 private struct InsightsRepositoryKey: EnvironmentKey {
+    typealias Value = InsightsRepositoryProtocol
     static let defaultValue: InsightsRepositoryProtocol = RemoteInsightsRepository(
         apiClient: APIClient(baseURLString: "https://crave-trinity--clarity-backend-fastapi-app.modal.run", tokenProvider: { nil })!
     )
 }
 
 private struct UserRepositoryKey: EnvironmentKey {
+    typealias Value = UserRepositoryProtocol
     static let defaultValue: UserRepositoryProtocol = RemoteUserRepository(
         apiClient: APIClient(baseURLString: "https://crave-trinity--clarity-backend-fastapi-app.modal.run", tokenProvider: { nil })!
     )
 }
 
 private struct HealthKitServiceKey: EnvironmentKey {
+    typealias Value = HealthKitServiceProtocol
     static let defaultValue: HealthKitServiceProtocol = {
         let defaultAPIClient: APIClientProtocol = {
             guard let client = APIClient(

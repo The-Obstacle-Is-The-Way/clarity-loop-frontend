@@ -50,12 +50,12 @@ struct AutoFillCompatibleSecureField: View {
     VStack {
         CustomSecureField(text: $password1, placeholder: "Basic SecureField")
             .padding()
-            .background(Color(.systemGray6))
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(8)
         
         AutoFillCompatibleSecureField(text: $password2, placeholder: "Enhanced SecureField")
             .padding()
-            .background(Color(.systemGray6))
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(8)
     }
     .padding()
