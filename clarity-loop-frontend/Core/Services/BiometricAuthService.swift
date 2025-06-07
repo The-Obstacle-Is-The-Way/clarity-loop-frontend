@@ -1,6 +1,7 @@
 import Foundation
 import LocalAuthentication
 import Observation
+import UIKit
 
 @Observable
 final class BiometricAuthService: @unchecked Sendable {
@@ -11,9 +12,16 @@ final class BiometricAuthService: @unchecked Sendable {
     var isAvailable = false
     var lastAuthenticationDate: Date?
     
-    private let context = LAContext()
+    var context: LAContext = LAContext()
+    
     private let userDefaults = UserDefaults.standard
     private let biometricEnabledKey = "biometric_auth_enabled"
+    
+    var isAppObscured = false
+    var shouldBlurOnBackground = true
+    var isJailbroken = false
+    
+    private var blurView: UIView?
     
     // MARK: - Initialization
     init() {

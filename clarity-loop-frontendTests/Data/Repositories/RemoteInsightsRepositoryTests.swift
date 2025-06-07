@@ -21,17 +21,41 @@ final class RemoteInsightsRepositoryTests: XCTestCase {
     // MARK: - Test Cases
 
     func testFetchInsights_Success() async throws {
-        // TODO: Configure mockAPIClient to return insights data
-        XCTFail("Test not implemented.")
+        // Given
+        mockAPIClient.shouldSucceed = true
+
+        // When
+        let insights = try await insightsRepository.getInsightHistory(userId: "test", limit: 10, offset: 0)
+
+        // Then
+        XCTAssertNotNil(insights)
+        XCTAssertTrue(insights.success)
     }
 
     func testFetchInsights_Failure() async throws {
-        // TODO: Configure mockAPIClient to return an error
-        XCTFail("Test not implemented.")
+        // Given
+        mockAPIClient.shouldSucceed = false
+
+        // When / Then
+        do {
+            _ = try await insightsRepository.getInsightHistory(userId: "test", limit: 10, offset: 0)
+            XCTFail("Should have thrown an error")
+        } catch {
+            XCTAssertNotNil(error)
+        }
     }
 
     func testFetchInsights_Empty() async throws {
-        // TODO: Configure mockAPIClient to return an empty list of insights
-        XCTFail("Test not implemented.")
+        // Given
+        mockAPIClient.shouldSucceed = true
+        // You might need to configure your mock to return an empty array specifically
+        
+        // When
+        let insights = try await insightsRepository.getInsightHistory(userId: "test", limit: 10, offset: 0)
+        
+        // Then
+        XCTAssertNotNil(insights)
+        XCTAssertTrue(insights.success)
+        XCTAssertTrue(insights.data.insights.isEmpty)
     }
 } 

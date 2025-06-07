@@ -69,7 +69,7 @@ final class SyncHealthDataUseCase {
         if dailyMetrics.stepCount > 0 {
             samples.append(HealthKitSampleDTO(
                 sampleType: "stepCount",
-                value: dailyMetrics.stepCount,
+                value: Double(dailyMetrics.stepCount),
                 categoryValue: nil,
                 unit: "count",
                 startDate: Calendar.current.startOfDay(for: date),

@@ -7,18 +7,20 @@ import LocalAuthentication
 final class BiometricAuthServiceTests: XCTestCase {
     
     var biometricAuthService: BiometricAuthService!
-    // TODO: Add mock for LocalAuthentication context
+    var mockContext: MockLAContext!
     
     // MARK: - Test Setup
     
     override func setUpWithError() throws {
         try super.setUpWithError()
-        // TODO: Initialize BiometricAuthService with mock context
         biometricAuthService = BiometricAuthService()
+        mockContext = MockLAContext()
+        biometricAuthService.context = mockContext
     }
     
     override func tearDownWithError() throws {
         biometricAuthService = nil
+        mockContext = nil
         try super.tearDownWithError()
     }
     
@@ -182,33 +184,100 @@ final class BiometricAuthServiceTests: XCTestCase {
 
     // MARK: - Test Cases
 
-    func testAuthenticationWithBiometrics_Success() {
-        // TODO: Implement test case for successful biometric authentication
-        XCTFail("Test not implemented")
+    func testAuthenticationWithBiometrics_Success() async throws {
+        // Given
+        mockContext.mockCanEvaluatePolicy = true
+        mockContext.mockError = nil
+        biometricAuthService.isBiometricEnabled = true
+
+        // When
+        let success = try await biometricAuthService.authenticateWithBiometrics(reason: "Test")
+
+        // Then
+        XCTAssertTrue(success)
     }
 
-    func testAuthenticationWithBiometrics_Failure() {
-        // TODO: Implement test case for failed biometric authentication
-        XCTFail("Test not implemented")
+    func testAuthenticationWithBiometrics_Failure() async throws {
+        // Given
+        mockContext.mockCanEvaluatePolicy = true
+        mockContext.mockError = NSError(domain: "TestError", code: -1, userInfo: nil)
+        biometricAuthService.isBiometricEnabled = true
+
+        // When / Then
+        do {
+            _ = try await biometricAuthService.authenticateWithBiometrics(reason: "Test")
+            XCTFail("Should have thrown an error")
+        } catch {
+            XCTAssertNotNil(error)
+        }
     }
 
     func testEvaluatePolicyDomainState() {
-        // TODO: Implement test to check if domain state changes are correctly evaluated
-        XCTFail("Test not implemented")
+        // Given
+        mockContext.mockCanEvaluatePolicy = true
+        
+        // When
+        biometricAuthService.checkBiometricAvailability()
+        
+        // Then
+        XCTAssertTrue(biometricAuthService.isAvailable)
     }
 
     func testBiometryType_FaceID() {
-        // TODO: Mock context to return FaceID and verify
-        XCTFail("Test not implemented")
+        // Given
+        mockContext.mockBiometryType = .faceID
+        
+        // When
+        biometricAuthService.checkBiometricAvailability()
+        
+        // Then
+        XCTAssertEqual(biometricAuthService.biometricType, .faceID)
     }
 
     func testBiometryType_TouchID() {
-        // TODO: Mock context to return TouchID and verify
-        XCTFail("Test not implemented")
+        // Given
+        mockContext.mockBiometryType = .touchID
+        
+        // When
+        biometricAuthService.checkBiometricAvailability()
+        
+        // Then
+        XCTAssertEqual(biometricAuthService.biometricType, .touchID)
     }
 
     func testBiometryType_None() {
-        // TODO: Mock context to return None and verify
-        XCTFail("Test not implemented")
+        // Given
+        mockContext.mockBiometryType = .none
+        
+        // When
+        biometricAuthService.checkBiometricAvailability()
+        
+        // Then
+        XCTAssertEqual(biometricAuthService.biometricType, .none)
+    }
+}
+
+class MockLAContext: LAContext {
+    var mockBiometryType: LABiometryType = .none
+    var mockError: Error?
+    var mockCanEvaluatePolicy = true
+
+    override var biometryType: LABiometryType {
+        return mockBiometryType
+    }
+
+    override func canEvaluatePolicy(_ policy: LAPolicy, error: NSErrorPointer) -> Bool {
+        if let mockError = mockError {
+            error?.pointee = mockError as NSError
+        }
+        return mockCanEvaluatePolicy
+    }
+
+    override func evaluatePolicy(_ policy: LAPolicy, localizedReason: String, reply: @escaping (Bool, Error?) -> Void) {
+        if let mockError = mockError {
+            reply(false, mockError)
+        } else {
+            reply(mockCanEvaluatePolicy, nil)
+        }
     }
 } 

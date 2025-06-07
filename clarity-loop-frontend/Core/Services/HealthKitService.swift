@@ -194,7 +194,7 @@ class HealthKitService: HealthKitServiceProtocol {
         
         return DailyHealthMetrics(
             date: date,
-            stepCount: stepCount,
+            stepCount: Int(stepCount),
             restingHeartRate: restingHeartRate,
             sleepData: sleepData
         )

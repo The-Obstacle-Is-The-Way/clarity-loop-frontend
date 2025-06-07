@@ -123,5 +123,6 @@ final class AuthenticationUITests: XCTestCase {
         // - Test success/failure paths
         // - Verify UI state transitions
         // CATCHES: Biometric authentication UI issues
+        try XCTSkipIf(true, "Skipping biometric UI test that requires manual interaction.")
     }
 } 

@@ -1,3 +1,5 @@
+import Foundation
+import UIKit
 import XCTest
 @testable import clarity_loop_frontend
 
