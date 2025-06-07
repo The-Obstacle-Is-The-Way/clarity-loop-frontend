@@ -20,17 +20,17 @@ extension HealthDataEndpoint: Endpoint {
     var path: String {
         switch self {
         case .getMetrics:
-            return "/health-data"
+            return "/api/v1/health-data"
         case .uploadHealthKit:
-            return "/health-data/upload"
+            return "/api/v1/health-data/upload"
         case .syncHealthKit:
-            return "/health-data/sync"
+            return "/api/v1/health-data/sync"
         case .getSyncStatus(let syncId):
-            return "/health-data/sync/\(syncId)"
+            return "/api/v1/health-data/sync/\(syncId)"
         case .getUploadStatus(let uploadId):
-            return "/health-data/upload/\(uploadId)/status"
+            return "/api/v1/health-data/upload/\(uploadId)/status"
         case .getProcessingStatus(let id):
-            return "/health-data/processing/\(id.uuidString)"
+            return "/api/v1/health-data/processing/\(id.uuidString)"
         }
     }
 

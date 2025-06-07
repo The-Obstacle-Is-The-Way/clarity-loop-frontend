@@ -11,13 +11,13 @@ extension PATEndpoint: Endpoint {
     var path: String {
         switch self {
         case .analyzeStepData:
-            return "/pat/analyze/steps"
+            return "/api/v1/pat/analyze-step-data"
         case .analyzeActigraphy:
-            return "/pat/analyze/actigraphy"
+            return "/api/v1/pat/analyze"
         case .getAnalysis(let id):
-            return "/pat/analysis/\(id)"
+            return "/api/v1/pat/analysis/\(id)"
         case .getServiceHealth:
-            return "/pat/health"
+            return "/api/v1/pat/health"
         }
     }
 

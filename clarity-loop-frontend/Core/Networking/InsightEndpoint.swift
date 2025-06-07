@@ -18,13 +18,13 @@ extension InsightEndpoint: Endpoint {
     var path: String {
         switch self {
         case .getHistory(let userId, _, _):
-            return "/insights/history/\(userId)"
+            return "/api/v1/insights/history/\(userId)"
         case .generate:
-            return "/insights/generate"
+            return "/api/v1/insights/generate"
         case .getInsight(let id):
-            return "/insights/\(id)"
+            return "/api/v1/insights/\(id)"
         case .getServiceStatus:
-            return "/insights/status"
+            return "/api/v1/insights/status"
         }
     }
 

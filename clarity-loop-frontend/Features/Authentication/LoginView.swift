@@ -70,7 +70,7 @@ struct LoginView: View {
 #Preview {
     // Create a preview-safe APIClient
     let previewAPIClient = APIClient(
-        baseURLString: "https://api.example.com",
+        baseURLString: "https://crave-trinity--clarity-backend-fastapi-app.modal.run",
         tokenProvider: { nil }
     )!
     

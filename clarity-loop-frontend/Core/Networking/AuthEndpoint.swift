@@ -12,17 +12,17 @@ enum AuthEndpoint: Endpoint {
     var path: String {
         switch self {
         case .register:
-            return "/auth/register"
+            return "/api/v1/auth/register"
         case .login:
-            return "/auth/login"
+            return "/api/v1/auth/login"
         case .refreshToken:
-            return "/auth/refresh"
+            return "/api/v1/auth/refresh"
         case .logout:
-            return "/auth/logout"
+            return "/api/v1/auth/logout"
         case .getCurrentUser:
-            return "/auth/me"
+            return "/api/v1/auth/me"
         case .verifyEmail:
-            return "/auth/verify-email"
+            return "/api/v1/auth/verify-email"
         }
     }
 
