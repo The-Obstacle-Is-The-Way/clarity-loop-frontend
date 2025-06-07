@@ -151,13 +151,16 @@ final class AnalyzePATDataUseCase {
             let response = try await apiClient.getPATAnalysis(id: analysisId)
             
             if response.status == "completed" || response.status == "failed" {
+                // Convert [String: Double] to [String: AnyCodable]
+                let patFeatures: [String: AnyCodable]? = response.patFeatures?.mapValues { AnyCodable($0) }
+                
                 return PATAnalysisResult(
-                    analysisId: response.analysisId,
+                    analysisId: response.id,
                     status: response.status,
-                    patFeatures: response.patFeatures,
-                    confidence: response.confidence,
+                    patFeatures: patFeatures,
+                    confidence: response.analysis?.confidenceScore,
                     completedAt: response.completedAt,
-                    error: response.error
+                    error: response.errorMessage
                 )
             }
             

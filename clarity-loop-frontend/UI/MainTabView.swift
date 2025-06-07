@@ -40,7 +40,12 @@ struct MainTabView: View {
 }
 
 #Preview {
+    let previewAPIClient = APIClient(
+        baseURLString: "https://api.example.com",
+        tokenProvider: { nil }
+    )!
+    
     MainTabView()
-        .environment(\.authService, MockAuthService())
-        .environment(\.healthKitService, MockHealthKitService())
+        .environment(\.authService, AuthService(apiClient: previewAPIClient))
+        .environment(\.healthKitService, HealthKitService())
 }

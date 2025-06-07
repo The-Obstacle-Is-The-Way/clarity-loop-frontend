@@ -1,16 +1,20 @@
 import Foundation
+import UIKit
 
 final class SyncHealthDataUseCase {
     
     private let healthKitService: HealthKitServiceProtocol
     private let healthDataRepository: HealthDataRepositoryProtocol
+    private let apiClient: APIClientProtocol
     
     init(
         healthKitService: HealthKitServiceProtocol,
-        healthDataRepository: HealthDataRepositoryProtocol
+        healthDataRepository: HealthDataRepositoryProtocol,
+        apiClient: APIClientProtocol
     ) {
         self.healthKitService = healthKitService
         self.healthDataRepository = healthDataRepository
+        self.apiClient = apiClient
     }
     
     func execute(
@@ -35,8 +39,8 @@ final class SyncHealthDataUseCase {
                 // Convert to HealthKit upload format
                 let uploadRequest = try buildUploadRequest(from: dailyMetrics, date: currentDate)
                 
-                // Upload to backend
-                let uploadResponse = try await healthDataRepository.uploadHealthKitData(requestDTO: uploadRequest)
+                // Upload to backend (direct API call since this is an infrastructure operation)
+                let uploadResponse = try await apiClient.uploadHealthKitData(requestDTO: uploadRequest)
                 
                 syncResult.successfulDays += 1
                 syncResult.uploadedSamples += uploadResponse.processedSamples
@@ -64,47 +68,79 @@ final class SyncHealthDataUseCase {
         // Add step count sample
         if dailyMetrics.stepCount > 0 {
             samples.append(HealthKitSampleDTO(
-                identifier: "HKQuantityTypeIdentifierStepCount",
-                value: Double(dailyMetrics.stepCount),
+                sampleType: "stepCount",
+                value: dailyMetrics.stepCount,
+                categoryValue: nil,
                 unit: "count",
                 startDate: Calendar.current.startOfDay(for: date),
                 endDate: Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: date)) ?? date,
-                metadata: nil
+                metadata: nil,
+                sourceRevision: createSourceRevision()
             ))
         }
         
         // Add resting heart rate sample
         if let heartRate = dailyMetrics.restingHeartRate {
             samples.append(HealthKitSampleDTO(
-                identifier: "HKQuantityTypeIdentifierRestingHeartRate",
+                sampleType: "restingHeartRate",
                 value: heartRate,
+                categoryValue: nil,
                 unit: "bpm",
                 startDate: date,
                 endDate: date,
-                metadata: nil
+                metadata: nil,
+                sourceRevision: createSourceRevision()
             ))
         }
         
         // Add sleep data samples
         if let sleepData = dailyMetrics.sleepData {
+            // Calculate sleep start/end from total time asleep and time in bed
+            let sleepStart = Calendar.current.startOfDay(for: date).addingTimeInterval(22 * 3600) // Assume 10 PM start
+            let sleepEnd = sleepStart.addingTimeInterval(sleepData.totalTimeInBed)
+            
             samples.append(HealthKitSampleDTO(
-                identifier: "HKCategoryTypeIdentifierSleepAnalysis",
-                value: Double(sleepData.totalSleepMinutes),
+                sampleType: "sleepAnalysis",
+                value: sleepData.totalTimeAsleep / 60.0, // Convert to minutes
+                categoryValue: 1, // HKCategoryValueSleepAnalysis.asleep
                 unit: "min",
-                startDate: sleepData.sleepStart,
-                endDate: sleepData.sleepEnd,
+                startDate: sleepStart,
+                endDate: sleepEnd,
                 metadata: [
                     "sleep_efficiency": AnyCodable(sleepData.sleepEfficiency),
-                    "time_to_sleep_minutes": AnyCodable(sleepData.timeToSleepMinutes)
-                ]
+                    "total_time_in_bed": AnyCodable(sleepData.totalTimeInBed / 60.0)
+                ],
+                sourceRevision: createSourceRevision()
             ))
         }
         
         return HealthKitUploadRequestDTO(
+            userId: "current-user-id", // TODO: Get from auth service
             samples: samples,
-            uploadSource: "iOS_HealthKit",
-            clientTimestamp: Date(),
-            syncToken: UUID().uuidString
+            deviceInfo: createDeviceInfo(),
+            timestamp: Date()
+        )
+    }
+    
+    private func createSourceRevision() -> SourceRevisionDTO {
+        return SourceRevisionDTO(
+            source: SourceDTO(
+                name: "CLARITY Pulse",
+                bundleIdentifier: Bundle.main.bundleIdentifier ?? "com.novamindnyc.clarity-loop-frontend"
+            ),
+            version: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
+            productType: UIDevice.current.model,
+            operatingSystemVersion: UIDevice.current.systemVersion
+        )
+    }
+    
+    private func createDeviceInfo() -> DeviceInfoDTO {
+        return DeviceInfoDTO(
+            deviceModel: UIDevice.current.model,
+            systemName: UIDevice.current.systemName,
+            systemVersion: UIDevice.current.systemVersion,
+            appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown",
+            timeZone: TimeZone.current.identifier
         )
     }
 }

@@ -68,5 +68,11 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(viewModel: LoginViewModel(authService: MockAuthService()))
+    // Create a preview-safe APIClient
+    let previewAPIClient = APIClient(
+        baseURLString: "https://api.example.com",
+        tokenProvider: { nil }
+    )!
+    
+    LoginView(viewModel: LoginViewModel(authService: AuthService(apiClient: previewAPIClient)))
 } 

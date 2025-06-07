@@ -62,13 +62,13 @@ struct TimeRangeDTO: Codable {
 struct PATServiceHealthDTO: Codable {
     let service: String
     let status: String
-    let model: ModelInfoDTO
+    let model: PATModelInfoDTO
     let timestamp: Date
     let capabilities: [String]
     let version: String
 }
 
-struct ModelInfoDTO: Codable {
+struct PATModelInfoDTO: Codable {
     let modelName: String
     let projectId: String
     let initialized: Bool

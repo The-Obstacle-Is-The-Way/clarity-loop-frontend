@@ -146,6 +146,31 @@ clarity-loop-frontend/
 
 ## Critical Development Notes
 
+### 🛑 COMPILATION ORDER ISSUES - DO NOT FIX WITH CODE CHANGES
+If you encounter compilation errors like:
+- `Cannot find type 'AuthServiceProtocol' in scope`
+- `Type 'AuthServiceKey' does not conform to protocol 'EnvironmentKey'`
+- Similar "cannot find" errors for types that clearly exist in the codebase
+
+**STOP CODING IMMEDIATELY** - This is an Xcode/Swift build system issue, NOT a code problem.
+
+**What NOT to do:**
+- ❌ Add imports to fix missing types
+- ❌ Move code between files
+- ❌ Duplicate type definitions
+- ❌ Remove or modify working code
+- ❌ Add @testable imports to main target files
+
+**What TO do:**
+- ✅ Tell the developer: "This is an Xcode compilation order issue"
+- ✅ Recommend: Clean Build Folder in Xcode
+- ✅ Recommend: Restart Xcode
+- ✅ Stop making code changes
+
+**Why this happens:** Swift files in the same target should see each other automatically, but sometimes the build system processes files in the wrong order or has cached outdated information.
+
+**Remember:** If types exist in the codebase but compiler says they don't exist, it's ALWAYS a build system issue, never a code issue.
+
 ### Test Target Issues
 ⚠️ **STOP CODING** if you encounter test compilation errors. Ask developer to fix test targets in Xcode since we're working in Cursor/external editor.
 
