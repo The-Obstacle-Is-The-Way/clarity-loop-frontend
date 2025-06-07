@@ -72,10 +72,49 @@ extension EnvironmentValues {
         get { self[HealthKitServiceKey.self] }
         set { self[HealthKitServiceKey.self] = newValue }
     }
+    
+    var apiClient: APIClientProtocol {
+        get { self[APIClientKey.self] }
+        set { self[APIClientKey.self] = newValue }
+    }
 }
 
 #if DEBUG
 // MARK: - Mock Implementations for Previews
+
+class MockAPIClient: APIClientProtocol {
+    func register(requestDTO: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO {
+        .init(userId: UUID(), email: "", status: "mock", verificationEmailSent: true, createdAt: Date())
+    }
+    
+    func login(requestDTO: UserLoginRequestDTO) async throws -> LoginResponseDTO {
+        fatalError("Mock Not Implemented")
+    }
+    
+    func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
+        .init(data: [])
+    }
+    
+    func uploadHealthKitData(requestDTO: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO {
+        .init(success: true, uploadId: "mock", processedSamples: 0, skippedSamples: 0, errors: nil, message: "mock")
+    }
+    
+    func syncHealthKitData(requestDTO: HealthKitSyncRequestDTO) async throws -> HealthKitSyncResponseDTO {
+        .init(success: true, syncId: "mock", status: "mock", estimatedDuration: nil, message: "mock")
+    }
+    
+    func getHealthKitSyncStatus(syncId: String) async throws -> HealthKitSyncStatusDTO {
+        .init(syncId: "mock", status: "mock", progress: 1.0, processedSamples: 0, totalSamples: 0, errors: nil, completedAt: Date())
+    }
+    
+    func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO {
+        .init(success: true, data: .init(insights: [], totalCount: 0, hasMore: false, pagination: nil), metadata: nil)
+    }
+    
+    func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO {
+        fatalError("Mock Not Implemented")
+    }
+}
 
 class MockAuthService: AuthServiceProtocol {
     var currentUser: FirebaseAuth.User? = nil

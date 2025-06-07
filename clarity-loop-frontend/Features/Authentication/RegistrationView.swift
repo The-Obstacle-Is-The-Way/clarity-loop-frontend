@@ -24,14 +24,33 @@ struct RegistrationView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding()
+            }
+
             TextField("First Name", text: $viewModel.firstName)
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+            
             TextField("Last Name", text: $viewModel.lastName)
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+
             TextField("Email", text: $viewModel.email)
                 .keyboardType(.emailAddress)
                 .autocapitalization(.none)
-            
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+
             SecureField("Password", text: $viewModel.password)
-            SecureField("Confirm Password", text: $viewModel.confirmPassword)
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
             
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
@@ -55,21 +74,22 @@ struct RegistrationView: View {
                 }
             }
             
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .font(.caption)
-            }
-            
-            Button(action: viewModel.register) {
-                if viewModel.isLoading {
-                    ProgressView()
-                } else {
+            if viewModel.isLoading {
+                ProgressView()
+            } else {
+                Button(action: {
+                    Task {
+                        await viewModel.register()
+                    }
+                }) {
                     Text("Register")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.accentColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                 }
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(viewModel.isLoading)
             
             Spacer()
             
@@ -77,9 +97,11 @@ struct RegistrationView: View {
                 presentationMode.wrappedValue.dismiss()
             }
         }
-        .textFieldStyle(.roundedBorder)
         .padding()
-        .navigationTitle("Sign Up")
-        .navigationBarBackButtonHidden(true)
+        .navigationTitle("Register")
     }
+}
+
+#Preview {
+    RegistrationView(authService: MockAuthService())
 } 

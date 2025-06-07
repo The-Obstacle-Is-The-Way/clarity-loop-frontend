@@ -139,4 +139,20 @@ final class RegistrationViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.errorMessage, "You must accept the Terms of Service and Privacy Policy.")
         XCTAssertFalse(viewModel.isLoading)
     }
+
+    func testRegister_Success() async {
+        // Given
+        viewModel.email = "test@example.com"
+        viewModel.password = "password"
+        viewModel.firstName = "Test"
+        viewModel.lastName = "User"
+        
+        // When
+        await viewModel.register()
+        
+        // Then
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertEqual(mockAuthService.registerCallCount, 1)
+    }
 } 

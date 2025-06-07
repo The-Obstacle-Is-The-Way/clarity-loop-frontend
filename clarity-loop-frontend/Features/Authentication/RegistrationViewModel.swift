@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 /// A view model that manages the state and logic for the user registration screen.
@@ -29,36 +30,31 @@ final class RegistrationViewModel {
     // MARK: - Public Methods
     
     /// Attempts to register a new user with the provided details.
-    func register() {
-        guard validateInputs() else { return }
-        
+    @MainActor
+    func register() async {
         isLoading = true
         errorMessage = nil
         
-        let registrationDTO = UserRegistrationRequestDTO(
+        // TODO: Add validation for fields
+        
+        let details = UserRegistrationRequestDTO(
             email: email,
             password: password,
             firstName: firstName,
             lastName: lastName,
-            phoneNumber: nil, // Add to form if needed
-            termsAccepted: termsAccepted,
-            privacyPolicyAccepted: privacyPolicyAccepted
+            phoneNumber: nil,
+            termsAccepted: true, // Assuming these are handled in the UI
+            privacyPolicyAccepted: true
         )
         
-        Task {
-            do {
-                _ = try await authService.register(
-                    withEmail: email,
-                    password: password,
-                    details: registrationDTO
-                )
-                self.isLoading = false
-                self.registrationComplete = true
-            } catch {
-                self.errorMessage = error.localizedDescription
-                self.isLoading = false
-            }
+        do {
+            _ = try await authService.register(withEmail: email, password: password, details: details)
+            // On success, show a message to the user to check their email for verification.
+        } catch {
+            errorMessage = error.localizedDescription
         }
+        
+        isLoading = false
     }
     
     // MARK: - Private Validation

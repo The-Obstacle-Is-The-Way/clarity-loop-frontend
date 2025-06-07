@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 /// A view model that manages the state and logic for the login screen.
@@ -7,8 +8,8 @@ final class LoginViewModel {
     // MARK: - Published Properties
     var email = ""
     var password = ""
-    var isLoading = false
     var errorMessage: String?
+    var isLoading = false
     
     // MARK: - Private Properties
     private let authService: AuthServiceProtocol
@@ -21,53 +22,33 @@ final class LoginViewModel {
     // MARK: - Public Methods
     
     /// Attempts to sign in the user with the provided credentials.
-    func signIn() {
-        // Basic validation
-        guard !email.isEmpty, !password.isEmpty else {
-            errorMessage = "Please enter both email and password."
-            return
-        }
-        
-        guard isValidEmail(email) else {
-            errorMessage = "Please enter a valid email address."
-            return
-        }
-        
+    func login() async {
         isLoading = true
         errorMessage = nil
         
-        Task {
-            do {
-                _ = try await authService.signIn(withEmail: email, password: password)
-                // On success, the global AuthViewModel will automatically trigger navigation.
-                self.isLoading = false
-            } catch {
-                self.errorMessage = error.localizedDescription
-                self.isLoading = false
-            }
+        do {
+            _ = try await authService.signIn(withEmail: email, password: password)
+            // On success, the AuthViewModel observing the auth state will trigger the UI change.
+        } catch {
+            errorMessage = error.localizedDescription
         }
+        
+        isLoading = false
     }
     
     /// Sends a password reset email to the entered email address.
-    func sendPasswordReset() {
-        guard !email.isEmpty else {
-            errorMessage = "Please enter your email address to reset your password."
-            return
+    func requestPasswordReset() async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            try await authService.sendPasswordReset(to: email)
+            // Optionally, set a message to inform the user to check their email.
+        } catch {
+            errorMessage = error.localizedDescription
         }
         
-        guard isValidEmail(email) else {
-            errorMessage = "Please enter a valid email address."
-            return
-        }
-        
-        Task {
-            do {
-                try await authService.sendPasswordReset(to: email)
-                self.errorMessage = "Password reset email sent. Please check your inbox." // Use this for user feedback
-            } catch {
-                self.errorMessage = error.localizedDescription
-            }
-        }
+        isLoading = false
     }
     
     // MARK: - Private Helpers

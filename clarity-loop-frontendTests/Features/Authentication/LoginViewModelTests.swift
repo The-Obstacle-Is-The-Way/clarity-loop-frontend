@@ -9,9 +9,12 @@ fileprivate class MockAuthService: AuthServiceProtocol {
 
     var signInShouldSucceed = true
     var sendPasswordResetShouldSucceed = true
+    var shouldThrowError = false
+    var signInCallCount = 0
 
     func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
         if signInShouldSucceed {
+            signInCallCount += 1
             return UserSessionResponseDTO(
                 userId: UUID(),
                 firstName: "Test",
@@ -45,8 +48,8 @@ fileprivate class MockAuthService: AuthServiceProtocol {
 @MainActor
 final class LoginViewModelTests: XCTestCase {
 
-    private var viewModel: LoginViewModel!
-    private var mockAuthService: MockAuthService!
+    var viewModel: LoginViewModel!
+    var mockAuthService: MockAuthService!
 
     override func setUp() {
         super.setUp()
@@ -58,6 +61,48 @@ final class LoginViewModelTests: XCTestCase {
         viewModel = nil
         mockAuthService = nil
         super.tearDown()
+    }
+
+    func testLogin_Success() async {
+        // Given
+        viewModel.email = "test@example.com"
+        viewModel.password = "password"
+        
+        // When
+        await viewModel.login()
+        
+        // Then
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertEqual(mockAuthService.signInCallCount, 1)
+    }
+    
+    func testLogin_Failure_EmptyFields() async {
+        // Given
+        // email and password are empty by default
+        
+        // When
+        await viewModel.login()
+        
+        // Then
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNotNil(viewModel.errorMessage)
+        XCTAssertEqual(mockAuthService.signInCallCount, 0)
+    }
+    
+    func testLogin_Failure_ApiError() async {
+        // Given
+        viewModel.email = "fail@example.com"
+        viewModel.password = "password"
+        mockAuthService.shouldThrowError = true
+        
+        // When
+        await viewModel.login()
+        
+        // Then
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNotNil(viewModel.errorMessage)
+        XCTAssertEqual(mockAuthService.signInCallCount, 1)
     }
 
     func testSignIn_WithEmptyCredentials_ShowsErrorMessage() {
