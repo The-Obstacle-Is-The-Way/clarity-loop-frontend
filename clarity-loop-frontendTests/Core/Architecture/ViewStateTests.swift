@@ -232,4 +232,50 @@ final class ViewStateTests: XCTestCase {
             XCTFail("Recovery should result in loaded state")
         }
     }
+
+    // MARK: - Test Cases
+
+    func testViewState_InitialState() {
+        let state: ViewState<String> = .idle
+        XCTAssertEqual(state, .idle, "Initial state should be .idle")
+    }
+
+    func testViewState_LoadingState() {
+        let state: ViewState<String> = .loading
+        XCTAssertEqual(state, .loading, "State should be .loading")
+    }
+
+    func testViewState_LoadedState_Success() {
+        let successData = "Success Data"
+        let state: ViewState<String> = .loaded(successData)
+        
+        guard case .loaded(let data) = state else {
+            XCTFail("State should be .loaded")
+            return
+        }
+        XCTAssertEqual(data, successData, "Loaded data does not match expected data.")
+    }
+
+    func testViewState_ErrorState() {
+        let errorMessage = "Test Error"
+        let error = NSError(domain: "TestDomain", code: 123, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+        let state: ViewState<String> = .error(errorMessage)
+        
+        guard case .error(let message) = state else {
+            XCTFail("State should be .error")
+            return
+        }
+        XCTAssertEqual(message, errorMessage, "Error message does not match expected message.")
+    }
+    
+    func testViewState_EquatableConformance() {
+        let state1: ViewState<Int> = .loaded(10)
+        let state2: ViewState<Int> = .loaded(10)
+        let state3: ViewState<Int> = .loaded(20)
+        let state4: ViewState<Int> = .loading
+        
+        XCTAssertEqual(state1, state2, ".loaded states with same data should be equal.")
+        XCTAssertNotEqual(state1, state3, ".loaded states with different data should not be equal.")
+        XCTAssertNotEqual(state1, state4, "Different states should not be equal.")
+    }
 } 

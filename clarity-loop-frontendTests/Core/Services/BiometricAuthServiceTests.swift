@@ -6,17 +6,20 @@ import LocalAuthentication
 /// CRITICAL: Tests the @unchecked Sendable fix and async biometric operations
 final class BiometricAuthServiceTests: XCTestCase {
     
+    var biometricAuthService: BiometricAuthService!
+    // TODO: Add mock for LocalAuthentication context
+    
     // MARK: - Test Setup
     
     override func setUpWithError() throws {
-        // TODO: Set up test environment
-        // - Mock LAContext
-        // - Configure biometric simulation
-        // - Set up test policies
+        try super.setUpWithError()
+        // TODO: Initialize BiometricAuthService with mock context
+        biometricAuthService = BiometricAuthService()
     }
     
     override func tearDownWithError() throws {
-        // TODO: Clean up test environment
+        biometricAuthService = nil
+        try super.tearDownWithError()
     }
     
     // MARK: - Sendable Conformance Tests
@@ -175,5 +178,37 @@ final class BiometricAuthServiceTests: XCTestCase {
         // - Successful auth restores session
         // - Failed auth requires re-login
         // - Proper state management
+    }
+
+    // MARK: - Test Cases
+
+    func testAuthenticationWithBiometrics_Success() {
+        // TODO: Implement test case for successful biometric authentication
+        XCTFail("Test not implemented")
+    }
+
+    func testAuthenticationWithBiometrics_Failure() {
+        // TODO: Implement test case for failed biometric authentication
+        XCTFail("Test not implemented")
+    }
+
+    func testEvaluatePolicyDomainState() {
+        // TODO: Implement test to check if domain state changes are correctly evaluated
+        XCTFail("Test not implemented")
+    }
+
+    func testBiometryType_FaceID() {
+        // TODO: Mock context to return FaceID and verify
+        XCTFail("Test not implemented")
+    }
+
+    func testBiometryType_TouchID() {
+        // TODO: Mock context to return TouchID and verify
+        XCTFail("Test not implemented")
+    }
+
+    func testBiometryType_None() {
+        // TODO: Mock context to return None and verify
+        XCTFail("Test not implemented")
     }
 } 

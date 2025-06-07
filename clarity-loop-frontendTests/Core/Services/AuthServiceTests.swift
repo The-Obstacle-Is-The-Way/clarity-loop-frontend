@@ -3,14 +3,19 @@ import XCTest
 
 final class AuthServiceTests: XCTestCase {
     
-    var authService: MockAuthService!
+    var authService: AuthService!
+    var mockAPIClient: MockAPIClient!
     
     override func setUpWithError() throws {
-        authService = MockAuthService()
+        try super.setUpWithError()
+        mockAPIClient = MockAPIClient()
+        authService = AuthService(apiClient: mockAPIClient)
     }
     
     override func tearDownWithError() throws {
         authService = nil
+        mockAPIClient = nil
+        try super.tearDownWithError()
     }
     
     func testSignInSuccess() async throws {
@@ -123,5 +128,49 @@ final class AuthServiceTests: XCTestCase {
         
         // Then
         XCTAssertEqual(receivedUser, expectedUser)
+    }
+
+    // MARK: - Test Cases
+
+    func testLogin_Success() async throws {
+        // TODO: Configure MockAPIClient to return a successful login response
+        // let response = AuthResponseDTO(...)
+        // mockAPIClient.mockLoginResponse = .success(response)
+        
+        // TODO: Call the login method and assert that the user state is updated
+        XCTFail("Test not implemented.")
+    }
+
+    func testLogin_Failure() async throws {
+        // TODO: Configure MockAPIClient to return an APIError
+        // mockAPIClient.mockLoginResponse = .failure(APIError.invalidCredentials)
+        
+        // TODO: Call the login method and assert that an error is thrown
+        XCTFail("Test not implemented.")
+    }
+    
+    func testRegistration_Success() async throws {
+        // TODO: Configure MockAPIClient for successful registration
+        XCTFail("Test not implemented.")
+    }
+    
+    func testRegistration_Failure() async throws {
+        // TODO: Configure MockAPIClient for failed registration
+        XCTFail("Test not implemented.")
+    }
+
+    func testLogout_Success() async throws {
+        // TODO: Configure MockAPIClient for successful logout
+        XCTFail("Test not implemented.")
+    }
+
+    func testRefreshToken_Success() async throws {
+        // TODO: Configure MockAPIClient to return a new token
+        XCTFail("Test not implemented.")
+    }
+    
+    func testRefreshToken_Failure() async throws {
+        // TODO: Configure MockAPIClient to return an error on token refresh
+        XCTFail("Test not implemented.")
     }
 } 
