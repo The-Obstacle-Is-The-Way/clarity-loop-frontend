@@ -26,6 +26,35 @@ protocol AuthServiceProtocol {
     func getCurrentUserToken() async throws -> String
 }
 
+/// Specific errors for authentication operations
+enum AuthenticationError: LocalizedError {
+    case emailAlreadyInUse
+    case weakPassword
+    case invalidEmail
+    case userDisabled
+    case networkError
+    case configurationError
+    case unknown(String)
+    
+    var errorDescription: String? {
+        switch self {
+        case .emailAlreadyInUse:
+            return "This email address is already registered. Please try signing in instead."
+        case .weakPassword:
+            return "Please choose a stronger password with at least 8 characters, including uppercase, lowercase, and numbers."
+        case .invalidEmail:
+            return "Please enter a valid email address."
+        case .userDisabled:
+            return "This account has been disabled. Please contact support."
+        case .networkError:
+            return "Unable to connect to the server. Please check your internet connection and try again."
+        case .configurationError:
+            return "App configuration error. Please restart the app or contact support."
+        case .unknown(let message):
+            return "Registration failed: \(message)"
+        }
+    }
+}
 
 /// The concrete implementation of the authentication service, using Firebase.
 final class AuthService: AuthServiceProtocol {
@@ -64,25 +93,33 @@ final class AuthService: AuthServiceProtocol {
     // MARK: - Public Methods
 
     func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
-        try await Auth.auth().signIn(withEmail: email, password: password)
-        
-        let loginDTO = UserLoginRequestDTO(email: email, password: password, rememberMe: true, deviceInfo: nil)
-        let response = try await apiClient.login(requestDTO: loginDTO)
-        
-        // Here you would typically save the user profile to SwiftData
-        // let user = User(from: response.user)
-        // try persistence.save(user)
-        
-        return response.user
+        do {
+            try await Auth.auth().signIn(withEmail: email, password: password)
+            
+            let loginDTO = UserLoginRequestDTO(email: email, password: password, rememberMe: true, deviceInfo: nil)
+            let response = try await apiClient.login(requestDTO: loginDTO)
+            
+            return response.user
+        } catch {
+            throw mapFirebaseError(error)
+        }
     }
     
     func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO {
-        let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
-        try await authResult.user.sendEmailVerification()
-        
-        // After creating the user in Firebase, register them in our backend.
-        let response = try await apiClient.register(requestDTO: details)
-        return response
+        do {
+            // Step 1: Create Firebase user
+            let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
+            
+            // Step 2: Send email verification
+            try await authResult.user.sendEmailVerification()
+            
+            // Step 3: Register with our backend
+            let response = try await apiClient.register(requestDTO: details)
+            return response
+        } catch {
+            // If Firebase registration failed, provide specific error
+            throw mapFirebaseError(error)
+        }
     }
     
     func signOut() throws {
@@ -91,7 +128,11 @@ final class AuthService: AuthServiceProtocol {
     }
     
     func sendPasswordReset(to email: String) async throws {
-        try await Auth.auth().sendPasswordReset(withEmail: email)
+        do {
+            try await Auth.auth().sendPasswordReset(withEmail: email)
+        } catch {
+            throw mapFirebaseError(error)
+        }
     }
     
     func getCurrentUserToken() async throws -> String {
@@ -99,6 +140,41 @@ final class AuthService: AuthServiceProtocol {
             throw APIError.unauthorized
         }
         return try await user.getIDToken(forcingRefresh: false)
+    }
+    
+    // MARK: - Private Error Mapping
+    
+    private func mapFirebaseError(_ error: Error) -> Error {
+        guard let authError = error as? AuthErrorCode else {
+            // Handle non-Firebase errors
+            if let urlError = error as? URLError {
+                return AuthenticationError.networkError
+            }
+            return AuthenticationError.unknown(error.localizedDescription)
+        }
+        
+        switch authError.code {
+        case .emailAlreadyInUse:
+            return AuthenticationError.emailAlreadyInUse
+        case .weakPassword:
+            return AuthenticationError.weakPassword
+        case .invalidEmail:
+            return AuthenticationError.invalidEmail
+        case .userDisabled:
+            return AuthenticationError.userDisabled
+        case .networkError:
+            return AuthenticationError.networkError
+        case .tooManyRequests:
+            return AuthenticationError.unknown("Too many attempts. Please try again later.")
+        case .userTokenExpired:
+            return AuthenticationError.unknown("Session expired. Please sign in again.")
+        case .invalidAPIKey:
+            return AuthenticationError.configurationError
+        case .appNotAuthorized:
+            return AuthenticationError.configurationError
+        default:
+            return AuthenticationError.unknown("Authentication failed: \(authError.localizedDescription)")
+        }
     }
 } 
  
