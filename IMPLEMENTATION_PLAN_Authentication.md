@@ -2,7 +2,20 @@
 
 This document provides a step-by-step guide for implementing the user authentication flows, including registration, login, session management, and the corresponding UI, ViewModels, and Services.
 
-## ✅ IMPLEMENTATION STATUS: COMPLETE
+## 🔄 IMPLEMENTATION STATUS: MOSTLY COMPLETE
+
+**✅ COMPLETED:**
+- Core authentication flows (login/registration)
+- Firebase Auth integration
+- JWT token management
+- Session state management
+- Basic UI components
+
+**❌ MISSING:**
+- Email verification flow UI
+- Password reset flow UI
+- Complete error handling
+- Some API endpoints
 
 ## 1. Authentication Service (`AuthService`)
 
@@ -27,6 +40,7 @@ This service will encapsulate all interactions with the Firebase Authentication 
     - [x] ✅ COMPLETE - Implement logic to clear any sensitive local data (e.g., wipe specific SwiftData entities or reset user-specific cache).
 - [x] **Implement `sendPasswordReset(withEmail:)` method:**
     - [x] ✅ COMPLETE - Call `Auth.auth().sendPasswordReset(withEmail:email)`.
+    - [ ] ❌ MISSING - Password reset UI flow
 - [x] **Implement `getCurrentUserToken()` method:**
     - [x] ✅ COMPLETE - Create an `async throws` method that retrieves the JWT from the current user.
     - [x] ✅ COMPLETE - Call `Auth.auth().currentUser?.getIDToken(forcingRefresh: false)`. This will auto-refresh if the token is expired.
@@ -83,10 +97,11 @@ This service will encapsulate all interactions with the Firebase Authentication 
     - [x] ✅ COMPLETE - Provide a logout button in the app's settings or profile view.
     - [x] ✅ COMPLETE - The button's action should call a method on `AuthenticationManager` which in turn calls `authService.signOut()`.
     - [x] ✅ COMPLETE - The UI will automatically switch to the `LoginView` due to the change in the global authentication state.
-- [x] **Email Verification:** ✅ COMPLETE
+- [ ] **Email Verification:** ❌ INCOMPLETE
     - [x] ✅ COMPLETE - After registration, guide the user to their email.
-    - [x] ✅ COMPLETE - On the backend, API endpoints should reject requests from users whose `email_verified` claim in the JWT is `false`.
-    - [x] ✅ COMPLETE - In the app, you can optionally add a screen that periodically checks `Auth.auth().currentUser?.isEmailVerified` and allows the user to resend the verification email.
+    - [ ] ❌ MISSING - Backend email verification enforcement
+    - [ ] ❌ MISSING - Email verification status checking UI
+    - [ ] ❌ MISSING - Resend verification email functionality
 
 ## 6. Known Issues
 

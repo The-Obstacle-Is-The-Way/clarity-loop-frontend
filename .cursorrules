@@ -1,3 +1,12 @@
+IF YOU RUN INTO A GODDAMN TEST TARGET ISSUE
+STOP FUCKING CODING 
+
+AND TELL ME TO FIX THE TEST TARGET MYSELF IN XCODE
+YOU CANNOT CODE AROUND IT 
+
+IF YOU CODE AROUND TEST TARGET ISSUES, THE WHOLE REPOSITORY WILL GET NUKED. 
+DO NOT FUCKING DO THIS. 
+
 Non-Negotiable Directives (Execution Constraints):
 These are not suggestions. Violation of these directives constitutes a mission failure.
 NO public MODIFIERS: This is a self-contained application, NOT a framework. The public access modifier is strictly forbidden. The default internal access level is sufficient and required. Do not use public.

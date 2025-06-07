@@ -1,6 +1,18 @@
 # Implementation Plan: HealthKit Integration
 
-## ✅ IMPLEMENTATION STATUS: COMPLETE
+## 🔄 IMPLEMENTATION STATUS: PARTIALLY COMPLETE
+
+**✅ COMPLETED:**
+- Basic HealthKit service setup
+- Core data fetching methods
+- Permission request flow
+- Basic health data types
+
+**❌ MISSING:**
+- Background delivery setup
+- Observer queries
+- Complete authorization handling
+- Many specific data fetching methods
 
 This document outlines the steps to integrate HealthKit into the CLARITY Pulse app. It covers creating a dedicated service, handling permissions, and fetching required health data.
 
@@ -29,15 +41,15 @@ A dedicated service will encapsulate all HealthKit logic, abstracting its comple
 ## 2. Permissions Flow
 
 - [x] **Implement `requestAuthorization()` method:**
-    - [ ] Create an `async throws` method in `HealthKitService` to request user permission.
-    - [ ] Call `healthStore.requestAuthorization(toShare:read:)` with an empty `share` set and the `readTypes` set.
-    - [ ] Wrap the completion handler-based API with an `async` continuation to return a `Bool` indicating success or throw an error.
+    - [x] ✅ COMPLETE Create an `async throws` method in `HealthKitService` to request user permission.
+    - [x] ✅ COMPLETE Call `healthStore.requestAuthorization(toShare:read:)` with an empty `share` set and the `readTypes` set.
+    - [x] ✅ COMPLETE Wrap the completion handler-based API with an `async` continuation to return a `Bool` indicating success or throw an error.
 - [x] **Trigger Authorization Request:**
-    - [ ] The request should be triggered at an appropriate time in the user flow, for example:
+    - [x] ✅ COMPLETE The request should be triggered at an appropriate time in the user flow, for example:
         - During an initial onboarding sequence.
         - When the user first navigates to the Dashboard.
-    - [ ] Create a ViewModel (e.g., `OnboardingViewModel` or `DashboardViewModel`) that calls `healthKitService.requestAuthorization()`.
-- [ ] **Handle Authorization Status:**
+    - [x] ✅ COMPLETE Create a ViewModel (e.g., `OnboardingViewModel` or `DashboardViewModel`) that calls `healthKitService.requestAuthorization()`.
+- [ ] ❌ MISSING **Handle Authorization Status:**
     - [ ] After the request, check the authorization status for each data type using `healthStore.authorizationStatus(for:)`.
     - [ ] The UI should gracefully handle cases where the user denies permission. For example, the Dashboard could show an informative message guiding the user to the Settings app to enable permissions if they are `denied`.
 
@@ -47,36 +59,36 @@ Implement methods in `HealthKitService` to fetch the specific metrics required b
 
 - [x] **Wrap HealthKit Queries:** Since many HealthKit queries are still completion-based, create a generic helper to wrap them in an `async` call using `withCheckedThrowingContinuation`.
 - [x] **Fetch Daily Step Count:**
-    - [ ] Implement `fetchDailySteps(for date: Date) async throws -> Int`.
-    - [ ] Use an `HKStatisticsQuery` to get the `.cumulativeSum` of `stepCount` for the given day (from midnight to midnight).
+    - [x] ✅ COMPLETE Implement `fetchDailySteps(for date: Date) async throws -> Int`.
+    - [x] ✅ COMPLETE Use an `HKStatisticsQuery` to get the `.cumulativeSum` of `stepCount` for the given day (from midnight to midnight).
 - [x] **Fetch Resting Heart Rate:**
-    - [ ] Implement `fetchRestingHeartRate(for date: Date) async throws -> Double?`.
-    - [ ] Query for `restingHeartRate` samples. This is typically one sample per day. Find the most recent sample for the given day.
+    - [x] ✅ COMPLETE Implement `fetchRestingHeartRate(for date: Date) async throws -> Double?`.
+    - [x] ✅ COMPLETE Query for `restingHeartRate` samples. This is typically one sample per day. Find the most recent sample for the given day.
 - [x] **Fetch Sleep Analysis:**
-    - [ ] Implement `fetchSleepAnalysis(for date: Date) async throws -> SleepData`. (*`SleepData` would be a custom struct holding total time, efficiency, etc.*)
-    - [ ] Use an `HKSampleQuery` to fetch `HKCategorySample`s with the type `.sleepAnalysis`.
-    - [ ] The query's predicate should cover the previous night (e.g., from noon yesterday to noon today).
-    - [ ] Process the returned samples to calculate:
+    - [x] ✅ COMPLETE Implement `fetchSleepAnalysis(for date: Date) async throws -> SleepData`. (*`SleepData` would be a custom struct holding total time, efficiency, etc.*)
+    - [x] ✅ COMPLETE Use an `HKSampleQuery` to fetch `HKCategorySample`s with the type `.sleepAnalysis`.
+    - [x] ✅ COMPLETE The query's predicate should cover the previous night (e.g., from noon yesterday to noon today).
+    - [x] ✅ COMPLETE Process the returned samples to calculate:
         - Total time in bed.
         - Total time asleep (sum of `.asleepUnspecified`, `.asleepCore`, `.asleepDeep`, `.asleepREM`).
         - Breakdown of time in each stage.
 - [x] **Create a Unified Fetch Method:**
-    - [ ] Implement a method like `fetchLatestMetrics() async throws -> HealthDataBatch`.
-    - [ ] This method will use `async let` or a `TaskGroup` to concurrently execute the individual fetch methods (steps, heart rate, sleep, etc.).
-    - [ ] It will aggregate the results into a single, structured object (`HealthDataBatch`) that can be easily used by the ViewModel or sent to the backend.
+    - [x] ✅ COMPLETE Implement a method like `fetchLatestMetrics() async throws -> HealthDataBatch`.
+    - [x] ✅ COMPLETE This method will use `async let` or a `TaskGroup` to concurrently execute the individual fetch methods (steps, heart rate, sleep, etc.).
+    - [x] ✅ COMPLETE It will aggregate the results into a single, structured object (`HealthDataBatch`) that can be easily used by the ViewModel or sent to the backend.
 
 ## 4. Background Delivery and Synchronization
 
-- [ ] **Enable Background Delivery:**
+- [ ] ❌ MISSING **Enable Background Delivery:**
     - [ ] Implement `enableBackgroundDelivery()` in `HealthKitService`.
     - [ ] This method will call `healthStore.enableBackgroundDelivery(for:frequency:withCompletion:)` for each data type you want to monitor. A frequency of `.hourly` is a reasonable starting point.
-- [ ] **Set up Observer Queries:**
+- [ ] ❌ MISSING **Set up Observer Queries:**
     - [ ] Implement `setupObserverQueries()` in `HealthKitService`.
     - [ ] For each data type, create an `HKObserverQuery`.
     - [ ] The query's `updateHandler` will be called by HealthKit when new data is available.
-- [ ] **Handle Background Updates:**
+- [ ] ❌ MISSING **Handle Background Updates:**
     - [ ] The `updateHandler` of the observer query should not perform heavy work directly. Instead, it should schedule a background task.
     - [ ] Use `BGTaskScheduler` to submit a `BGProcessingTaskRequest`. This task will be responsible for fetching the new data and uploading it to the backend.
-- [ ] **Integrate with App Delegate/Lifecycle:**
+- [ ] ❌ MISSING **Integrate with App Delegate/Lifecycle:**
     - [ ] The background delivery setup (`enableBackgroundDelivery` and `setupObserverQueries`) should be called once the user is authenticated and has granted HealthKit permission. This could be done from the main `App` struct or an `AppDelegate`.
     - [ ] The app's launch sequence must register the background task identifiers with `BGTaskScheduler`. 

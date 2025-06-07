@@ -1,6 +1,17 @@
 # Implementation Plan: Data Models (DTOs & SwiftData)
 
-## ✅ IMPLEMENTATION STATUS: COMPLETE
+## 🔄 IMPLEMENTATION STATUS: MOSTLY COMPLETE
+
+**✅ COMPLETED:**
+- Core DTOs for authentication, health data, insights
+- SwiftData models for local persistence
+- Basic utility DTOs
+
+**❌ MISSING:**
+- HealthKit upload DTOs
+- PAT analysis DTOs
+- Some service status DTOs
+- Complete DTO mapping functions
 
 This document provides a detailed specification for all data models required for the CLARITY Pulse application. It is broken down into two main sections:
 1.  **Data Transfer Objects (DTOs):** Plain `Codable` Swift structs that exactly match the JSON structure of the backend API. These are used in the Networking layer.
@@ -78,10 +89,10 @@ These structs are used for encoding and decoding data for network requests. They
 
 ### 1.3. HealthKit Upload DTOs (`/api/v1/healthkit_upload`)
 
-- [ ] **`HealthKitSampleDTO.swift`**
-- [ ] **`HealthKitUploadRequestDTO.swift`**
-- [ ] **`HealthKitUploadResponseDTO.swift`**
-- [ ] **`HealthKitUploadStatusDTO.swift`**
+- [ ] ❌ MISSING **`HealthKitSampleDTO.swift`**
+- [ ] ❌ MISSING **`HealthKitUploadRequestDTO.swift`**
+- [ ] ❌ MISSING **`HealthKitUploadResponseDTO.swift`**
+- [ ] ❌ MISSING **`HealthKitUploadStatusDTO.swift`**
 
 ### 1.4. Health Data DTOs (`/api/v1/health-data`)
 
@@ -132,13 +143,13 @@ These structs are used for encoding and decoding data for network requests. They
     - `meditationMinutes: Int?`
     - `notes: String?`
     - `timestamp: Date`
-- [ ] **`HealthDataUploadDTO.swift`**
+- [ ] ❌ MISSING **`HealthDataUploadDTO.swift`**
     - `userId: UUID`
     - `metrics: [HealthMetricDTO]`
     - `uploadSource: String`
     - `clientTimestamp: Date`
     - `syncToken: String?`
-- [ ] **`HealthDataResponseDTO.swift`**
+- [ ] ❌ MISSING **`HealthDataResponseDTO.swift`**
     - `processingId: UUID`
     - `status: String`
     - `acceptedMetrics: Int`
@@ -154,12 +165,12 @@ These structs are used for encoding and decoding data for network requests. They
 
 ### 1.5. PAT Analysis DTOs (`/api/v1/pat`)
 
-- [ ] **`StepDataRequestDTO.swift`**
-- [ ] **`ActigraphyDataPointDTO.swift`**
-- [ ] **`DirectActigraphyRequestDTO.swift`**
-- [ ] **`AnalysisResponseDTO.swift`** (Generic wrapper)
-- [ ] **`PATAnalysisResponseDTO.swift`** (for `GET /pat/analysis/{id}`)
-- [ ] **`PATServiceHealthDTO.swift`**
+- [ ] ❌ MISSING **`StepDataRequestDTO.swift`**
+- [ ] ❌ MISSING **`ActigraphyDataPointDTO.swift`**
+- [ ] ❌ MISSING **`DirectActigraphyRequestDTO.swift`**
+- [ ] ❌ MISSING **`AnalysisResponseDTO.swift`** (Generic wrapper)
+- [ ] ❌ MISSING **`PATAnalysisResponseDTO.swift`** (for `GET /pat/analysis/{id}`)
+- [ ] ❌ MISSING **`PATServiceHealthDTO.swift`**
 
 ### 1.6. Gemini Insights DTOs (`/api/v1/insights`)
 
@@ -200,16 +211,16 @@ These structs are used for encoding and decoding data for network requests. They
     - `page: Int`
     - `limit: Int`
     - `// etc.`
-- [ ] **`ServiceStatusResponseDTO.swift`** (for `GET /insights/status`)
+- [ ] ❌ MISSING **`ServiceStatusResponseDTO.swift`** (for `GET /insights/status`)
     - `success: Bool`
     - `data: ServiceStatusDataDTO`
     - `metadata: [String: AnyCodable]`
-- [ ] **`ServiceStatusDataDTO.swift`**
+- [ ] ❌ MISSING **`ServiceStatusDataDTO.swift`**
     - `service: String`
     - `status: String`
     - `model: ModelInfoDTO`
     - `timestamp: Date`
-- [ ] **`ModelInfoDTO.swift`**
+- [ ] ❌ MISSING **`ModelInfoDTO.swift`**
     - `modelName: String`
     - `projectId: String`
     - `initialized: Bool`
@@ -278,6 +289,6 @@ These classes are for local persistence using SwiftData. They should be placed i
     - `activityEmbedding: Data?` (JSON-encoded array)
     - `lastSyncedAt: Date`
 - [x] **Implement Mappings:** Create convenience initializers or mapping functions to convert between DTOs and SwiftData `@Model` entities. This logic should reside within a Repository or a dedicated Mapper class.
-    - [ ] `HealthMetricEntity(from dto: HealthMetricDTO)`
+    - [ ] ❌ MISSING `HealthMetricEntity(from dto: HealthMetricDTO)`
     - [x] `InsightEntity(from dto: HealthInsightDTO)`
     - [x] `UserProfile(from dto: UserSessionResponseDTO)` 

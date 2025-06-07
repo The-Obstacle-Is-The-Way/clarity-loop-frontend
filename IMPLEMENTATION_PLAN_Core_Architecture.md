@@ -2,7 +2,19 @@
 
 This document outlines the setup of the core application architecture, including the layered structure, dependency injection, and state management, based on the principles of MVVM and Clean Architecture.
 
-## ✅ IMPLEMENTATION STATUS: COMPLETE
+## 🔄 IMPLEMENTATION STATUS: MOSTLY COMPLETE
+
+**✅ COMPLETED:**
+- Core MVVM + Clean Architecture structure
+- SwiftUI Environment-based dependency injection
+- SwiftData persistence setup
+- ViewState pattern for async operations
+- Core services and repositories
+
+**❌ MISSING:**
+- Some repository protocols
+- Some service implementations
+- Complete environment key setup
 
 ## 1. Core Architectural Layers
 
@@ -10,16 +22,16 @@ This checklist ensures the separation of concerns is implemented correctly.
 
 - [x] **Create Folder Structure:** Implement the folder structure as defined in `IMPLEMENTATION_PLAN_Project_Setup.md`.
 - [x] **Define Repository Protocols:** In the `Domain/Repositories` folder, create Swift protocols for each data repository. These define the contracts for data access.
-    - [ ] `AuthRepositoryProtocol.swift`
+    - [ ] ❌ MISSING `AuthRepositoryProtocol.swift`
     - [x] `HealthDataRepositoryProtocol.swift`
     - [x] `InsightsRepositoryProtocol.swift`
     - [x] `UserRepositoryProtocol.swift`
 - [x] **Implement Services:** In the `Core/Services` folder, create concrete implementations for services that interact with external frameworks.
     - [x] `AuthService.swift` (handles Firebase Auth calls).
     - [x] `HealthKitService.swift` (handles HealthKit calls).
-    - [ ] `InsightAIService.swift` (handles calls to Gemini).
+    - [ ] ❌ MISSING `InsightAIService.swift` (handles calls to Gemini).
 - [x] **Implement Repositories:** Create concrete repository implementations in the `Data/Repositories` folder (or a subfolder within). These will conform to the protocols in the Domain layer and use the services from the Core layer.
-    - [ ] `FirebaseUserRepository.swift`
+    - [ ] ❌ MISSING `FirebaseUserRepository.swift`
     - [x] `RemoteHealthDataRepository.swift`
     - [x] `RemoteInsightsRepository.swift`
 
@@ -45,7 +57,7 @@ Leverage SwiftUI's Environment for a lightweight and native DI experience.
     }
     ```
 - [x] **Create Keys for All Services:** Repeat the pattern above for all major dependencies:
-    - [ ] `AuthRepositoryProtocol`
+    - [ ] ❌ MISSING `AuthRepositoryProtocol`
     - [x] `InsightsRepositoryProtocol`
     - [x] `HealthKitServiceProtocol`
     - [x] `APIClientProtocol`
@@ -118,11 +130,11 @@ Leverage SwiftUI's Environment for a lightweight and native DI experience.
         }
     }
     ```
-- [ ] **Access ModelContext in Repositories:** Repositories that need to interact with the local database will get the `ModelContext` from the shared container.
+- [ ] ❌ MISSING **Access ModelContext in Repositories:** Repositories that need to interact with the local database will get the `ModelContext` from the shared container.
 
 ## 4. State Management Strategy
 
-- [ ] **Adopt `@Observable`:** Use the new `@Observable` macro for all ViewModel classes for simpler, more efficient state management in iOS 17.
+- [x] ✅ COMPLETE **Adopt `@Observable`:** Use the new `@Observable` macro for all ViewModel classes for simpler, more efficient state management in iOS 17.
 - [x] **Global App State:** Create a global `AuthViewModel` or `AppState` object to manage authentication status and the current user session.
     - [x] This object should be an `@StateObject` in the `App` struct and passed down as an `@EnvironmentObject`.
     - [x] It will listen to Firebase's auth state changes and publish the `isLoggedIn` status.
