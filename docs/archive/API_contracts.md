@@ -1,5 +1,16 @@
 # CLARITY Pulse iOS Networking and Data Modeling Blueprint
 
+> **⚠️ DOCUMENT STATUS: PARTIALLY OUTDATED** 
+> 
+> **API BASE URL CORRECTED**: The base URL examples in this document are WRONG.
+> 
+> **✅ CORRECT URL**: `https://crave-trinity--clarity-backend-fastapi-app.modal.run`
+> **❌ WRONG URL**: `https://api.clarity.health` (redirects to psychology website)
+> 
+> **📄 See**: `AUTHENTICATION_AUDIT_UPDATE.md` for current implementation status
+> 
+> ---
+
 ## Swift API Data Models (DTOs)
 
 To mirror the backend’s OpenAPI (FastAPI/Pydantic) models, we define Swift structs (DTOs) conforming to `Codable` for each request and response. All fields, types, and optionality match the API contracts exactly, using `UUID` for identifiers and `Date` for timestamps (with ISO8601 encoding).
@@ -473,7 +484,7 @@ We can organize methods by endpoint category for readability, e.g.:
 
 ```swift
 class APIClient {
-    let baseURL = URL(string: "https://api.clarity.health/api/v1")!
+    let baseURL = URL(string: "https://crave-trinity--clarity-backend-fastapi-app.modal.run/api/v1")!
     var tokenProvider: () async -> String?   // e.g. use FirebaseAuth to get current ID token
     
     // MARK: Auth Endpoints

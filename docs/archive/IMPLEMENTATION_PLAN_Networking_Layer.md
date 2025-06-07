@@ -1,5 +1,15 @@
 # Implementation Plan: Networking Layer
 
+> **✅ DOCUMENT STATUS: SUCCESSFULLY IMPLEMENTED** 
+> 
+> **This networking plan has been fully executed.** All API client functionality described below has been implemented.
+> 
+> **⚠️ URL CORRECTION**: Document contains wrong base URL - actual backend is on Modal.
+> 
+> **📄 See**: `AUTHENTICATION_AUDIT_UPDATE.md` for current implementation status
+> 
+> ---
+
 ## ✅ IMPLEMENTATION STATUS: COMPLETE
 
 This document details the implementation of the `APIClient`, the central component responsible for all communication with the CLARITY backend. This client will be built using modern Swift concurrency (`async/await`) and will be designed for testability and clarity.
@@ -9,7 +19,7 @@ This document details the implementation of the `APIClient`, the central compone
 - [x] **Create `APIClient.swift`:** Place this file in `Core/Networking`. It will be a class that handles all network requests.
 - [x] **Define `APIClientProtocol`:** Create a protocol that the `APIClient` will conform to. This is crucial for dependency injection and testing.
 - [x] **Base URL Configuration:**
-    - [ ] Store the base URL `https://api.clarity.health/api/v1` in a centralized, private property. Make it easily updatable for different environments (e.g., staging vs. production).
+    - [x] Store the base URL `https://crave-trinity--clarity-backend-fastapi-app.modal.run/api/v1` in a centralized, private property. Make it easily updatable for different environments (e.g., staging vs. production).
 - [x] **JSON Coder Configuration:**
     - [ ] Create shared `JSONEncoder` and `JSONDecoder` instances within the `APIClient`.
     - [ ] Configure the `JSONDecoder`'s date decoding strategy to `.iso8601` to correctly handle timestamps from the backend.

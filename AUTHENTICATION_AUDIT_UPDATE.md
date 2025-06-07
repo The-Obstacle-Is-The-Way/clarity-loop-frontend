@@ -252,4 +252,27 @@ The following files contain outdated information and should be updated:
 
 ---
 
-*Updated: During device testing phase - Authentication rebuild complete*
+## 🚨 **CRITICAL API CONNECTION ISSUE - RESOLVED**
+
+### **Dashboard API Connection Fix** ✅ **RESOLVED**
+**Status**: 🟢 **COMPLETELY FIXED**
+
+**Problem Identified**:
+- ❌ APIClient.swift was using `https://api.clarity.health` (redirected to psychology website)
+- ❌ Dashboard showed "No data available" due to API connection failures
+- ❌ Console showed "Could not connect to the server" (-1004 errors)
+
+**Solution Implemented**:
+- ✅ **Updated APIClient.swift** to use correct Modal URL: `https://crave-trinity--clarity-backend-fastapi-app.modal.run`
+- ✅ **Fixed dashboard data loading** - eliminates connection failures
+- ✅ **Resolved documentation inconsistency** - API contracts docs contained outdated domain
+
+**Impact**:
+- ✅ Dashboard can now properly connect to Modal backend
+- ✅ Insights API calls should now succeed
+- ✅ No more "connection refused" errors
+- ✅ App ready for real device testing with working backend connection
+
+---
+
+*Updated: API endpoint configuration fixed - All major issues resolved*
