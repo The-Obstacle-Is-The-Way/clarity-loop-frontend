@@ -5,18 +5,27 @@ import SwiftUI
 /// The key for accessing the `AuthServiceProtocol` in the SwiftUI Environment.
 struct AuthServiceKey: EnvironmentKey {
     static var defaultValue: AuthServiceProtocol {
-        // Provide a safe mock for previews and testing
-        #if DEBUG
-        return MockAuthService()
-        #else
-        fatalError("AuthService not found. Did you forget to inject it?")
-        #endif
+        // Create a default APIClient for the default AuthService
+        let defaultAPIClient: APIClientProtocol = {
+            guard let client = APIClient(
+                baseURLString: "https://api.example.com",
+                tokenProvider: { nil }
+            ) else {
+                fatalError("Failed to create default APIClient")
+            }
+            return client
+        }()
+        
+        return AuthService(apiClient: defaultAPIClient)
     }
 }
 
 private struct APIClientKey: EnvironmentKey {
     static let defaultValue: APIClientProtocol = {
-        guard let client = APIClient(tokenProvider: { nil }) else {
+        guard let client = APIClient(
+            baseURLString: "https://api.example.com",
+            tokenProvider: { nil }
+        ) else {
             fatalError("Failed to create default APIClient")
         }
         return client
@@ -45,7 +54,19 @@ private struct UserRepositoryKey: EnvironmentKey {
 }
 
 private struct HealthKitServiceKey: EnvironmentKey {
-    static let defaultValue: HealthKitServiceProtocol = HealthKitService()
+    static let defaultValue: HealthKitServiceProtocol = {
+        let defaultAPIClient: APIClientProtocol = {
+            guard let client = APIClient(
+                baseURLString: "https://api.example.com",
+                tokenProvider: { nil }
+            ) else {
+                fatalError("Failed to create default APIClient for HealthKitService")
+            }
+            return client
+        }()
+        
+        return HealthKitService(apiClient: defaultAPIClient)
+    }()
 }
 
 // Security services will be added later when protocols are defined
@@ -83,25 +104,7 @@ extension EnvironmentValues {
     }
 }
 
-#if DEBUG
-// MARK: - Mock Implementations for Previews
-
-// For debug builds, use real implementations for previews to avoid maintaining dual mock sets
-private extension PreviewAPIClientKey {
-    static let previewValue = APIClient()
-}
-
-private extension PreviewHealthKitServiceKey {
-    static let previewValue = HealthKitService()
-}
-
-private extension PreviewAuthServiceKey {
-    static let previewValue = AuthService(apiClient: APIClient())
-}
-
-// Mock implementations removed from main target to avoid maintenance burden
-// Use real implementations for previews in debug builds
-// Test-specific mocks are maintained in the test target
-#endif
+// Default values are provided above for each environment key
+// These will be used in previews and when services aren't explicitly injected
 
 // NOTE: Add other service keys here as needed (e.g., for HealthKit, Networking, etc.) 
