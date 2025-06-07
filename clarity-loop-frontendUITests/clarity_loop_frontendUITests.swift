@@ -23,19 +23,27 @@ final class clarity_loop_frontendUITests: XCTestCase {
     }
 
     @MainActor
-    func testExample() throws {
+    func testAppLaunches() throws {
         // UI tests must launch the application that they test.
         let app = XCUIApplication()
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        // Verify the app launches and shows login screen
+        XCTAssertTrue(app.staticTexts["Welcome Back"].waitForExistence(timeout: 10))
     }
 
     @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
-        }
+    func testLoginScreenElements() throws {
+        let app = XCUIApplication()
+        app.launch()
+        
+        // Wait for login screen to appear
+        XCTAssertTrue(app.staticTexts["Welcome Back"].waitForExistence(timeout: 10))
+        
+        // Verify login form elements exist
+        XCTAssertTrue(app.textFields["Email"].exists)
+        XCTAssertTrue(app.secureTextFields["Password"].exists)
+        XCTAssertTrue(app.buttons["Login"].exists)
+        XCTAssertTrue(app.buttons["Don't have an account? Register"].exists)
     }
 }
