@@ -22,37 +22,66 @@ struct OnboardingContentView: View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        ZStack {
-            // Background gradient
-            LinearGradient(
-                gradient: Gradient(colors: [Color.blue.opacity(0.1), Color.purple.opacity(0.1)]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+        VStack(spacing: 0) {
+            // Progress Bar
+            ProgressView(value: viewModel.progressPercentage)
+                .progressViewStyle(LinearProgressViewStyle())
+                .padding(.horizontal)
+                .padding(.top)
             
-            VStack(spacing: 0) {
-                // Progress indicator
-                progressIndicator
+            // Content
+            TabView(selection: $viewModel.currentStep) {
+                WelcomeStepView()
+                    .tag(0)
                 
-                // Content area
-                TabView(selection: $viewModel.currentStep) {
-                    stepView(for: 0)
-                        .tag(0)
-                    stepView(for: 1)
-                        .tag(1)
-                    stepView(for: 2)
-                        .tag(2)
-                    stepView(for: 3)
-                        .tag(3)
-                    stepView(for: 4)
-                        .tag(4)
+                TermsStepView(viewModel: viewModel)
+                    .tag(1)
+                
+                HealthKitStepView(viewModel: viewModel)
+                    .tag(2)
+                
+                NotificationsStepView(viewModel: viewModel)
+                    .tag(3)
+                
+                CompletionStepView(viewModel: viewModel)
+                    .tag(4)
+            }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            .animation(.easeInOut, value: viewModel.currentStep)
+            
+            // Navigation Buttons
+            HStack {
+                if viewModel.currentStep > 0 {
+                    Button("Back") {
+                        viewModel.previousStep()
+                    }
+                    .foregroundColor(.secondary)
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                .animation(.easeInOut, value: viewModel.currentStep)
                 
-                // Navigation buttons
-                navigationButtons
+                Spacer()
+                
+                if viewModel.currentStep < viewModel.totalSteps - 1 {
+                    Button("Next") {
+                        viewModel.nextStep()
+                    }
+                    .disabled(!viewModel.canProceedFromCurrentStep || viewModel.isLoading)
+                    .buttonStyle(.borderedProminent)
+                } else {
+                    Button("Get Started") {
+                        viewModel.completeOnboarding()
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+            .padding()
+        }
+        .overlay {
+            if viewModel.isLoading {
+                ProgressView()
+                    .scaleEffect(1.5)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.black.opacity(0.3))
             }
         }
         .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
@@ -60,370 +89,275 @@ struct OnboardingContentView: View {
                 viewModel.clearError()
             }
         } message: {
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
+            if let message = viewModel.errorMessage {
+                Text(message)
             }
-        }
-        .sheet(isPresented: .constant(false)) {
-            TermsAndConditionsView(
-                onAccept: {
-                    viewModel.acceptTerms()
-                    viewModel.acceptPrivacy()
-                },
-                onDecline: {
-                    // Handle decline
-                }
-            )
         }
     }
-    
-    // MARK: - Progress Indicator
-    
-    private var progressIndicator: some View {
-        VStack(spacing: 16) {
-            HStack {
-                ForEach(0..<viewModel.totalSteps, id: \.self) { step in
-                    Circle()
-                        .fill(step <= viewModel.currentStep ? Color.blue : Color.gray.opacity(0.3))
-                        .frame(width: 12, height: 12)
-                        .scaleEffect(step == viewModel.currentStep ? 1.2 : 1.0)
-                        .animation(.easeInOut, value: viewModel.currentStep)
-                    
-                    if step != viewModel.totalSteps - 1 {
-                        Rectangle()
-                            .fill(step < viewModel.currentStep ? Color.blue : Color.gray.opacity(0.3))
-                            .frame(height: 2)
-                            .animation(.easeInOut, value: viewModel.currentStep)
-                    }
-                }
-            }
-            .padding(.horizontal, 40)
+}
+
+// MARK: - Step Views
+
+struct WelcomeStepView: View {
+    var body: some View {
+        VStack(spacing: 30) {
+            Spacer()
             
-            Text("Step \(viewModel.currentStep + 1) of \(viewModel.totalSteps)")
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding(.top, 20)
-        .padding(.bottom, 10)
-    }
-    
-    // MARK: - Step Views
-    
-    @ViewBuilder
-    private func stepView(for step: Int) -> some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                Spacer(minLength: 20)
-                
-                switch step {
-                case 0:
-                    welcomeStepView
-                case 1:
-                    termsStepView
-                case 2:
-                    healthKitStepView
-                case 3:
-                    notificationsStepView
-                case 4:
-                    completionStepView
-                default:
-                    welcomeStepView
-                }
-                
-                Spacer(minLength: 40)
-            }
-            .padding(.horizontal, 32)
-        }
-    }
-    
-    private var welcomeStepView: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "heart.circle.fill")
+            Image(systemName: "heart.fill")
                 .font(.system(size: 80))
                 .foregroundColor(.red)
             
-            Text("Welcome to Clarity")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-            
-            Text("Your personal health insights companion")
-                .font(.title2)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-            
-            VStack(alignment: .leading, spacing: 16) {
-                FeatureRow(
-                    icon: "chart.line.uptrend.xyaxis",
-                    title: "Health Tracking",
-                    description: "Monitor your daily health metrics"
-                )
+            VStack(spacing: 16) {
+                Text("Welcome to Clarity")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
                 
-                FeatureRow(
-                    icon: "brain.head.profile",
-                    title: "AI Insights",
-                    description: "Get personalized health recommendations"
-                )
-                
-                FeatureRow(
-                    icon: "lock.shield",
-                    title: "Privacy First",
-                    description: "Your data stays secure and private"
-                )
+                Text("Your personal health insights companion")
+                    .font(.title2)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
             }
-            .padding(.top, 20)
+            
+            VStack(spacing: 12) {
+                FeatureRow(icon: "chart.line.uptrend.xyaxis", title: "Health Analytics", description: "Track and analyze your health metrics")
+                FeatureRow(icon: "brain.head.profile", title: "AI Insights", description: "Get personalized health recommendations")
+                FeatureRow(icon: "lock.shield", title: "Privacy First", description: "Your data stays secure and private")
+            }
+            .padding(.horizontal)
+            
+            Spacer()
         }
+        .padding()
     }
+}
+
+struct TermsStepView: View {
+    @Bindable var viewModel: OnboardingViewModel
     
-    private var termsStepView: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "doc.text.fill")
+    var body: some View {
+        VStack(spacing: 30) {
+            Spacer()
+            
+            Image(systemName: "doc.text")
                 .font(.system(size: 60))
                 .foregroundColor(.blue)
             
-            Text("Terms & Privacy")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
+            VStack(spacing: 16) {
+                Text("Terms & Privacy")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                
+                Text("Please review and accept our terms to continue")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+            }
             
-            Text("Please review our terms of service and privacy policy to continue.")
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
+            VStack(spacing: 16) {
+                HStack {
+                    Button(action: viewModel.toggleTermsAcceptance) {
+                        Image(systemName: viewModel.hasAcceptedTerms ? "checkmark.square.fill" : "square")
+                            .foregroundColor(viewModel.hasAcceptedTerms ? .blue : .secondary)
+                    }
+                    
+                    Text("I accept the Terms of Service")
+                        .font(.body)
+                    
+                    Spacer()
+                }
+                
+                HStack {
+                    Button(action: viewModel.togglePrivacyAcceptance) {
+                        Image(systemName: viewModel.hasAcceptedPrivacy ? "checkmark.square.fill" : "square")
+                            .foregroundColor(viewModel.hasAcceptedPrivacy ? .blue : .secondary)
+                    }
+                    
+                    Text("I accept the Privacy Policy")
+                        .font(.body)
+                    
+                    Spacer()
+                }
+            }
+            .padding(.horizontal)
             
-                         VStack(spacing: 16) {
-                 HStack {
-                     Button(action: viewModel.toggleTermsAcceptance) {
-                         Image(systemName: viewModel.hasAcceptedTerms ? "checkmark.circle.fill" : "circle")
-                             .foregroundColor(viewModel.hasAcceptedTerms ? .green : .gray)
-                     }
-                     
-                     Text("I accept the Terms of Service")
-                         .font(.body)
-                     
-                     Spacer()
-                 }
-                 
-                 HStack {
-                     Button(action: viewModel.togglePrivacyAcceptance) {
-                         Image(systemName: viewModel.hasAcceptedPrivacy ? "checkmark.circle.fill" : "circle")
-                             .foregroundColor(viewModel.hasAcceptedPrivacy ? .green : .gray)
-                     }
-                     
-                     Text("I accept the Privacy Policy")
-                         .font(.body)
-                     
-                     Spacer()
-                 }
-             }
-             .padding()
-             .background(Color(.systemGray6))
-             .cornerRadius(12)
+            Spacer()
         }
+        .padding()
     }
+}
+
+struct HealthKitStepView: View {
+    @Bindable var viewModel: OnboardingViewModel
     
-    private var healthKitStepView: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "heart.text.square.fill")
+    var body: some View {
+        VStack(spacing: 30) {
+            Spacer()
+            
+            Image(systemName: "heart.text.square")
                 .font(.system(size: 60))
                 .foregroundColor(.red)
             
-            Text("HealthKit Integration")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-            
-            Text("Connect with Apple Health to automatically sync your health data and get personalized insights.")
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-            
             VStack(spacing: 16) {
-                PermissionRow(
-                    icon: "figure.walk",
-                    title: "Steps & Activity",
-                    description: "Daily step count and activity levels",
-                    isGranted: viewModel.healthKitPermissions.stepsGranted
-                )
+                Text("HealthKit Access")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
                 
-                PermissionRow(
-                    icon: "heart.fill",
-                    title: "Heart Rate",
-                    description: "Resting and active heart rate data",
-                    isGranted: viewModel.healthKitPermissions.heartRateGranted
-                )
-                
-                PermissionRow(
-                    icon: "bed.double.fill",
-                    title: "Sleep Analysis",
-                    description: "Sleep duration and quality metrics",
-                    isGranted: viewModel.healthKitPermissions.sleepGranted
-                )
+                Text("Allow Clarity to access your health data for personalized insights")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
             }
             
-            if viewModel.isRequestingHealthKitPermission {
-                ProgressView("Requesting permissions...")
-                    .padding()
-            } else {
-                Button("Grant HealthKit Permissions") {
+            VStack(spacing: 12) {
+                FeatureRow(icon: "figure.walk", title: "Activity Data", description: "Steps, workouts, and movement")
+                FeatureRow(icon: "bed.double", title: "Sleep Analysis", description: "Sleep patterns and quality")
+                FeatureRow(icon: "heart", title: "Vital Signs", description: "Heart rate and health metrics")
+            }
+            .padding(.horizontal)
+            
+            VStack(spacing: 12) {
+                Button("Allow HealthKit Access") {
                     Task {
-                        await viewModel.requestHealthKitPermission()
+                        await viewModel.requestHealthKitPermissions()
                     }
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(viewModel.healthKitPermissions.allGranted)
+                .disabled(viewModel.isLoading)
+                
+                Button("Skip for Now") {
+                    viewModel.skipHealthKit()
+                }
+                .foregroundColor(.secondary)
             }
             
-            if viewModel.healthKitPermissions.allGranted {
+            if viewModel.healthKitAuthorized {
                 HStack {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.green)
-                    Text("All permissions granted!")
+                    Text("HealthKit access granted!")
                         .foregroundColor(.green)
-                        .fontWeight(.medium)
                 }
             }
+            
+            Spacer()
         }
+        .padding()
     }
+}
+
+struct NotificationsStepView: View {
+    @Bindable var viewModel: OnboardingViewModel
     
-    private var notificationsStepView: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "bell.fill")
+    var body: some View {
+        VStack(spacing: 30) {
+            Spacer()
+            
+            Image(systemName: "bell.badge")
                 .font(.system(size: 60))
                 .foregroundColor(.orange)
             
-            Text("Stay Informed")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-            
-            Text("Get timely reminders and insights to help you maintain your health goals.")
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-            
             VStack(spacing: 16) {
-                NotificationTypeRow(
-                    icon: "brain.head.profile",
-                    title: "Health Insights",
-                    description: "New AI-generated insights about your health",
-                    isEnabled: viewModel.notificationPreferences.insightsEnabled
-                ) {
-                    viewModel.toggleNotification(.insights)
-                }
+                Text("Stay Informed")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
                 
-                NotificationTypeRow(
-                    icon: "clock.fill",
-                    title: "Daily Reminders",
-                    description: "Reminders to check your health metrics",
-                    isEnabled: viewModel.notificationPreferences.remindersEnabled
-                ) {
-                    viewModel.toggleNotification(.reminders)
-                }
-                
-                NotificationTypeRow(
-                    icon: "exclamationmark.triangle.fill",
-                    title: "Health Alerts",
-                    description: "Important health-related notifications",
-                    isEnabled: viewModel.notificationPreferences.alertsEnabled
-                ) {
-                    viewModel.toggleNotification(.alerts)
-                }
+                Text("Get notified about new insights and health updates")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
             }
             
-            if viewModel.isRequestingNotificationPermission {
-                ProgressView("Requesting notification permission...")
-                    .padding()
-            } else if !viewModel.notificationPermissionGranted {
+            VStack(spacing: 12) {
+                FeatureRow(icon: "lightbulb", title: "New Insights", description: "When AI generates new health insights")
+                FeatureRow(icon: "exclamationmark.triangle", title: "Health Alerts", description: "Important health pattern changes")
+                FeatureRow(icon: "calendar", title: "Reminders", description: "Health check-ins and data sync")
+            }
+            .padding(.horizontal)
+            
+            VStack(spacing: 12) {
                 Button("Enable Notifications") {
                     Task {
-                        await viewModel.requestNotificationPermission()
+                        await viewModel.requestNotificationPermissions()
                     }
                 }
                 .buttonStyle(.borderedProminent)
+                .disabled(viewModel.isLoading)
+                
+                Button("Skip for Now") {
+                    viewModel.skipNotifications()
+                }
+                .foregroundColor(.secondary)
             }
+            
+            if viewModel.notificationsAuthorized {
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                    Text("Notifications enabled!")
+                        .foregroundColor(.green)
+                }
+            }
+            
+            Spacer()
         }
+        .padding()
     }
+}
+
+struct CompletionStepView: View {
+    @Bindable var viewModel: OnboardingViewModel
     
-    private var completionStepView: some View {
-        VStack(spacing: 24) {
+    var body: some View {
+        VStack(spacing: 30) {
+            Spacer()
+            
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 80))
                 .foregroundColor(.green)
             
-            Text("You're All Set!")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-            
-            Text("Welcome to your personalized health journey with Clarity.")
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-            
             VStack(spacing: 16) {
-                CompletionSummaryRow(
-                    icon: "doc.text.fill",
-                    title: "Terms Accepted",
-                    isCompleted: viewModel.termsAccepted && viewModel.privacyAccepted
-                )
+                Text("You're All Set!")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
                 
-                CompletionSummaryRow(
-                    icon: "heart.text.square.fill",
-                    title: "HealthKit Connected",
-                    isCompleted: viewModel.healthKitPermissions.allGranted
-                )
-                
-                CompletionSummaryRow(
-                    icon: "bell.fill",
-                    title: "Notifications Configured",
-                    isCompleted: viewModel.notificationPermissionGranted
-                )
-            }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
-            
-            Button("Start Using Clarity") {
-                viewModel.completeOnboarding()
-                dismiss()
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-        }
-    }
-    
-    // MARK: - Navigation Buttons
-    
-    private var navigationButtons: some View {
-        HStack {
-            if viewModel.currentStep != 0 {
-                Button("Back") {
-                    viewModel.previousStep()
-                }
-                .buttonStyle(.bordered)
+                Text("Clarity is ready to help you understand your health better")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
             }
             
-            Spacer()
-            
-            if viewModel.currentStep != 4 {
-                Button(viewModel.canProceedFromCurrentStep ? "Next" : "Skip") {
-                    if viewModel.canProceedFromCurrentStep {
-                        viewModel.nextStep()
-                    } else {
-                        viewModel.nextStep()
+            VStack(spacing: 8) {
+                if viewModel.healthKitAuthorized {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                        Text("HealthKit connected")
                     }
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(viewModel.currentStep == 1 && !viewModel.canProceedFromCurrentStep)
+                
+                if viewModel.notificationsAuthorized {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                        Text("Notifications enabled")
+                    }
+                }
+                
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                    Text("Terms accepted")
+                }
             }
+            .foregroundColor(.secondary)
+            
+            Spacer()
         }
-        .padding(.horizontal, 32)
-        .padding(.bottom, 32)
+        .padding()
     }
 }
 
-// MARK: - Supporting Views
+// MARK: - Helper Views
 
 struct FeatureRow: View {
     let icon: String
@@ -440,158 +374,12 @@ struct FeatureRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.headline)
-                
                 Text(description)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
             
             Spacer()
-        }
-    }
-}
-
-struct PermissionRow: View {
-    let icon: String
-    let title: String
-    let description: String
-    let isGranted: Bool
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(.red)
-                .frame(width: 30)
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.headline)
-                
-                Text(description)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            Image(systemName: isGranted ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(isGranted ? .green : .gray)
-        }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
-    }
-}
-
-struct NotificationTypeRow: View {
-    let icon: String
-    let title: String
-    let description: String
-    let isEnabled: Bool
-    let onToggle: () -> Void
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(.orange)
-                .frame(width: 30)
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.headline)
-                
-                Text(description)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            Toggle("", isOn: .constant(isEnabled))
-                .onChange(of: isEnabled) { _, _ in
-                    onToggle()
-                }
-        }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
-    }
-}
-
-struct CompletionSummaryRow: View {
-    let icon: String
-    let title: String
-    let isCompleted: Bool
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(.blue)
-                .frame(width: 30)
-            
-            Text(title)
-                .font(.headline)
-            
-            Spacer()
-            
-            Image(systemName: isCompleted ? "checkmark.circle.fill" : "xmark.circle.fill")
-                .foregroundColor(isCompleted ? .green : .red)
-        }
-    }
-}
-
-struct TermsAndConditionsView: View {
-    let onAccept: () -> Void
-    let onDecline: () -> Void
-    
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Terms of Service")
-                        .font(.title)
-                        .fontWeight(.bold)
-                    
-                    Text("By using Clarity, you agree to the following terms...")
-                        .font(.body)
-                    
-                    // Add actual terms content here
-                    Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
-                        .font(.body)
-                    
-                    Text("Privacy Policy")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .padding(.top)
-                    
-                    Text("Your privacy is important to us...")
-                        .font(.body)
-                    
-                    // Add actual privacy policy content here
-                    Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
-                        .font(.body)
-                }
-                .padding()
-            }
-            .navigationTitle("Terms & Privacy")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Decline") {
-                        onDecline()
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Accept") {
-                        onAccept()
-                    }
-                    .fontWeight(.semibold)
-                }
-            }
         }
     }
 }
