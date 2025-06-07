@@ -46,6 +46,8 @@ private struct HealthKitServiceKey: EnvironmentKey {
     static let defaultValue: HealthKitServiceProtocol = MockHealthKitService()
 }
 
+// Security services will be added later when protocols are defined
+
 extension EnvironmentValues {
     /// Provides access to the `AuthService` throughout the SwiftUI environment.
     var authService: AuthServiceProtocol {

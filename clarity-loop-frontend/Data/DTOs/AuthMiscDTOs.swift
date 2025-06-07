@@ -31,3 +31,22 @@ struct UserPrivacyPreferencesDTO: Codable {
     let dataRetentionPeriod: Int // in days
     let allowThirdPartyIntegrations: Bool
 }
+
+/// DTO for email verification requests.
+struct EmailVerificationRequestDTO: Codable {
+    let verificationCode: String
+    let email: String?
+}
+
+/// DTO for password reset requests.
+struct PasswordResetRequestDTO: Codable {
+    let email: String
+    let redirectUrl: String?
+}
+
+/// DTO for password reset confirmation.
+struct PasswordResetConfirmDTO: Codable {
+    let resetToken: String
+    let newPassword: String
+    let confirmPassword: String
+}

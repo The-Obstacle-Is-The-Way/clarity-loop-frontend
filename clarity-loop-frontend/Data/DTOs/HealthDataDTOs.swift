@@ -77,8 +77,7 @@ struct MentalHealthIndicatorDTO: Codable {
 
 struct PaginatedMetricsResponseDTO: Codable {
     let data: [HealthMetricDTO]
-    // Pagination metadata will be added here based on the final API spec.
-    // let meta: PaginationMetaDTO
+    // Pagination will be added when backend finalizes the structure
 }
 
 // MARK: - Health Data Upload DTOs
@@ -96,7 +95,22 @@ struct HealthDataResponseDTO: Codable {
     let status: String
     let acceptedMetrics: Int
     let rejectedMetrics: Int
-    let validationErrors: [ValidationErrorDTO]
+    let validationErrors: [String] // Simplified for now
+    let estimatedProcessingTime: Int?
+    let syncToken: String?
     let message: String
     let timestamp: Date
+}
+
+/// DTO for processing status queries.
+struct ProcessingStatusDTO: Codable {
+    let processingId: UUID
+    let status: String // "pending", "processing", "completed", "failed"
+    let progress: Double // 0.0 to 1.0
+    let processedMetrics: Int
+    let totalMetrics: Int?
+    let estimatedTimeRemaining: Int? // in seconds
+    let completedAt: Date?
+    let errors: [String]? // Simplified for now
+    let message: String?
 } 

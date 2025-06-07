@@ -67,4 +67,23 @@ struct PaginationMetaDTO: Codable {
     let page: Int
     let limit: Int
     // Add other pagination fields as needed from the API spec
+}
+
+// MARK: - Service Status DTOs
+
+/// DTO for service status response.
+struct ServiceStatusResponseDTO: Codable {
+    let success: Bool
+    let data: ServiceStatusDataDTO
+    let metadata: [String: AnyCodable]?
+}
+
+/// DTO for service status data.
+struct ServiceStatusDataDTO: Codable {
+    let service: String
+    let status: String // "healthy", "degraded", "unhealthy"
+    let modelInfo: [String: AnyCodable] // Simplified to avoid duplication
+    let timestamp: Date
+    let uptime: Double? // in seconds
+    let version: String?
 } 
