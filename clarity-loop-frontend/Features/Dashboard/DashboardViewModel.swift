@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import FirebaseAuth
+import Observation
 
 /// A struct to hold all the necessary data for the dashboard.
 /// This will be expanded as more data sources are integrated.
@@ -16,12 +17,12 @@ struct DashboardData {
     let insightOfTheDay: InsightPreviewDTO?
 }
 
-@MainActor
-class DashboardViewModel: ObservableObject {
+@Observable
+final class DashboardViewModel {
     
-    // MARK: - Published Properties
+    // MARK: - Properties
     
-    @Published var viewState: ViewState<DashboardData> = .idle
+    var viewState: ViewState<DashboardData> = .idle
     
     // MARK: - Dependencies
     

@@ -44,4 +44,15 @@ protocol HealthKitServiceProtocol {
     /// - Parameter uploadRequest: The HealthKit upload request containing samples to upload
     /// - Returns: A response indicating the upload status
     func uploadHealthKitData(_ uploadRequest: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO
+    
+    /// Enables background delivery for HealthKit data types
+    /// - Throws: An error if background delivery setup fails
+    func enableBackgroundDelivery() async throws
+    
+    /// Disables background delivery for HealthKit data types
+    /// - Throws: An error if background delivery disable fails
+    func disableBackgroundDelivery() async throws
+    
+    /// Sets up observer queries to monitor HealthKit data changes
+    func setupObserverQueries()
 } 

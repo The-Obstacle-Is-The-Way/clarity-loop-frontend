@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 final class AnalyzePATDataUseCase {
     
@@ -96,9 +97,8 @@ final class AnalyzePATDataUseCase {
                 
                 stepData.append(StepDataPointDTO(
                     timestamp: timestamp,
-                    stepCount: steps,
-                    cadence: nil, // HealthKit doesn't provide cadence directly
-                    activityLevel: categorizeActivityLevel(steps: steps)
+                    stepCount: Int(steps),
+                    source: "HealthKit"
                 ))
                 
                 currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate

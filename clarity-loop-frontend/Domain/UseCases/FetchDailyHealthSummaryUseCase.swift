@@ -23,7 +23,7 @@ final class FetchDailyHealthSummaryUseCase {
         // Combine and process the data
         return DailyHealthSummary(
             date: date,
-            stepCount: localMetrics.stepCount,
+            stepCount: Int(localMetrics.stepCount),
             restingHeartRate: localMetrics.restingHeartRate,
             sleepData: localMetrics.sleepData,
             remoteMetrics: remoteData.data,
@@ -50,6 +50,6 @@ struct DailyHealthSummary {
     
     var totalSleepHours: Double? {
         guard let sleepData = sleepData else { return nil }
-        return Double(sleepData.totalSleepMinutes) / 60.0
+        return Double(sleepData.totalTimeMinutes) / 60.0
     }
 }

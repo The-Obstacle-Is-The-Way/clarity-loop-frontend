@@ -6,38 +6,26 @@
 //
 
 import Foundation
-
-/// A struct representing a single message in the chat interface.
-struct ChatMessage: Identifiable, Equatable {
-    let id = UUID()
-    let sender: Sender
-    var text: String
-    var isError: Bool = false
-
-    enum Sender {
-        case user
-        case assistant
-    }
-}
+import Observation
 
 /// The ViewModel for the on-demand Gemini chat interface.
-@MainActor
-class ChatViewModel: ObservableObject {
+@Observable
+final class ChatViewModel {
     
-    // MARK: - Published Properties
+    // MARK: - Properties
     
-    @Published var messages: [ChatMessage] = []
-    @Published var currentInput: String = ""
-    @Published var isSending: Bool = false
+    var messages: [ChatMessage] = []
+    var currentInput: String = ""
+    var isSending: Bool = false
     
     // MARK: - Dependencies
     
-    private let insightsRepo: InsightsRepositoryProtocol
+    private let insightAIService: InsightAIServiceProtocol
     
     // MARK: - Initializer
     
-    init(insightsRepo: InsightsRepositoryProtocol) {
-        self.insightsRepo = insightsRepo
+    init(insightAIService: InsightAIServiceProtocol) {
+        self.insightAIService = insightAIService
     }
     
     // MARK: - Public Methods
@@ -57,30 +45,23 @@ class ChatViewModel: ObservableObject {
         
         Task {
             do {
-                // Placeholder for real analysis data
-                let analysisResults: [String: AnyCodable] = ["steps": AnyCodable(10000.0)]
-                
-                let request = InsightGenerationRequestDTO(
-                    analysisResults: analysisResults,
-                    context: tempInput,
-                    insightType: "brief",
-                    includeRecommendations: true,
-                    language: "en"
+                let response = try await insightAIService.generateChatResponse(
+                    userMessage: tempInput,
+                    conversationHistory: messages,
+                    healthContext: nil
                 )
-                
-                let response = try await insightsRepo.generateInsight(requestDTO: request)
                 
                 // Remove the "..." typing indicator
                 _ = messages.popLast()
                 
-                let assistantMessage = ChatMessage(sender: .assistant, text: response.data.narrative)
+                let assistantMessage = ChatMessage(sender: .assistant, text: response.narrative)
                 messages.append(assistantMessage)
                 
             } catch {
                 // Remove the "..." typing indicator
                 _ = messages.popLast()
                 
-                let errorMessage = ChatMessage(sender: .assistant, text: "Sorry, I couldn't fetch that insight. Please try again.", isError: true)
+                let errorMessage = ChatMessage(sender: .assistant, text: "Sorry, I couldn't process your request. Please try again.", isError: true)
                 messages.append(errorMessage)
             }
             isSending = false

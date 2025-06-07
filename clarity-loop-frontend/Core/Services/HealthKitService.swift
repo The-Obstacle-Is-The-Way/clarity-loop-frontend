@@ -203,6 +203,68 @@ class HealthKitService: HealthKitServiceProtocol {
     func uploadHealthKitData(_ uploadRequest: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO {
         return try await apiClient.uploadHealthKitData(requestDTO: uploadRequest)
     }
+    
+    // MARK: - Background Delivery
+    
+    func enableBackgroundDelivery() async throws {
+        for dataType in readTypes {
+            guard let quantityType = dataType as? HKQuantityType else { continue }
+            
+            return try await withCheckedThrowingContinuation { continuation in
+                healthStore.enableBackgroundDelivery(for: quantityType, frequency: .hourly) { success, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            }
+        }
+    }
+    
+    func disableBackgroundDelivery() async throws {
+        for dataType in readTypes {
+            guard let quantityType = dataType as? HKQuantityType else { continue }
+            
+            return try await withCheckedThrowingContinuation { continuation in
+                healthStore.disableBackgroundDelivery(for: quantityType) { success, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            }
+        }
+    }
+    
+    func setupObserverQueries() {
+        for dataType in readTypes {
+            let query = HKObserverQuery(sampleType: dataType, predicate: nil) { [weak self] query, completionHandler, error in
+                if let error = error {
+                    print("Observer query error: \(error)")
+                    return
+                }
+                
+                // Schedule background task for data sync
+                self?.scheduleBackgroundSync(for: dataType)
+                
+                // Call completion handler to indicate we've handled the update
+                completionHandler()
+            }
+            
+            healthStore.execute(query)
+        }
+    }
+    
+    private func scheduleBackgroundSync(for dataType: HKObjectType) {
+        // Post notification that can be observed by the app
+        NotificationCenter.default.post(
+            name: .healthKitDataUpdated,
+            object: nil,
+            userInfo: ["dataType": dataType.identifier]
+        )
+    }
 }
 
 enum HealthKitError: Error {
@@ -218,4 +280,8 @@ extension Calendar {
         }
         return endOfDay
     }
+}
+
+extension Notification.Name {
+    static let healthKitDataUpdated = Notification.Name("healthKitDataUpdated")
 } 
