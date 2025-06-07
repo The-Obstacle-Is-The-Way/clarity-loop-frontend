@@ -50,6 +50,6 @@ struct DailyHealthSummary {
     
     var totalSleepHours: Double? {
         guard let sleepData = sleepData else { return nil }
-        return Double(sleepData.totalTimeMinutes) / 60.0
+        return sleepData.totalTimeAsleep / 3600.0 // Convert from seconds to hours
     }
 }

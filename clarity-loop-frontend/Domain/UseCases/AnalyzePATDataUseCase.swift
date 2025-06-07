@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import FirebaseAuth
 
 final class AnalyzePATDataUseCase {
     
@@ -22,16 +23,12 @@ final class AnalyzePATDataUseCase {
         let stepData = try await collectStepData(from: startDate, to: endDate)
         
         // Create request DTO
+        let userId = FirebaseAuth.Auth.auth().currentUser?.uid ?? "unknown"
         let request = StepDataRequestDTO(
+            userId: userId,
             stepData: stepData,
-            startDate: startDate,
-            endDate: endDate,
-            timezone: TimeZone.current.identifier,
-            metadata: [
-                "source": AnyCodable("HealthKit"),
-                "device_model": AnyCodable(UIDevice.current.model),
-                "app_version": AnyCodable(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown")
-            ]
+            analysisType: "comprehensive",
+            timeRange: TimeRangeDTO(startDate: startDate, endDate: endDate)
         )
         
         // Submit for analysis
@@ -41,26 +38,37 @@ final class AnalyzePATDataUseCase {
         if analysisResponse.status == "processing" {
             return try await pollForCompletion(analysisId: analysisResponse.analysisId)
         } else {
+            // Convert step analysis data to generic PAT features
+            let patFeatures: [String: AnyCodable]? = analysisResponse.data.map { stepData in
+                [
+                    "averageStepsPerDay": AnyCodable(stepData.dailyStepPattern.averageStepsPerDay),
+                    "consistencyScore": AnyCodable(stepData.dailyStepPattern.consistencyScore),
+                    "activityLevel": AnyCodable(stepData.activityInsights.activityLevel),
+                    "goalProgress": AnyCodable(stepData.activityInsights.goalProgress),
+                    "estimatedCaloriesBurned": AnyCodable(stepData.healthMetrics.estimatedCaloriesBurned)
+                ]
+            }
+            
             return PATAnalysisResult(
                 analysisId: analysisResponse.analysisId,
                 status: analysisResponse.status,
-                patFeatures: analysisResponse.patFeatures,
-                confidence: analysisResponse.confidence,
-                completedAt: analysisResponse.completedAt,
-                error: analysisResponse.error
+                patFeatures: patFeatures,
+                confidence: nil, // Not available in step analysis
+                completedAt: analysisResponse.createdAt, // Using creation date as completion
+                error: analysisResponse.message // Using message as error if needed
             )
         }
     }
     
     func executeActigraphyAnalysis(actigraphyData: [ActigraphyDataPointDTO]) async throws -> PATAnalysisResult {
+        let userId = FirebaseAuth.Auth.auth().currentUser?.uid ?? "unknown"
+        let startDate = actigraphyData.first?.timestamp ?? Date()
+        let endDate = actigraphyData.last?.timestamp ?? Date()
         let request = DirectActigraphyRequestDTO(
+            userId: userId,
             actigraphyData: actigraphyData,
-            samplingRate: 30.0, // 30 Hz default
-            timezone: TimeZone.current.identifier,
-            metadata: [
-                "source": AnyCodable("DirectInput"),
-                "data_points": AnyCodable(actigraphyData.count)
-            ]
+            analysisType: "comprehensive",
+            timeRange: TimeRangeDTO(startDate: startDate, endDate: endDate)
         )
         
         let analysisResponse = try await apiClient.analyzeActigraphy(requestDTO: request)
@@ -68,13 +76,25 @@ final class AnalyzePATDataUseCase {
         if analysisResponse.status == "processing" {
             return try await pollForCompletion(analysisId: analysisResponse.analysisId)
         } else {
+            // Convert actigraphy analysis data to generic PAT features
+            let patFeatures: [String: AnyCodable]? = analysisResponse.data.map { actigraphyData in
+                [
+                    "totalSleepTime": AnyCodable(actigraphyData.sleepMetrics.totalSleepTime),
+                    "sleepEfficiency": AnyCodable(actigraphyData.sleepMetrics.sleepEfficiency),
+                    "sleepLatency": AnyCodable(actigraphyData.sleepMetrics.sleepLatency),
+                    "dailyActivityScore": AnyCodable(actigraphyData.activityPatterns.dailyActivityScore),
+                    "circadianPhase": AnyCodable(actigraphyData.circadianRhythm.phase),
+                    "circadianAmplitude": AnyCodable(actigraphyData.circadianRhythm.amplitude)
+                ]
+            }
+            
             return PATAnalysisResult(
                 analysisId: analysisResponse.analysisId,
                 status: analysisResponse.status,
-                patFeatures: analysisResponse.patFeatures,
-                confidence: analysisResponse.confidence,
-                completedAt: analysisResponse.completedAt,
-                error: analysisResponse.error
+                patFeatures: patFeatures,
+                confidence: nil, // Not available in actigraphy analysis
+                completedAt: analysisResponse.createdAt, // Using creation date as completion
+                error: analysisResponse.message // Using message as error if needed
             )
         }
     }

@@ -200,6 +200,13 @@ extension ErrorView {
                 systemImage: "questionmark.circle.fill",
                 retryAction: onRetry
             )
+        case .notImplemented:
+            self.init(
+                title: "Feature Unavailable",
+                message: "This feature is not yet implemented. Please check back later.",
+                systemImage: "wrench.and.screwdriver",
+                retryAction: nil
+            )
         }
     }
 }

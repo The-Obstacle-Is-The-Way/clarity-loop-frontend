@@ -102,8 +102,8 @@ struct HealthDataResponseDTO: Codable {
     let timestamp: Date
 }
 
-/// DTO for processing status queries.
-struct ProcessingStatusDTO: Codable {
+/// DTO for health data processing status queries.
+struct HealthDataProcessingStatusDTO: Codable {
     let processingId: UUID
     let status: String // "pending", "processing", "completed", "failed"
     let progress: Double // 0.0 to 1.0

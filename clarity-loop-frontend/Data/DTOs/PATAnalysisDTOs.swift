@@ -124,4 +124,38 @@ struct CircadianRhythmDTO: Codable {
     let stability: Double
     let regularity: Double
     let recommendations: [String]
-} 
+}
+
+// MARK: - Step Analysis DTO
+
+struct StepAnalysisDTO: Codable {
+    let dailyStepPattern: DailyStepPatternDTO
+    let activityInsights: ActivityInsightsDTO
+    let healthMetrics: StepHealthMetricsDTO
+    let recommendations: [String]
+}
+
+struct DailyStepPatternDTO: Codable {
+    let averageStepsPerDay: Double
+    let peakActivityHours: [Int]
+    let consistencyScore: Double
+    let trendsOverTime: [String]
+}
+
+struct ActivityInsightsDTO: Codable {
+    let activityLevel: String
+    let goalProgress: Double
+    let improvementAreas: [String]
+    let strengths: [String]
+}
+
+struct StepHealthMetricsDTO: Codable {
+    let estimatedCaloriesBurned: Double
+    let activeMinutesPerDay: Double
+    let sedentaryTimePercentage: Double
+}
+
+// MARK: - Type Aliases for API Client
+
+typealias StepAnalysisResponseDTO = AnalysisResponseDTO<StepAnalysisDTO>
+typealias ActigraphyAnalysisResponseDTO = AnalysisResponseDTO<ActigraphyAnalysisDTO> 

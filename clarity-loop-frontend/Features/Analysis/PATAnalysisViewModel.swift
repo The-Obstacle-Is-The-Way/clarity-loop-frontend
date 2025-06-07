@@ -35,13 +35,16 @@ final class PATAnalysisViewModel {
         
         do {
             let response = try await apiClient.getPATAnalysis(id: analysisId)
+            // Convert [String: Double] to [String: AnyCodable]
+            let patFeatures: [String: AnyCodable]? = response.patFeatures?.mapValues { AnyCodable($0) }
+            
             let result = PATAnalysisResult(
-                analysisId: response.analysisId,
+                analysisId: response.id,
                 status: response.status,
-                patFeatures: response.patFeatures,
-                confidence: response.confidence,
+                patFeatures: patFeatures,
+                confidence: response.analysis?.confidenceScore,
                 completedAt: response.completedAt,
-                error: response.error
+                error: response.errorMessage
             )
             
             if result.isCompleted {
@@ -95,13 +98,16 @@ final class PATAnalysisViewModel {
         for attempt in 1...maxAttempts {
             do {
                 let response = try await apiClient.getPATAnalysis(id: analysisId)
+                // Convert [String: Double] to [String: AnyCodable]
+                let patFeatures: [String: AnyCodable]? = response.patFeatures?.mapValues { AnyCodable($0) }
+                
                 let result = PATAnalysisResult(
-                    analysisId: response.analysisId,
+                    analysisId: response.id,
                     status: response.status,
-                    patFeatures: response.patFeatures,
-                    confidence: response.confidence,
+                    patFeatures: patFeatures,
+                    confidence: response.analysis?.confidenceScore,
                     completedAt: response.completedAt,
-                    error: response.error
+                    error: response.errorMessage
                 )
                 
                 if result.isCompleted {

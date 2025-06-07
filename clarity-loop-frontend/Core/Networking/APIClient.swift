@@ -17,7 +17,7 @@ protocol APIClientProtocol {
     func syncHealthKitData(requestDTO: HealthKitSyncRequestDTO) async throws -> HealthKitSyncResponseDTO
     func getHealthKitSyncStatus(syncId: String) async throws -> HealthKitSyncStatusDTO
     func getHealthKitUploadStatus(uploadId: String) async throws -> HealthKitUploadStatusDTO
-    func getProcessingStatus(id: UUID) async throws -> ProcessingStatusDTO
+    func getProcessingStatus(id: UUID) async throws -> HealthDataProcessingStatusDTO
     
     // Endpoints for Insights
     func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO
@@ -26,8 +26,8 @@ protocol APIClientProtocol {
     func getInsightsServiceStatus() async throws -> ServiceStatusResponseDTO
     
     // Endpoints for PAT Analysis
-    func analyzeStepData(requestDTO: StepDataRequestDTO) async throws -> AnalysisResponseDTO
-    func analyzeActigraphy(requestDTO: DirectActigraphyRequestDTO) async throws -> AnalysisResponseDTO
+    func analyzeStepData(requestDTO: StepDataRequestDTO) async throws -> StepAnalysisResponseDTO
+    func analyzeActigraphy(requestDTO: DirectActigraphyRequestDTO) async throws -> ActigraphyAnalysisResponseDTO
     func getPATAnalysis(id: String) async throws -> PATAnalysisResponseDTO
     func getPATServiceHealth() async throws -> ServiceStatusResponseDTO
 }
@@ -139,7 +139,7 @@ final class APIClient: APIClientProtocol {
         return try await performRequest(for: endpoint)
     }
     
-    func getProcessingStatus(id: UUID) async throws -> ProcessingStatusDTO {
+    func getProcessingStatus(id: UUID) async throws -> HealthDataProcessingStatusDTO {
         let endpoint = HealthDataEndpoint.getProcessingStatus(id: id)
         return try await performRequest(for: endpoint)
     }
@@ -158,12 +158,12 @@ final class APIClient: APIClientProtocol {
     
     // MARK: - PAT Analysis Methods
     
-    func analyzeStepData(requestDTO: StepDataRequestDTO) async throws -> AnalysisResponseDTO {
+    func analyzeStepData(requestDTO: StepDataRequestDTO) async throws -> StepAnalysisResponseDTO {
         let endpoint = PATEndpoint.analyzeStepData(dto: requestDTO)
         return try await performRequest(for: endpoint)
     }
     
-    func analyzeActigraphy(requestDTO: DirectActigraphyRequestDTO) async throws -> AnalysisResponseDTO {
+    func analyzeActigraphy(requestDTO: DirectActigraphyRequestDTO) async throws -> ActigraphyAnalysisResponseDTO {
         let endpoint = PATEndpoint.analyzeActigraphy(dto: requestDTO)
         return try await performRequest(for: endpoint)
     }

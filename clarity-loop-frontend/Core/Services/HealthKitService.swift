@@ -240,14 +240,16 @@ class HealthKitService: HealthKitServiceProtocol {
     
     func setupObserverQueries() {
         for dataType in readTypes {
-            let query = HKObserverQuery(sampleType: dataType, predicate: nil) { [weak self] query, completionHandler, error in
+            // Only create observer queries for sample types (not category types)
+            guard let sampleType = dataType as? HKSampleType else { continue }
+            let query = HKObserverQuery(sampleType: sampleType, predicate: nil) { [weak self] query, completionHandler, error in
                 if let error = error {
                     print("Observer query error: \(error)")
                     return
                 }
                 
                 // Schedule background task for data sync
-                self?.scheduleBackgroundSync(for: dataType)
+                self?.scheduleBackgroundSync(for: sampleType)
                 
                 // Call completion handler to indicate we've handled the update
                 completionHandler()

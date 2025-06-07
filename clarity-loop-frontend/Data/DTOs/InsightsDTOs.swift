@@ -95,7 +95,7 @@ struct ModelInfoDTO: Codable {
     let capabilities: [String]
 }
 
-struct ProcessingStatusDTO: Codable {
+struct InsightProcessingStatusDTO: Codable {
     let processingId: UUID
     let status: String // "pending", "processing", "completed", "failed"
     let progress: Double? // 0.0 to 1.0
