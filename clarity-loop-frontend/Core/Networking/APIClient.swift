@@ -46,7 +46,7 @@ final class APIClient: APIClientProtocol {
     // MARK: - Initializer
 
     init?(
-        baseURLString: String = "https://api.clarity.health/api/v1",
+        baseURLString: String = "https://api.clarity.health",
         session: URLSession = .shared,
         tokenProvider: @escaping () async -> String?
     ) {

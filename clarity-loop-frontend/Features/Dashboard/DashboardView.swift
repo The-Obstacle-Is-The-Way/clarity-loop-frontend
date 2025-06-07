@@ -114,7 +114,7 @@ struct DashboardView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: ChatView()) {
-                        Image(systemName: "sparkles.bubble.fill")
+                        Image(systemName: "bubble.left.and.bubble.right")
                     }
                 }
             }
