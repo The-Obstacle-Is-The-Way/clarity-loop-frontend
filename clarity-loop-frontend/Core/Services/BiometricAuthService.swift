@@ -3,7 +3,7 @@ import LocalAuthentication
 import Observation
 
 @Observable
-final class BiometricAuthService {
+final class BiometricAuthService: @unchecked Sendable {
     
     // MARK: - Properties
     var isBiometricEnabled = false

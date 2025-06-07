@@ -35,15 +35,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		7171570B2DF3DE6C00F8B4D7 /* Exceptions for "clarity-loop-frontendTests" folder in "clarity-loop-frontendTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			platformFiltersByRelativePath = {
-				Core/Services/AuthServiceTests.swift = (ios, );
-				IntegrationTests.swift = (ios, );
-				Mocks/MockAuthService.swift = (ios, );
-			};
-			target = 71B2A8D92DF35EBB00F2784F /* clarity-loop-frontendTests */;
-		};
 		7171570C2DF3DE8600F8B4D7 /* Exceptions for "clarity-loop-frontendUITests" folder in "clarity-loop-frontendUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			platformFiltersByRelativePath = {
@@ -62,9 +53,6 @@
 		};
 		71B2A8DD2DF35EBB00F2784F /* clarity-loop-frontendTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				7171570B2DF3DE6C00F8B4D7 /* Exceptions for "clarity-loop-frontendTests" folder in "clarity-loop-frontendTests" target */,
-			);
 			path = "clarity-loop-frontendTests";
 			sourceTree = "<group>";
 		};

@@ -51,6 +51,11 @@ struct RegistrationView: View {
                 .padding()
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
+
+            SecureField("Confirm Password", text: $viewModel.confirmPassword)
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
             
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
