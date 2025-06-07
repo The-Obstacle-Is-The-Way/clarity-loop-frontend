@@ -1,38 +1,7 @@
 import XCTest
 @testable import clarity_loop_frontend
 
-fileprivate class MockAPIClient: APIClientProtocol {
-    
-    var insightsHistoryShouldSucceed = true
-    var generateInsightShouldSucceed = true
-    
-    var mockInsightHistoryResponse: InsightHistoryResponseDTO?
-    var mockGenerateInsightResponse: InsightGenerationResponseDTO?
-    
-    // Health Data Methods
-    func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO { fatalError("Not implemented") }
-    
-    // Insights Methods
-    func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO {
-        if insightsHistoryShouldSucceed {
-            return mockInsightHistoryResponse ?? InsightHistoryResponseDTO(success: true, data: InsightHistoryDataDTO(insights: [], totalCount: 0, hasMore: false, pagination: nil), metadata: nil)
-        } else {
-            throw APIError.serverError(statusCode: 500, message: "Test server error")
-        }
-    }
-    
-    func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO {
-        if generateInsightShouldSucceed {
-            return mockGenerateInsightResponse!
-        } else {
-            throw APIError.serverError(statusCode: 400, message: "Bad request")
-        }
-    }
-    
-    // Auth Methods
-    func register(requestDTO: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO { fatalError("Not implemented") }
-    func login(requestDTO: UserLoginRequestDTO) async throws -> LoginResponseDTO { fatalError("Not implemented") }
-}
+
 
 final class RemoteInsightsRepositoryTests: XCTestCase {
 
@@ -67,7 +36,7 @@ final class RemoteInsightsRepositoryTests: XCTestCase {
     
     func testGetInsightHistory_Failure() async {
         // Given
-        mockAPIClient.insightsHistoryShouldSucceed = false
+        mockAPIClient.shouldSucceed = false
         
         // When & Then
         do {

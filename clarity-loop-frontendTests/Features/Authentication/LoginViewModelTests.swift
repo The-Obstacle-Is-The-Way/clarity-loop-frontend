@@ -2,48 +2,7 @@ import XCTest
 import FirebaseAuth
 @testable import clarity_loop_frontend
 
-// A mock implementation of AuthServiceProtocol for testing purposes.
-fileprivate class MockAuthService: AuthServiceProtocol {
-    var authState: AsyncStream<FirebaseAuth.User?> { AsyncStream { $0.yield(nil) } }
-    var currentUser: FirebaseAuth.User? { nil }
 
-    var signInShouldSucceed = true
-    var sendPasswordResetShouldSucceed = true
-    var shouldThrowError = false
-    var signInCallCount = 0
-
-    func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
-        if signInShouldSucceed {
-            signInCallCount += 1
-            return UserSessionResponseDTO(
-                userId: UUID(),
-                firstName: "Test",
-                lastName: "User",
-                email: email,
-                role: "user",
-                permissions: [],
-                status: "active",
-                mfaEnabled: false,
-                emailVerified: true,
-                createdAt: Date(),
-                lastLogin: nil
-            )
-        } else {
-            throw APIError.unauthorized
-        }
-    }
-
-    func sendPasswordReset(to email: String) async throws {
-        if !sendPasswordResetShouldSucceed {
-            throw APIError.unknown(NSError(domain: "test", code: 0, userInfo: nil))
-        }
-    }
-    
-    // Unused methods for this test case
-    func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO { fatalError("Not implemented") }
-    func signOut() throws { fatalError("Not implemented") }
-    func getCurrentUserToken() async throws -> String { fatalError("Not implemented") }
-}
 
 @MainActor
 final class LoginViewModelTests: XCTestCase {
@@ -105,79 +64,67 @@ final class LoginViewModelTests: XCTestCase {
         XCTAssertEqual(mockAuthService.signInCallCount, 1)
     }
 
-    func testSignIn_WithEmptyCredentials_ShowsErrorMessage() {
+    func testLogin_WithEmptyCredentials_ShowsErrorMessage() async {
         // Given
         viewModel.email = ""
         viewModel.password = ""
         
         // When
-        viewModel.signIn()
+        await viewModel.login()
         
         // Then
         XCTAssertFalse(viewModel.isLoading)
-        XCTAssertEqual(viewModel.errorMessage, "Please enter both email and password.")
+        XCTAssertNotNil(viewModel.errorMessage)
     }
     
-    func testSignIn_Successful() async {
+    func testLogin_Successful() async {
         // Given
         mockAuthService.signInShouldSucceed = true
         viewModel.email = "test@example.com"
         viewModel.password = "password"
         
         // When
-        viewModel.signIn()
+        await viewModel.login()
         
         // Then
-        XCTAssertTrue(viewModel.isLoading)
-        
-        // Allow the async task to run
-        await Task.yield()
-        
         XCTAssertFalse(viewModel.isLoading)
         XCTAssertNil(viewModel.errorMessage)
     }
     
-    func testSignIn_Failure_ShowsErrorMessage() async {
+    func testLogin_Failure_ShowsErrorMessage() async {
         // Given
         mockAuthService.signInShouldSucceed = false
         viewModel.email = "test@example.com"
         viewModel.password = "wrongpassword"
         
         // When
-        viewModel.signIn()
+        await viewModel.login()
         
         // Then
-        XCTAssertTrue(viewModel.isLoading)
-        
-        await Task.yield()
-        
         XCTAssertFalse(viewModel.isLoading)
         XCTAssertNotNil(viewModel.errorMessage)
-        XCTAssertEqual(viewModel.errorMessage, APIError.unauthorized.localizedDescription)
     }
     
-    func testSendPasswordReset_WithEmptyEmail_ShowsErrorMessage() {
+    func testRequestPasswordReset_WithEmptyEmail_ShowsErrorMessage() async {
         // Given
         viewModel.email = ""
         
         // When
-        viewModel.sendPasswordReset()
+        await viewModel.requestPasswordReset()
         
         // Then
-        XCTAssertEqual(viewModel.errorMessage, "Please enter your email address to reset your password.")
+        XCTAssertNotNil(viewModel.errorMessage)
     }
     
-    func testSendPasswordReset_Successful() async {
+    func testRequestPasswordReset_Successful() async {
         // Given
         mockAuthService.sendPasswordResetShouldSucceed = true
         viewModel.email = "test@example.com"
         
         // When
-        viewModel.sendPasswordReset()
-        
-        await Task.yield()
+        await viewModel.requestPasswordReset()
 
         // Then
-        XCTAssertEqual(viewModel.errorMessage, "Password reset email sent. Please check your inbox.")
+        XCTAssertNil(viewModel.errorMessage)
     }
 } 

@@ -35,7 +35,11 @@ final class RegistrationViewModel {
         isLoading = true
         errorMessage = nil
         
-        // TODO: Add validation for fields
+        // Validate inputs first
+        guard validateInputs() else {
+            isLoading = false
+            return
+        }
         
         let details = UserRegistrationRequestDTO(
             email: email,
@@ -43,13 +47,14 @@ final class RegistrationViewModel {
             firstName: firstName,
             lastName: lastName,
             phoneNumber: nil,
-            termsAccepted: true, // Assuming these are handled in the UI
-            privacyPolicyAccepted: true
+            termsAccepted: termsAccepted,
+            privacyPolicyAccepted: privacyPolicyAccepted
         )
         
         do {
             _ = try await authService.register(withEmail: email, password: password, details: details)
-            // On success, show a message to the user to check their email for verification.
+            registrationComplete = true
+            errorMessage = "Registration successful! Please check your email for verification."
         } catch {
             errorMessage = error.localizedDescription
         }

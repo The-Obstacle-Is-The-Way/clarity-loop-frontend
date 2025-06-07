@@ -1,40 +1,6 @@
 import XCTest
 @testable import clarity_loop_frontend
 
-class MockAPIClient: APIClientProtocol {
-    func register(requestDTO: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO {
-        throw APIError.notImplemented
-    }
-    
-    func login(requestDTO: UserLoginRequestDTO) async throws -> LoginResponseDTO {
-        throw APIError.notImplemented
-    }
-    
-    func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO {
-        throw APIError.notImplemented
-    }
-    
-    func uploadHealthKitData(requestDTO: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO {
-        return HealthKitUploadResponseDTO(success: true, uploadId: "test", processedSamples: 1, skippedSamples: 0, errors: nil, message: nil)
-    }
-    
-    func syncHealthKitData(requestDTO: HealthKitSyncRequestDTO) async throws -> HealthKitSyncResponseDTO {
-        throw APIError.notImplemented
-    }
-    
-    func getHealthKitSyncStatus(syncId: String) async throws -> HealthKitSyncStatusDTO {
-        throw APIError.notImplemented
-    }
-    
-    func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO {
-        throw APIError.notImplemented
-    }
-    
-    func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO {
-        throw APIError.notImplemented
-    }
-}
-
 final class HealthKitServiceTests: XCTestCase {
 
     private var service: HealthKitService!
