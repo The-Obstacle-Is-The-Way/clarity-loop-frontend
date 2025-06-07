@@ -20,6 +20,13 @@ struct AuthServiceKey: EnvironmentKey {
     }
 }
 
+/// The key for accessing the `AuthViewModel` in the SwiftUI Environment.
+struct AuthViewModelKey: EnvironmentKey {
+    static var defaultValue: AuthViewModel {
+        fatalError("AuthViewModel must be explicitly provided in the environment")
+    }
+}
+
 private struct APIClientKey: EnvironmentKey {
     static let defaultValue: APIClientProtocol = {
         guard let client = APIClient(
@@ -76,6 +83,12 @@ extension EnvironmentValues {
     var authService: AuthServiceProtocol {
         get { self[AuthServiceKey.self] }
         set { self[AuthServiceKey.self] = newValue }
+    }
+    
+    /// Provides access to the `AuthViewModel` throughout the SwiftUI environment.
+    var authViewModel: AuthViewModel {
+        get { self[AuthViewModelKey.self] }
+        set { self[AuthViewModelKey.self] = newValue }
     }
     
     var healthDataRepository: HealthDataRepositoryProtocol {

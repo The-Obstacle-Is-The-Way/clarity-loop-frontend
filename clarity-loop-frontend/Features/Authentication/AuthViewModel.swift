@@ -1,5 +1,7 @@
 import Combine
+import Foundation
 import SwiftUI
+import Observation
 
 /// Manages the global authentication state for the entire application.
 ///
@@ -7,12 +9,13 @@ import SwiftUI
 /// It observes the `AuthService` and publishes the authentication status, allowing
 /// the UI to reactively switch between login/main content views.
 @MainActor
-final class AuthViewModel: ObservableObject {
+@Observable
+final class AuthViewModel {
     
-    // MARK: - Published Properties
+    // MARK: - Properties
     
     /// A boolean flag indicating if a user is currently authenticated.
-    @Published private(set) var isLoggedIn: Bool = false
+    private(set) var isLoggedIn: Bool = false
     
     // MARK: - Private Properties
     

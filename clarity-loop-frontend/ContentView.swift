@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject private var authViewModel: AuthViewModel
+    @Environment(AuthViewModel.self) private var authViewModel
     @Environment(\.authService) private var authService
 
     var body: some View {
         if authViewModel.isLoggedIn {
             MainTabView()
         } else {
-            // The LoginView should be wrapped in a NavigationView for proper UI flow.
-            NavigationView {
+            // The LoginView should be wrapped in a NavigationStack for proper UI flow.
+            NavigationStack {
                 LoginView(viewModel: LoginViewModel(authService: authService))
             }
         }

@@ -4,7 +4,7 @@ struct RegistrationView: View {
     
     // MARK: - Environment
     
-    @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.dismiss) private var dismiss
     
     // MARK: - State
     
@@ -47,12 +47,12 @@ struct RegistrationView: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
 
-            SecureField("Password", text: $viewModel.password)
+            CustomSecureField(text: $viewModel.password, placeholder: "Password")
                 .padding()
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
 
-            SecureField("Confirm Password", text: $viewModel.confirmPassword)
+            CustomSecureField(text: $viewModel.confirmPassword, placeholder: "Confirm Password")
                 .padding()
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
@@ -99,7 +99,7 @@ struct RegistrationView: View {
             Spacer()
             
             Button("Already have an account? Login") {
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }
         }
         .padding()

@@ -15,9 +15,9 @@ struct ClarityPulseApp: App {
     
     // MARK: - Properties
     
-    // By using the @StateObject property wrapper, we ensure that the AuthViewModel
+    // By using the @State property wrapper, we ensure that the AuthViewModel
     // is instantiated only once for the entire lifecycle of the app.
-    @StateObject private var authViewModel: AuthViewModel
+    @State private var authViewModel: AuthViewModel
     
     // The APIClient and services are instantiated here and injected into the environment.
     private let authService: AuthServiceProtocol
@@ -50,7 +50,7 @@ struct ClarityPulseApp: App {
         self.healthDataRepository = RemoteHealthDataRepository(apiClient: client)
         
         // The AuthViewModel is created with the concrete AuthService instance.
-        _authViewModel = StateObject(wrappedValue: AuthViewModel(authService: service))
+        _authViewModel = State(initialValue: AuthViewModel(authService: service))
     }
 
     // MARK: - Body
@@ -58,7 +58,7 @@ struct ClarityPulseApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(authViewModel)
+                .environment(authViewModel)
                 .environment(\.authService, authService)
                 .environment(\.healthKitService, healthKitService)
                 .environment(\.apiClient, apiClient)
