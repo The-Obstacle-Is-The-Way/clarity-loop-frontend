@@ -90,3 +90,15 @@ struct HealthKitSyncStatusDTO: Codable {
     let errors: [String]?
     let completedAt: Date?
 }
+
+/// A DTO for upload status queries.
+struct HealthKitUploadStatusDTO: Codable {
+    let uploadId: String
+    let status: String
+    let progress: Double
+    let processedSamples: Int
+    let totalSamples: Int?
+    let errors: [String]?
+    let completedAt: Date?
+    let message: String?
+}
