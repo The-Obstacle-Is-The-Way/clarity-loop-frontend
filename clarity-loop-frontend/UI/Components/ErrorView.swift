@@ -207,6 +207,13 @@ extension ErrorView {
                 systemImage: "wrench.and.screwdriver",
                 retryAction: nil
             )
+        case .validationError(let message):
+            self.init(
+                title: "Invalid Data",
+                message: message,
+                systemImage: "exclamationmark.triangle.fill",
+                retryAction: onRetry
+            )
         }
     }
 }
