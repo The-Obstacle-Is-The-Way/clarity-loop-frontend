@@ -124,4 +124,89 @@ class MockHealthDataRepository: HealthDataRepositoryProtocol {
             throw APIError.serverError(statusCode: 500, message: "Database error")
         }
     }
+    
+    func uploadHealthKitData(requestDTO: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO {
+        if shouldSucceed {
+            return HealthKitUploadResponseDTO(
+                success: true,
+                uploadId: "mock-upload-id",
+                processedSamples: 10,
+                skippedSamples: 0,
+                errors: nil,
+                message: "Mock upload successful"
+            )
+        } else {
+            throw APIError.serverError(statusCode: 500, message: "Upload error")
+        }
+    }
+    
+    func syncHealthKitData(requestDTO: HealthKitSyncRequestDTO) async throws -> HealthKitSyncResponseDTO {
+        if shouldSucceed {
+            return HealthKitSyncResponseDTO(
+                success: true,
+                syncId: "mock-sync-id",
+                status: "completed",
+                processedSamples: 20,
+                skippedSamples: 0,
+                errors: [],
+                message: "Mock sync successful"
+            )
+        } else {
+            throw APIError.serverError(statusCode: 500, message: "Sync error")
+        }
+    }
+    
+    func getHealthKitSyncStatus(syncId: String) async throws -> HealthKitSyncStatusDTO {
+        if shouldSucceed {
+            return HealthKitSyncStatusDTO(
+                syncId: syncId,
+                status: "completed",
+                progress: 100,
+                processedSamples: 25,
+                skippedSamples: 0,
+                errors: [],
+                startedAt: Date(),
+                completedAt: Date(),
+                estimatedTimeRemaining: nil
+            )
+        } else {
+            throw APIError.serverError(statusCode: 500, message: "Sync status error")
+        }
+    }
+    
+    func getHealthKitUploadStatus(uploadId: String) async throws -> HealthKitUploadStatusDTO {
+        if shouldSucceed {
+            return HealthKitUploadStatusDTO(
+                uploadId: uploadId,
+                status: "completed",
+                progress: 100,
+                processedSamples: 15,
+                skippedSamples: 0,
+                errors: [],
+                startedAt: Date(),
+                completedAt: Date(),
+                estimatedTimeRemaining: nil
+            )
+        } else {
+            throw APIError.serverError(statusCode: 500, message: "Upload status error")
+        }
+    }
+    
+    func getProcessingStatus(id: UUID) async throws -> HealthDataProcessingStatusDTO {
+        if shouldSucceed {
+            return HealthDataProcessingStatusDTO(
+                id: id,
+                status: "completed",
+                progress: 100,
+                processedRecords: 30,
+                totalRecords: 30,
+                errors: [],
+                startedAt: Date(),
+                completedAt: Date(),
+                estimatedTimeRemaining: nil
+            )
+        } else {
+            throw APIError.serverError(statusCode: 500, message: "Processing status error")
+        }
+    }
 } 
