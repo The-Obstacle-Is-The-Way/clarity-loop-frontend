@@ -36,7 +36,13 @@ struct MainTabView: View {
             }
             
             NavigationStack {
-                DebugAPIView()
+                VStack {
+                    DebugAPIView()
+                    
+                    NavigationLink("Token Debug Info", destination: TokenDebugView())
+                        .buttonStyle(.borderedProminent)
+                        .padding()
+                }
             }
             .tabItem {
                 Image(systemName: "ladybug.fill")

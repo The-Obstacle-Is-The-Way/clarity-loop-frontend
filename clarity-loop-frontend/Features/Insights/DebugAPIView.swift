@@ -7,6 +7,9 @@
 
 import SwiftUI
 import FirebaseAuth
+#if canImport(UIKit) && DEBUG
+import UIKit
+#endif
 
 struct DebugAPIView: View {
     @State private var statusMessage = "Tap buttons to test API"
@@ -103,6 +106,18 @@ struct DebugAPIView: View {
                     return
                 }
                 
+                #if DEBUG
+                // 1️⃣  Print the full JWT so we can copy from the console
+                print("FULL_ID_TOKEN → \(token)")
+
+                // 2️⃣  Copy to clipboard for CLI use
+                #if canImport(UIKit)
+                UIPasteboard.general.string = token
+                #endif
+
+                print("✅ ID-token copied to clipboard (length: \(token.count))")
+                #endif
+                
                 let url = URL(string: "\(AppConfig.apiBaseURL)/api/v1/insights/generate")!
                 var request = URLRequest(url: url)
                 request.httpMethod = "POST"
@@ -143,6 +158,18 @@ struct DebugAPIView: View {
                 let start = token.prefix(10)
                 let end = token.suffix(10)
                 statusMessage = "Token: \(start)...\(end)\nLength: \(token.count)"
+                
+                #if DEBUG
+                // 1️⃣  Print the full JWT so we can copy from the console
+                print("FULL_ID_TOKEN → \(token)")
+
+                // 2️⃣  Copy to clipboard for CLI use
+                #if canImport(UIKit)
+                UIPasteboard.general.string = token
+                #endif
+
+                print("✅ ID-token copied to clipboard (length: \(token.count))")
+                #endif
             } else {
                 statusMessage = "No token available - user not logged in?"
             }

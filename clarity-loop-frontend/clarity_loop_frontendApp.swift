@@ -10,6 +10,9 @@ import FirebaseCore
 import SwiftData
 import SwiftUI
 import BackgroundTasks
+#if canImport(UIKit) && DEBUG
+import UIKit
+#endif
 
 @main
 struct ClarityPulseApp: App {
@@ -36,8 +39,41 @@ struct ClarityPulseApp: App {
         
         // Initialize the APIClient with proper token provider
         guard let client = APIClient(tokenProvider: {
-            // Force refresh tokens to ensure they're fresh
-            return try? await Auth.auth().currentUser?.getIDToken(forcingRefresh: true)
+            print("🔍 APP: Token provider called")
+            
+            guard let user = Auth.auth().currentUser else {
+                print("❌ APP: No Firebase user found in token provider")
+                return nil
+            }
+            
+            print("✅ APP: User found in token provider: \(user.uid)")
+            
+            do {
+                // Force refresh tokens to ensure they're fresh
+                let tokenResult = try await user.getIDTokenResult(forcingRefresh: true)
+                let token = tokenResult.token
+                
+                print("✅ APP: Token obtained in provider")
+                print("   - Length: \(token.count)")
+                print("   - aud: \(tokenResult.claims["aud"] ?? "missing")")
+                print("   - iss: \(tokenResult.claims["iss"] ?? "missing")")
+                
+                #if DEBUG
+                // Print the full JWT so we can copy from the console
+                print("🧪 FULL_ID_TOKEN → \(token)")
+
+                // Copy to clipboard for CLI use
+                #if canImport(UIKit)
+                UIPasteboard.general.string = token
+                print("📋 Token copied to clipboard")
+                #endif
+                #endif
+                
+                return token
+            } catch {
+                print("❌ APP: Failed to get token in provider: \(error)")
+                return nil
+            }
         }) else {
             fatalError("Failed to initialize APIClient with a valid URL.")
         }

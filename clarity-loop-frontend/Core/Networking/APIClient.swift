@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(UIKit) && DEBUG
+import UIKit
+#endif
 
 /// Defines the contract for an API client that communicates with the CLARITY backend.
 /// This protocol allows for dependency injection and mocking for testing purposes.
@@ -221,11 +224,41 @@ final class APIClient: APIClientProtocol {
                 throw APIError.unauthorized
             }
             print("✅ APIClient: Token retrieved (length: \(token.count))")
+            
+            // Check if this is a test token
+            if token == "test-token-123" {
+                print("⚠️ WARNING: Using test token 'test-token-123'! This will fail authentication!")
+            }
+            
+            #if DEBUG
+            // Print token details for debugging
+            print("🔍 Token details:")
+            print("   - First 50 chars: \(String(token.prefix(50)))")
+            print("   - Last 10 chars: \(String(token.suffix(10)))")
+            print("   - Full token: \(token)")
+
+            // Copy to clipboard for CLI use
+            #if canImport(UIKit)
+            UIPasteboard.general.string = token
+            #endif
+
+            print("✅ ID-token copied to clipboard")
+            #endif
+            
             authorizedRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            print("📤 APIClient: Authorization header set: Bearer \(String(token.prefix(20)))...")
         }
         
         do {
             print("📡 APIClient: Sending request to \(authorizedRequest.url?.absoluteString ?? "unknown URL")")
+            print("📋 APIClient: Request headers:")
+            authorizedRequest.allHTTPHeaderFields?.forEach { key, value in
+                if key == "Authorization" {
+                    print("   - \(key): Bearer \(String(value.dropFirst(7).prefix(20)))...")
+                } else {
+                    print("   - \(key): \(value)")
+                }
+            }
             let (data, response) = try await session.data(for: authorizedRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -261,6 +294,19 @@ final class APIClient: APIClientProtocol {
                     print("🔄 APIClient: Attempting token refresh...")
                     if let refreshedToken = await tokenProvider() {
                         print("🔑 APIClient: Retrying with refreshed token...")
+                        
+                        #if DEBUG
+                        // 1️⃣  Print the full JWT so we can copy from the console
+                        print("FULL_ID_TOKEN → \(refreshedToken)")
+
+                        // 2️⃣  Copy to clipboard for CLI use
+                        #if canImport(UIKit)
+                        UIPasteboard.general.string = refreshedToken
+                        #endif
+
+                        print("✅ ID-token copied to clipboard (length: \(refreshedToken.count))")
+                        #endif
+                        
                         authorizedRequest.setValue("Bearer \(refreshedToken)", forHTTPHeaderField: "Authorization")
                         
                         // Retry the request once with fresh token

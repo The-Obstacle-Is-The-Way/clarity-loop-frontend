@@ -7,9 +7,13 @@
 
 import FirebaseAuth
 import SwiftUI
+#if canImport(UIKit) && DEBUG
+import UIKit
+#endif
 
 struct ChatView: View {
     @State private var viewModel: ChatViewModel?
+    @Environment(\.apiClient) private var apiClient
 
     var body: some View {
         VStack {
@@ -53,11 +57,7 @@ struct ChatView: View {
         .navigationTitle("AI Assistant")
         .task {
             if viewModel == nil {
-                guard let apiClient = APIClient(tokenProvider: {
-                    try? await Auth.auth().currentUser?.getIDToken()
-                }) else {
-                    return
-                }
+                // Use the shared APIClient from environment instead of creating a new one
                 let insightAIService = InsightAIService(apiClient: apiClient)
                 viewModel = ChatViewModel(insightAIService: insightAIService)
             }

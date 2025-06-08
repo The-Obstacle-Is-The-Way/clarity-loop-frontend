@@ -1,5 +1,8 @@
 import FirebaseAuth
 import Foundation
+#if canImport(UIKit) && DEBUG
+import UIKit
+#endif
 
 /// Defines the contract for a service that manages user authentication.
 /// This protocol allows for dependency injection and mocking for testing purposes.
@@ -136,10 +139,47 @@ final class AuthService: AuthServiceProtocol {
     }
     
     func getCurrentUserToken() async throws -> String {
+        print("🔍 AUTH: getCurrentUserToken() called")
+        
         guard let user = Auth.auth().currentUser else {
+            print("❌ AUTH: No current user found!")
             throw APIError.unauthorized
         }
-        return try await user.getIDToken(forcingRefresh: false)
+        
+        print("✅ AUTH: Current user exists - UID: \(user.uid)")
+        print("📧 AUTH: User email: \(user.email ?? "no email")")
+        print("✉️ AUTH: Email verified: \(user.isEmailVerified)")
+        
+        // Get token result for more debugging info
+        do {
+            let tokenResult = try await user.getIDTokenResult(forcingRefresh: true)
+            print("🔍 AUTH: Token claims:")
+            print("   - aud: \(tokenResult.claims["aud"] ?? "missing")")
+            print("   - iss: \(tokenResult.claims["iss"] ?? "missing")")
+            print("   - exp: \(tokenResult.claims["exp"] ?? "missing")")
+            print("   - auth_time: \(tokenResult.claims["auth_time"] ?? "missing")")
+            
+            let token = tokenResult.token
+            print("✅ AUTH: Token retrieved successfully")
+            print("   - Length: \(token.count) characters")
+            print("   - Preview: \(String(token.prefix(50)))...")
+            
+            #if DEBUG
+            // 1️⃣  Print the full JWT so we can copy from the console
+            print("🧪 FULL_ID_TOKEN → \(token)")
+
+            // 2️⃣  Copy to clipboard for CLI use
+            #if canImport(UIKit)
+            UIPasteboard.general.string = token
+            print("📋 Token copied to clipboard")
+            #endif
+            #endif
+            
+            return token
+        } catch {
+            print("❌ AUTH: Failed to get ID token: \(error)")
+            throw error
+        }
     }
     
     // MARK: - Private Error Mapping
