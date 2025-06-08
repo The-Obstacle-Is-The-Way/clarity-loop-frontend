@@ -19,7 +19,6 @@ protocol BackgroundTaskManagerProtocol {
 }
 
 /// Manages background task scheduling and execution for health data sync
-@MainActor
 final class BackgroundTaskManager: BackgroundTaskManagerProtocol {
     
     // MARK: - Constants
@@ -41,20 +40,6 @@ final class BackgroundTaskManager: BackgroundTaskManagerProtocol {
     private let healthDataRepository: HealthDataRepositoryProtocol
     private let logger = Logger(subsystem: "com.novamindnyc.clarity-loop-frontend", category: "BackgroundTaskManager")
     
-    // MARK: - Singleton
-    
-    static let shared: BackgroundTaskManager = {
-        // Get services from the app's environment
-        guard let healthKitService = ServiceLocator.shared.healthKitService,
-              let healthDataRepository = ServiceLocator.shared.healthDataRepository else {
-            fatalError("Required services not available for BackgroundTaskManager")
-        }
-        
-        return BackgroundTaskManager(
-            healthKitService: healthKitService,
-            healthDataRepository: healthDataRepository
-        )
-    }()
     
     // MARK: - Initializer
     
@@ -72,7 +57,7 @@ final class BackgroundTaskManager: BackgroundTaskManagerProtocol {
             forTaskWithIdentifier: TaskIdentifier.healthDataSync,
             using: nil
         ) { task in
-            Task { @MainActor in
+            Task {
                 await self.handleBackgroundTask(task as! BGProcessingTask)
             }
         }
@@ -82,7 +67,7 @@ final class BackgroundTaskManager: BackgroundTaskManagerProtocol {
             forTaskWithIdentifier: TaskIdentifier.appRefresh,
             using: nil
         ) { task in
-            Task { @MainActor in
+            Task {
                 await self.handleAppRefreshTask(task as! BGAppRefreshTask)
             }
         }
@@ -119,7 +104,6 @@ final class BackgroundTaskManager: BackgroundTaskManagerProtocol {
     }
     
     /// Handles health data sync in the background
-    @MainActor
     func handleHealthDataSync() async -> Bool {
         logger.info("Starting background health data sync")
         
@@ -158,7 +142,6 @@ final class BackgroundTaskManager: BackgroundTaskManagerProtocol {
     }
     
     /// Handles app refresh in the background
-    @MainActor
     func handleAppRefresh() async -> Bool {
         logger.info("Starting background app refresh")
         
@@ -195,7 +178,6 @@ final class BackgroundTaskManager: BackgroundTaskManagerProtocol {
     
     // MARK: - Private Methods
     
-    @MainActor
     private func handleBackgroundTask(_ task: BGProcessingTask) async {
         // Schedule next sync immediately
         scheduleHealthDataSync()
@@ -213,7 +195,6 @@ final class BackgroundTaskManager: BackgroundTaskManagerProtocol {
         task.setTaskCompleted(success: success)
     }
     
-    @MainActor
     private func handleAppRefreshTask(_ task: BGAppRefreshTask) async {
         // Schedule next refresh immediately
         scheduleAppRefresh()

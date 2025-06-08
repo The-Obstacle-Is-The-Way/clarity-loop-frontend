@@ -27,6 +27,7 @@ struct ClarityPulseApp: App {
     private let insightsRepository: InsightsRepositoryProtocol
     private let healthDataRepository: HealthDataRepositoryProtocol
     private let backgroundTaskManager: BackgroundTaskManagerProtocol
+    private let offlineQueueManager: OfflineQueueManagerProtocol
 
     // MARK: - Initializer
     
@@ -45,7 +46,8 @@ struct ClarityPulseApp: App {
         // Initialize services with shared APIClient
         let service = AuthService(apiClient: client)
         self.authService = service
-        self.healthKitService = HealthKitService(apiClient: client)
+        let healthKit = HealthKitService(apiClient: client)
+        self.healthKitService = healthKit
         
         // Initialize repositories with shared APIClient
         self.insightsRepository = RemoteInsightsRepository(apiClient: client)
@@ -64,6 +66,20 @@ struct ClarityPulseApp: App {
         
         // Register background tasks
         backgroundTaskManager.registerBackgroundTasks()
+        
+        // Initialize offline queue manager
+        let queueManager = OfflineQueueManager(
+            modelContext: PersistenceController.shared.container.mainContext,
+            healthDataRepository: healthDataRepository,
+            insightsRepository: insightsRepository
+        )
+        self.offlineQueueManager = queueManager
+        
+        // Connect offline queue manager to HealthKitService
+        healthKit.setOfflineQueueManager(queueManager)
+        
+        // Start offline queue monitoring
+        offlineQueueManager.startMonitoring()
         
         // The AuthViewModel is created with the concrete AuthService instance.
         _authViewModel = State(initialValue: AuthViewModel(authService: service))

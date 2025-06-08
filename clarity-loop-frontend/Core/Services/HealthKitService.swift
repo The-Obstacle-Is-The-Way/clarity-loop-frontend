@@ -12,9 +12,14 @@ class HealthKitService: HealthKitServiceProtocol {
     
     private let healthStore = HKHealthStore()
     private let apiClient: APIClientProtocol
+    private var offlineQueueManager: OfflineQueueManagerProtocol?
     
     init(apiClient: APIClientProtocol) {
         self.apiClient = apiClient
+    }
+    
+    func setOfflineQueueManager(_ manager: OfflineQueueManagerProtocol) {
+        self.offlineQueueManager = manager
     }
     
     /// The set of `HKObjectType`s the app will request permission to read.
@@ -201,7 +206,28 @@ class HealthKitService: HealthKitServiceProtocol {
     }
     
     func uploadHealthKitData(_ uploadRequest: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO {
-        return try await apiClient.uploadHealthKitData(requestDTO: uploadRequest)
+        do {
+            return try await apiClient.uploadHealthKitData(requestDTO: uploadRequest)
+        } catch {
+            // If the upload fails due to network issues, queue it for later
+            if let apiError = error as? APIError,
+               case .networkError = apiError,
+               let queueManager = offlineQueueManager {
+                let queuedUpload = try uploadRequest.toQueuedUpload()
+                try await queueManager.enqueue(queuedUpload)
+                
+                // Return a placeholder response indicating the upload was queued
+                return HealthKitUploadResponseDTO(
+                    success: true,
+                    uploadId: queuedUpload.id.uuidString,
+                    processedSamples: uploadRequest.samples.count,
+                    skippedSamples: 0,
+                    errors: nil,
+                    message: "Upload queued for offline processing"
+                )
+            }
+            throw error
+        }
     }
     
     // MARK: - Background Delivery
