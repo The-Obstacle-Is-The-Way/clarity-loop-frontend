@@ -146,9 +146,7 @@ class MockHealthDataRepository: HealthDataRepositoryProtocol {
                 success: true,
                 syncId: "mock-sync-id",
                 status: "completed",
-                processedSamples: 20,
-                skippedSamples: 0,
-                errors: [],
+                estimatedDuration: 30.0,
                 message: "Mock sync successful"
             )
         } else {
@@ -161,13 +159,11 @@ class MockHealthDataRepository: HealthDataRepositoryProtocol {
             return HealthKitSyncStatusDTO(
                 syncId: syncId,
                 status: "completed",
-                progress: 100,
+                progress: 1.0,
                 processedSamples: 25,
-                skippedSamples: 0,
-                errors: [],
-                startedAt: Date(),
-                completedAt: Date(),
-                estimatedTimeRemaining: nil
+                totalSamples: 25,
+                errors: nil,
+                completedAt: Date()
             )
         } else {
             throw APIError.serverError(statusCode: 500, message: "Sync status error")
@@ -179,13 +175,12 @@ class MockHealthDataRepository: HealthDataRepositoryProtocol {
             return HealthKitUploadStatusDTO(
                 uploadId: uploadId,
                 status: "completed",
-                progress: 100,
+                progress: 1.0,
                 processedSamples: 15,
-                skippedSamples: 0,
-                errors: [],
-                startedAt: Date(),
+                totalSamples: 15,
+                errors: nil,
                 completedAt: Date(),
-                estimatedTimeRemaining: nil
+                message: "Upload completed successfully"
             )
         } else {
             throw APIError.serverError(statusCode: 500, message: "Upload status error")
@@ -195,15 +190,15 @@ class MockHealthDataRepository: HealthDataRepositoryProtocol {
     func getProcessingStatus(id: UUID) async throws -> HealthDataProcessingStatusDTO {
         if shouldSucceed {
             return HealthDataProcessingStatusDTO(
-                id: id,
+                processingId: id,
                 status: "completed",
-                progress: 100,
-                processedRecords: 30,
-                totalRecords: 30,
-                errors: [],
-                startedAt: Date(),
+                progress: 1.0,
+                processedMetrics: 30,
+                totalMetrics: 30,
+                estimatedTimeRemaining: nil,
                 completedAt: Date(),
-                estimatedTimeRemaining: nil
+                errors: nil,
+                message: "Processing completed successfully"
             )
         } else {
             throw APIError.serverError(statusCode: 500, message: "Processing status error")

@@ -51,26 +51,37 @@ final class JSONEncodingTests: XCTestCase {
     
     func testHealthKitUploadRequestEncoding() throws {
         // Given
+        let sourceRevision = SourceRevisionDTO(
+            source: SourceDTO(name: "Apple Watch", bundleIdentifier: "com.apple.health"),
+            version: "7.0",
+            productType: "Watch6,1",
+            operatingSystemVersion: "8.0"
+        )
+        
         let sample = HealthKitSampleDTO(
-            identifier: "test-id",
-            type: "quantity",
+            sampleType: "heartRate",
             value: 72.5,
-            unit: "bpm",
+            categoryValue: nil,
+            unit: "count/min",
             startDate: Date(),
             endDate: Date(),
-            sourceName: "Apple Watch",
-            device: nil,
-            metadata: [:]
+            metadata: ["HKMetadataKeyHeartRateMotionContext": AnyCodable(1)],
+            sourceRevision: sourceRevision
+        )
+        
+        let deviceInfo = DeviceInfoDTO(
+            deviceModel: "iPhone13,1",
+            systemName: "iOS",
+            systemVersion: "15.0",
+            appVersion: "1.0.0",
+            timeZone: "America/New_York"
         )
         
         let request = HealthKitUploadRequestDTO(
             userId: "user-123",
-            quantitySamples: [sample],
-            categorySamples: [],
-            workouts: [],
-            correlationSamples: [],
-            uploadMetadata: [:],
-            syncToken: nil
+            samples: [sample],
+            deviceInfo: deviceInfo,
+            timestamp: Date()
         )
         
         // When
@@ -79,13 +90,13 @@ final class JSONEncodingTests: XCTestCase {
         
         // Then
         XCTAssertTrue(jsonString.contains("\"user_id\""))
-        XCTAssertTrue(jsonString.contains("\"quantity_samples\""))
-        XCTAssertTrue(jsonString.contains("\"category_samples\""))
-        XCTAssertTrue(jsonString.contains("\"upload_metadata\""))
-        XCTAssertTrue(jsonString.contains("\"sync_token\""))
+        XCTAssertTrue(jsonString.contains("\"samples\""))
+        XCTAssertTrue(jsonString.contains("\"device_info\""))
+        XCTAssertTrue(jsonString.contains("\"timestamp\""))
+        XCTAssertTrue(jsonString.contains("\"sample_type\""))
         XCTAssertTrue(jsonString.contains("\"start_date\""))
         XCTAssertTrue(jsonString.contains("\"end_date\""))
-        XCTAssertTrue(jsonString.contains("\"source_name\""))
+        XCTAssertTrue(jsonString.contains("\"source_revision\""))
     }
     
     func testInsightGenerationResponseDecoding() throws {
