@@ -69,10 +69,12 @@ struct LoginView: View {
 
 #Preview {
     // Create a preview-safe APIClient
-    let previewAPIClient = APIClient(
+    guard let previewAPIClient = APIClient(
         baseURLString: AppConfig.previewAPIBaseURL,
         tokenProvider: { nil }
-    )!
+    ) else {
+        return Text("Failed to create preview client")
+    }
     
-    LoginView(viewModel: LoginViewModel(authService: AuthService(apiClient: previewAPIClient)))
+    return LoginView(viewModel: LoginViewModel(authService: AuthService(apiClient: previewAPIClient)))
 } 

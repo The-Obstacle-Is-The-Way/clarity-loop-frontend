@@ -150,12 +150,14 @@ struct DashboardView: View {
 }
 
 #Preview {
-    let previewAPIClient = APIClient(
+    guard let previewAPIClient = APIClient(
         baseURLString: AppConfig.previewAPIBaseURL,
         tokenProvider: { nil }
-    )!
+    ) else {
+        return DashboardView()
+    }
     
-    DashboardView()
+    return DashboardView()
         .environment(\.healthKitService, HealthKitService(apiClient: previewAPIClient))
         .environment(\.insightsRepository, RemoteInsightsRepository(apiClient: previewAPIClient))
 } 

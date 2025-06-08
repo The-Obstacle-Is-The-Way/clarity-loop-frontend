@@ -138,9 +138,8 @@ struct MaintenanceModeView: View {
     var body: some View {
         EmptyStateView(
             title: "Under Maintenance",
-            message: estimatedDowntime != nil 
-                ? "We're improving our services. Expected completion: \(estimatedDowntime!)"
-                : "We're performing scheduled maintenance. Please check back soon.",
+            message: estimatedDowntime.map { "We're improving our services. Expected completion: \($0)" }
+                ?? "We're performing scheduled maintenance. Please check back soon.",
             systemImage: "wrench.and.screwdriver.fill"
         )
     }

@@ -468,12 +468,14 @@ enum SleepStage: String, CaseIterable {
 // MARK: - Preview
 
 #Preview {
-    let previewAPIClient = APIClient(
+    guard let previewAPIClient = APIClient(
         baseURLString: AppConfig.previewAPIBaseURL,
         tokenProvider: { nil }
-    )!
+    ) else {
+        return Text("Failed to create preview client")
+    }
     
-    PATAnalysisView(
+    return PATAnalysisView(
         analysisId: nil,
         viewModel: PATAnalysisViewModel(
             analyzePATDataUseCase: AnalyzePATDataUseCase(

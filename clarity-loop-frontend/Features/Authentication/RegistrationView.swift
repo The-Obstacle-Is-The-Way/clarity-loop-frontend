@@ -108,10 +108,12 @@ struct RegistrationView: View {
 }
 
 #Preview {
-    let previewAPIClient = APIClient(
+    guard let previewAPIClient = APIClient(
         baseURLString: AppConfig.previewAPIBaseURL,
         tokenProvider: { nil }
-    )!
+    ) else {
+        return Text("Failed to create preview client")
+    }
     
-    RegistrationView(authService: AuthService(apiClient: previewAPIClient))
+    return RegistrationView(authService: AuthService(apiClient: previewAPIClient))
 } 

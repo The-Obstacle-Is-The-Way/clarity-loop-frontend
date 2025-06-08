@@ -46,23 +46,41 @@ private struct APIClientKey: EnvironmentKey {
 private struct HealthDataRepositoryKey: EnvironmentKey {
     typealias Value = HealthDataRepositoryProtocol
     // Use real implementation since mocks are maintained in test target only
-    static let defaultValue: HealthDataRepositoryProtocol = RemoteHealthDataRepository(
-        apiClient: APIClient(baseURLString: AppConfig.apiBaseURL, tokenProvider: { nil })!
-    )
+    static let defaultValue: HealthDataRepositoryProtocol = {
+        guard let client = APIClient(
+            baseURLString: AppConfig.apiBaseURL,
+            tokenProvider: { nil }
+        ) else {
+            fatalError("Failed to create default APIClient for HealthDataRepository")
+        }
+        return RemoteHealthDataRepository(apiClient: client)
+    }()
 }
 
 private struct InsightsRepositoryKey: EnvironmentKey {
     typealias Value = InsightsRepositoryProtocol
-    static let defaultValue: InsightsRepositoryProtocol = RemoteInsightsRepository(
-        apiClient: APIClient(baseURLString: AppConfig.apiBaseURL, tokenProvider: { nil })!
-    )
+    static let defaultValue: InsightsRepositoryProtocol = {
+        guard let client = APIClient(
+            baseURLString: AppConfig.apiBaseURL,
+            tokenProvider: { nil }
+        ) else {
+            fatalError("Failed to create default APIClient for InsightsRepository")
+        }
+        return RemoteInsightsRepository(apiClient: client)
+    }()
 }
 
 private struct UserRepositoryKey: EnvironmentKey {
     typealias Value = UserRepositoryProtocol
-    static let defaultValue: UserRepositoryProtocol = RemoteUserRepository(
-        apiClient: APIClient(baseURLString: AppConfig.apiBaseURL, tokenProvider: { nil })!
-    )
+    static let defaultValue: UserRepositoryProtocol = {
+        guard let client = APIClient(
+            baseURLString: AppConfig.apiBaseURL,
+            tokenProvider: { nil }
+        ) else {
+            fatalError("Failed to create default APIClient for UserRepository")
+        }
+        return RemoteUserRepository(apiClient: client)
+    }()
 }
 
 private struct HealthKitServiceKey: EnvironmentKey {

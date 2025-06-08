@@ -54,12 +54,14 @@ struct MainTabView: View {
 }
 
 #Preview {
-    let previewAPIClient = APIClient(
+    guard let previewAPIClient = APIClient(
         baseURLString: AppConfig.previewAPIBaseURL,
         tokenProvider: { nil }
-    )!
+    ) else {
+        return MainTabView()
+    }
     
-    MainTabView()
+    return MainTabView()
         .environment(\.authService, AuthService(apiClient: previewAPIClient))
         .environment(\.healthKitService, HealthKitService(apiClient: previewAPIClient))
 }

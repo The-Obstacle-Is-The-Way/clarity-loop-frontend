@@ -110,7 +110,11 @@ struct TokenDebugView: View {
                 }
                 
                 // Test against debug endpoint
-                let url = URL(string: "\(AppConfig.apiBaseURL)/api/v1/debug/auth-check")!
+                guard let url = URL(string: "\(AppConfig.apiBaseURL)/api/v1/debug/auth-check") else {
+                    tokenInfo = "❌ Invalid URL configuration"
+                    isLoading = false
+                    return
+                }
                 var request = URLRequest(url: url)
                 request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
                 

@@ -59,7 +59,11 @@ struct DebugAPIView: View {
         
         Task {
             do {
-                let url = URL(string: "\(AppConfig.apiBaseURL)/api/v1/health-data/health")!
+                guard let url = URL(string: "\(AppConfig.apiBaseURL)/api/v1/health-data/health") else {
+                    statusMessage = "Invalid URL configuration"
+                    isLoading = false
+                    return
+                }
                 let (data, response) = try await URLSession.shared.data(from: url)
                 
                 if let httpResponse = response as? HTTPURLResponse {
@@ -79,7 +83,11 @@ struct DebugAPIView: View {
         
         Task {
             do {
-                let url = URL(string: "\(AppConfig.apiBaseURL)/api/v1/insights/status")!
+                guard let url = URL(string: "\(AppConfig.apiBaseURL)/api/v1/insights/status") else {
+                    statusMessage = "Invalid URL configuration"
+                    isLoading = false
+                    return
+                }
                 let (data, response) = try await URLSession.shared.data(from: url)
                 
                 if let httpResponse = response as? HTTPURLResponse {
@@ -118,7 +126,11 @@ struct DebugAPIView: View {
                 print("✅ ID-token copied to clipboard (length: \(token.count))")
                 #endif
                 
-                let url = URL(string: "\(AppConfig.apiBaseURL)/api/v1/insights/generate")!
+                guard let url = URL(string: "\(AppConfig.apiBaseURL)/api/v1/insights/generate") else {
+                    statusMessage = "Invalid URL configuration"
+                    isLoading = false
+                    return
+                }
                 var request = URLRequest(url: url)
                 request.httpMethod = "POST"
                 request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
