@@ -46,7 +46,7 @@ final class APIClient: APIClientProtocol {
     // MARK: - Initializer
 
     init?(
-        baseURLString: String = "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run",
+        baseURLString: String = AppConfig.apiBaseURL,
         session: URLSession = .shared,
         tokenProvider: @escaping () async -> String?
     ) {

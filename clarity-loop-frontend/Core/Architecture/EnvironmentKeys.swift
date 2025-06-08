@@ -9,7 +9,7 @@ struct AuthServiceKey: EnvironmentKey {
         // Create a default APIClient for the default AuthService
         let defaultAPIClient: APIClientProtocol = {
             guard let client = APIClient(
-                baseURLString: "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run",
+                baseURLString: AppConfig.apiBaseURL,
                 tokenProvider: { nil }
             ) else {
                 fatalError("Failed to create default APIClient")
@@ -32,7 +32,7 @@ private struct APIClientKey: EnvironmentKey {
     typealias Value = APIClientProtocol
     static let defaultValue: APIClientProtocol = {
         guard let client = APIClient(
-            baseURLString: "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run",
+            baseURLString: AppConfig.apiBaseURL,
             tokenProvider: { nil }
         ) else {
             fatalError("Failed to create default APIClient")
@@ -47,21 +47,21 @@ private struct HealthDataRepositoryKey: EnvironmentKey {
     typealias Value = HealthDataRepositoryProtocol
     // Use real implementation since mocks are maintained in test target only
     static let defaultValue: HealthDataRepositoryProtocol = RemoteHealthDataRepository(
-        apiClient: APIClient(baseURLString: "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run", tokenProvider: { nil })!
+        apiClient: APIClient(baseURLString: AppConfig.apiBaseURL, tokenProvider: { nil })!
     )
 }
 
 private struct InsightsRepositoryKey: EnvironmentKey {
     typealias Value = InsightsRepositoryProtocol
     static let defaultValue: InsightsRepositoryProtocol = RemoteInsightsRepository(
-        apiClient: APIClient(baseURLString: "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run", tokenProvider: { nil })!
+        apiClient: APIClient(baseURLString: AppConfig.apiBaseURL, tokenProvider: { nil })!
     )
 }
 
 private struct UserRepositoryKey: EnvironmentKey {
     typealias Value = UserRepositoryProtocol
     static let defaultValue: UserRepositoryProtocol = RemoteUserRepository(
-        apiClient: APIClient(baseURLString: "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run", tokenProvider: { nil })!
+        apiClient: APIClient(baseURLString: AppConfig.apiBaseURL, tokenProvider: { nil })!
     )
 }
 
@@ -70,7 +70,7 @@ private struct HealthKitServiceKey: EnvironmentKey {
     static let defaultValue: HealthKitServiceProtocol = {
         let defaultAPIClient: APIClientProtocol = {
             guard let client = APIClient(
-                baseURLString: "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run",
+                baseURLString: AppConfig.apiBaseURL,
                 tokenProvider: { nil }
             ) else {
                 fatalError("Failed to create default APIClient for HealthKitService")

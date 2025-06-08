@@ -109,7 +109,7 @@ struct RegistrationView: View {
 
 #Preview {
     let previewAPIClient = APIClient(
-        baseURLString: "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run",
+        baseURLString: AppConfig.previewAPIBaseURL,
         tokenProvider: { nil }
     )!
     

@@ -53,11 +53,14 @@
 				Core/Persistence/PersistenceController.swift = (ios, );
 				Core/Services/AppSecurityService.swift = (ios, );
 				Core/Services/AuthService.swift = (ios, );
+				Core/Services/BackgroundTaskManager.swift = (ios, );
 				Core/Services/BiometricAuthService.swift = (ios, );
 				Core/Services/HealthKitService.swift = (ios, );
 				Core/Services/HealthKitServiceProtocol.swift = (ios, );
 				Core/Services/InsightAIService.swift = (ios, );
+				Core/Services/OfflineQueueManager.swift = (ios, );
 				Core/Services/SessionTimeoutService.swift = (ios, );
+				Core/Utilities/AppConfig.swift = (ios, );
 				Data/DTOs/AnyCodable.swift = (ios, );
 				Data/DTOs/AuthLoginDTOs.swift = (ios, );
 				Data/DTOs/AuthMiscDTOs.swift = (ios, );
