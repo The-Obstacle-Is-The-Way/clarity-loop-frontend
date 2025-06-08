@@ -206,40 +206,88 @@ final class APIClient: APIClientProtocol {
         for endpoint: Endpoint,
         requiresAuth: Bool = true
     ) async throws -> T {
+        print("🚀 APIClient: Starting request to \(endpoint.path)")
+        
         guard let request = try? endpoint.asURLRequest(baseURL: baseURL, encoder: encoder) else {
+            print("❌ APIClient: Invalid URL for endpoint \(endpoint.path)")
             throw APIError.invalidURL
         }
         
         var authorizedRequest = request
         if requiresAuth {
+            print("🔑 APIClient: Attempting to retrieve auth token...")
             guard let token = await tokenProvider() else {
+                print("❌ APIClient: Failed to retrieve auth token")
                 throw APIError.unauthorized
             }
+            print("✅ APIClient: Token retrieved (length: \(token.count))")
             authorizedRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
         do {
+            print("📡 APIClient: Sending request to \(authorizedRequest.url?.absoluteString ?? "unknown URL")")
             let (data, response) = try await session.data(for: authorizedRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
+                print("❌ APIClient: Invalid response type")
                 throw APIError.unknown(URLError(.badServerResponse))
             }
+            
+            print("📥 APIClient: Response status code: \(httpResponse.statusCode)")
             
             switch httpResponse.statusCode {
             case 200...299:
                 do {
                     // Handle empty response body for 204 No Content
                     if data.isEmpty, let empty = EmptyResponse() as? T {
+                        print("✅ APIClient: Empty response success")
                         return empty
                     }
-                    return try decoder.decode(T.self, from: data)
+                    let result = try decoder.decode(T.self, from: data)
+                    print("✅ APIClient: Successfully decoded response")
+                    return result
                 } catch {
+                    print("❌ APIClient: Decoding error: \(error)")
+                    // Log the raw response for debugging
+                    if let jsonString = String(data: data, encoding: .utf8) {
+                        print("📄 APIClient: Raw response: \(jsonString)")
+                    }
                     throw APIError.decodingError(error)
                 }
             case 401:
+                print("❌ APIClient: Unauthorized (401)")
+                // Try refreshing token once if we have auth
+                if requiresAuth {
+                    print("🔄 APIClient: Attempting token refresh...")
+                    if let refreshedToken = await tokenProvider() {
+                        print("🔑 APIClient: Retrying with refreshed token...")
+                        authorizedRequest.setValue("Bearer \(refreshedToken)", forHTTPHeaderField: "Authorization")
+                        
+                        // Retry the request once with fresh token
+                        if let retryData = try? await session.data(for: authorizedRequest),
+                           let retryResponse = retryData.1 as? HTTPURLResponse,
+                           retryResponse.statusCode >= 200 && retryResponse.statusCode < 300 {
+                            print("✅ APIClient: Retry succeeded after token refresh")
+                            do {
+                                if retryData.0.isEmpty, let empty = EmptyResponse() as? T {
+                                    return empty
+                                }
+                                return try decoder.decode(T.self, from: retryData.0)
+                            } catch {
+                                print("❌ APIClient: Retry decoding error: \(error)")
+                                throw APIError.decodingError(error)
+                            }
+                        }
+                    }
+                }
                 throw APIError.unauthorized
             default:
                 let serverMessage = try? decoder.decode(MessageResponseDTO.self, from: data).message
+                print("❌ APIClient: Server error \(httpResponse.statusCode): \(serverMessage ?? "No message")")
+                // Log the raw error response
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("📄 APIClient: Raw error response: \(jsonString)")
+                }
                 throw APIError.serverError(statusCode: httpResponse.statusCode, message: serverMessage)
             }
         } catch let error as APIError {

@@ -36,7 +36,8 @@ struct ClarityPulseApp: App {
         
         // Initialize the APIClient with proper token provider
         guard let client = APIClient(tokenProvider: {
-            return try? await Auth.auth().currentUser?.getIDToken()
+            // Force refresh tokens to ensure they're fresh
+            return try? await Auth.auth().currentUser?.getIDToken(forcingRefresh: true)
         }) else {
             fatalError("Failed to initialize APIClient with a valid URL.")
         }

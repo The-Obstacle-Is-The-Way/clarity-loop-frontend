@@ -45,11 +45,14 @@ final class ChatViewModel {
         
         Task {
             do {
+                print("💬 ChatViewModel: Sending message: \(tempInput)")
                 let response = try await insightAIService.generateChatResponse(
                     userMessage: tempInput,
                     conversationHistory: messages,
                     healthContext: nil
                 )
+                
+                print("✅ ChatViewModel: Received response")
                 
                 // Remove the "..." typing indicator
                 _ = messages.popLast()
@@ -58,10 +61,16 @@ final class ChatViewModel {
                 messages.append(assistantMessage)
                 
             } catch {
+                print("❌ ChatViewModel: Error - \(error)")
                 // Remove the "..." typing indicator
                 _ = messages.popLast()
                 
-                let errorMessage = ChatMessage(sender: .assistant, text: "Sorry, I couldn't process your request. Please try again.", isError: true)
+                var errorText = "Sorry, I couldn't process your request. Please try again."
+                if let apiError = error as? APIError {
+                    errorText = "Error: \(apiError.localizedDescription)"
+                }
+                
+                let errorMessage = ChatMessage(sender: .assistant, text: errorText, isError: true)
                 messages.append(errorMessage)
             }
             isSending = false

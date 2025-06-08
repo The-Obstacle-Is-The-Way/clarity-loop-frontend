@@ -34,6 +34,14 @@ struct MainTabView: View {
                 Image(systemName: "gearshape.fill")
                 Text("Settings")
             }
+            
+            NavigationStack {
+                DebugAPIView()
+            }
+            .tabItem {
+                Image(systemName: "ladybug.fill")
+                Text("Debug")
+            }
         }
         .accentColor(.red)
     }
