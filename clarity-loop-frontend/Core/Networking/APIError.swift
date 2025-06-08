@@ -24,6 +24,9 @@ enum APIError: Error, LocalizedError {
     
     /// Functionality not yet implemented (for mocks and testing).
     case notImplemented
+    
+    /// Validation error for invalid input data
+    case validationError(String)
 
     /// Provides a user-friendly description for each error case.
     public var errorDescription: String? {
@@ -42,6 +45,8 @@ enum APIError: Error, LocalizedError {
             return "An unknown error occurred."
         case .notImplemented:
             return "This functionality is not yet implemented."
+        case .validationError(let message):
+            return "Validation error: \(message)"
         }
     }
 } 

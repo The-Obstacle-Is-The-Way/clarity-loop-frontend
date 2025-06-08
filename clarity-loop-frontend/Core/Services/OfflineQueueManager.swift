@@ -233,6 +233,7 @@ final class OfflineQueueManager: OfflineQueueManagerProtocol {
     private func processHealthKitUpload(_ upload: QueuedUpload) async throws {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         let request = try decoder.decode(HealthKitUploadRequestDTO.self, from: upload.payload)
         _ = try await healthDataRepository.uploadHealthKitData(requestDTO: request)
@@ -241,6 +242,7 @@ final class OfflineQueueManager: OfflineQueueManagerProtocol {
     private func processInsightGeneration(_ upload: QueuedUpload) async throws {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         let request = try decoder.decode(InsightGenerationRequestDTO.self, from: upload.payload)
         _ = try await insightsRepository.generateInsight(requestDTO: request)
@@ -259,6 +261,7 @@ extension HealthKitUploadRequestDTO {
     func toQueuedUpload() throws -> QueuedUpload {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
+        encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try encoder.encode(self)
         return QueuedUpload(type: .healthKitData, payload: data)
     }
@@ -268,6 +271,7 @@ extension InsightGenerationRequestDTO {
     func toQueuedUpload() throws -> QueuedUpload {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
+        encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try encoder.encode(self)
         return QueuedUpload(type: .insightGeneration, payload: data)
     }

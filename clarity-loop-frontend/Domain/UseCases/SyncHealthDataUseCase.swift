@@ -6,15 +6,18 @@ final class SyncHealthDataUseCase {
     private let healthKitService: HealthKitServiceProtocol
     private let healthDataRepository: HealthDataRepositoryProtocol
     private let apiClient: APIClientProtocol
+    private let authService: AuthServiceProtocol
     
     init(
         healthKitService: HealthKitServiceProtocol,
         healthDataRepository: HealthDataRepositoryProtocol,
-        apiClient: APIClientProtocol
+        apiClient: APIClientProtocol,
+        authService: AuthServiceProtocol
     ) {
         self.healthKitService = healthKitService
         self.healthDataRepository = healthDataRepository
         self.apiClient = apiClient
+        self.authService = authService
     }
     
     func execute(
@@ -114,8 +117,13 @@ final class SyncHealthDataUseCase {
             ))
         }
         
+        // Get current user ID from auth service
+        guard let currentUser = authService.currentUser else {
+            throw SyncError.userNotAuthenticated
+        }
+        
         return HealthKitUploadRequestDTO(
-            userId: "current-user-id", // TODO: Get from auth service
+            userId: currentUser.uid,
             samples: samples,
             deviceInfo: createDeviceInfo(),
             timestamp: Date()
@@ -166,6 +174,7 @@ enum SyncError: LocalizedError {
     case healthKitNotAvailable
     case noDataToSync
     case uploadFailed(String)
+    case userNotAuthenticated
     
     var errorDescription: String? {
         switch self {
@@ -175,6 +184,8 @@ enum SyncError: LocalizedError {
             return "No health data available to sync"
         case .uploadFailed(let message):
             return "Upload failed: \(message)"
+        case .userNotAuthenticated:
+            return "User must be authenticated to sync health data"
         }
     }
 }

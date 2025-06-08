@@ -59,9 +59,11 @@ final class APIClient: APIClientProtocol {
         
         self.decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         self.encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
+        encoder.keyEncodingStrategy = .convertToSnakeCase
     }
 
     // MARK: - Public API Methods
@@ -84,8 +86,26 @@ final class APIClient: APIClientProtocol {
     }
     
     func uploadHealthKitData(requestDTO: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO {
-        let endpoint = HealthDataEndpoint.uploadHealthKit(dto: requestDTO)
-        return try await performRequest(for: endpoint)
+        // Convert to backend-compatible format
+        guard let backendRequest = requestDTO.toBackendUploadRequest() else {
+            throw APIError.validationError("Invalid user ID format")
+        }
+        
+        // Create a custom endpoint for the backend format
+        let endpoint = BackendHealthDataEndpoint.upload(dto: backendRequest)
+        
+        // Perform the request and get backend response
+        let backendResponse: HealthDataResponseDTO = try await performRequest(for: endpoint)
+        
+        // Convert backend response to frontend format
+        return HealthKitUploadResponseDTO(
+            success: backendResponse.status == "received" || backendResponse.status == "processing",
+            uploadId: backendResponse.processingId.uuidString,
+            processedSamples: backendResponse.acceptedMetrics,
+            skippedSamples: backendResponse.rejectedMetrics,
+            errors: backendResponse.validationErrors.isEmpty ? nil : backendResponse.validationErrors,
+            message: backendResponse.message
+        )
     }
     
     func syncHealthKitData(requestDTO: HealthKitSyncRequestDTO) async throws -> HealthKitSyncResponseDTO {
