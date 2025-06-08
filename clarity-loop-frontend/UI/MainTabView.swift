@@ -41,7 +41,7 @@ struct MainTabView: View {
 
 #Preview {
     let previewAPIClient = APIClient(
-        baseURLString: "https://crave-trinity--clarity-backend-fastapi-app.modal.run",
+        baseURLString: "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run",
         tokenProvider: { nil }
     )!
     

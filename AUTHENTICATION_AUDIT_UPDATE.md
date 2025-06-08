@@ -263,7 +263,7 @@ The following files contain outdated information and should be updated:
 - ❌ Console showed "Could not connect to the server" (-1004 errors)
 
 **Solution Implemented**:
-- ✅ **Updated APIClient.swift** to use correct Modal URL: `https://crave-trinity--clarity-backend-fastapi-app.modal.run`
+- ✅ **Updated APIClient.swift** to use correct Modal URL: `https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run`
 - ✅ **Fixed dashboard data loading** - eliminates connection failures
 - ✅ **Resolved documentation inconsistency** - API contracts docs contained outdated domain
 
