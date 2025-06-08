@@ -14,84 +14,106 @@ struct InsightsListView: View {
     
     var body: some View {
         NavigationStack {
-            Group {
-                if let viewModel = viewModel {
-                    switch viewModel.viewState {
-                    case .idle:
-                        Color.clear.onAppear {
-                            Task { await viewModel.loadInsights() }
+            contentView
+                .navigationTitle("Health Insights")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        NavigationLink(destination: ChatView()) {
+                            Image(systemName: "bubble.left.and.bubble.right")
                         }
-                        
-                    case .loading:
-                        ProgressView("Loading insights...")
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        
-                    case .loaded(let insights):
-                        if insights.isEmpty {
-                            EmptyInsightsView()
-                        } else {
-                            ScrollView {
-                                LazyVStack(spacing: 16) {
-                                    // Featured "Insight of the Day" card
-                                    if let featured = insights.first {
-                                        FeaturedInsightCard(insight: featured)
-                                            .padding(.horizontal)
-                                    }
-                                    
-                                    // Rest of the insights
-                                    ForEach(insights.dropFirst()) { insight in
-                                        InsightHistoryCard(insight: insight)
-                                            .padding(.horizontal)
-                                            .onAppear {
-                                                // Load more when reaching the end
-                                                if insight.id == insights.last?.id {
-                                                    Task { await viewModel.loadMoreInsights() }
-                                                }
-                                            }
-                                    }
-                                    
-                                    if viewModel.isLoadingMore {
-                                        ProgressView()
-                                            .padding()
-                                    }
-                                }
-                                .padding(.vertical)
-                            }
-                            .refreshable {
-                                await viewModel.refresh()
-                            }
-                        }
-                        
-                    case .error(let message):
-                        ErrorView(
-                            message: message,
-                            systemImage: "exclamationmark.triangle",
-                            retry: {
-                                Task { await viewModel.loadInsights() }
-                            }
-                        )
-                        
-                    case .empty:
-                        EmptyInsightsView()
                     }
-                } else {
-                    ProgressView()
+                }
+        }
+    }
+    
+    @ViewBuilder
+    private var contentView: some View {
+        if let viewModel = viewModel {
+            InsightsContentView(viewModel: viewModel)
+        } else {
+            ProgressView()
+                .onAppear {
+                    self.viewModel = InsightsListViewModel(
+                        insightsRepository: insightsRepository,
+                        userId: Auth.auth().currentUser?.uid ?? ""
+                    )
+                }
+        }
+    }
+}
+
+// Separate component to handle the state-based content
+struct InsightsContentView: View {
+    let viewModel: InsightsListViewModel
+    
+    var body: some View {
+        switch viewModel.viewState {
+        case .idle:
+            Color.clear.onAppear {
+                Task { await viewModel.loadInsights() }
+            }
+            
+        case .loading:
+            ProgressView("Loading insights...")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+        case .loaded(let insights):
+            if insights.isEmpty {
+                EmptyInsightsView()
+            } else {
+                InsightsScrollView(viewModel: viewModel, insights: insights)
+            }
+            
+        case .error(let message):
+            ErrorView(
+                message: message,
+                systemImage: "exclamationmark.triangle",
+                retryAction: {
+                    Task { await viewModel.loadInsights() }
+                }
+            )
+            
+        case .empty:
+            EmptyInsightsView()
+        }
+    }
+}
+
+// Separate scrollable content
+struct InsightsScrollView: View {
+    let viewModel: InsightsListViewModel
+    let insights: [InsightPreviewDTO]
+    
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 16) {
+                // Featured "Insight of the Day" card
+                if let featured = insights.first {
+                    FeaturedInsightCard(insight: featured)
+                        .padding(.horizontal)
+                }
+                
+                // Rest of the insights
+                ForEach(insights.dropFirst()) { insight in
+                    InsightHistoryCard(insight: insight)
+                        .padding(.horizontal)
                         .onAppear {
-                            self.viewModel = InsightsListViewModel(
-                                insightsRepository: insightsRepository,
-                                userId: Auth.auth().currentUser?.uid ?? ""
-                            )
+                            // Load more when reaching the end
+                            if insight.id == insights.last?.id {
+                                Task { await viewModel.loadMoreInsights() }
+                            }
                         }
                 }
-            }
-            .navigationTitle("Health Insights")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: ChatView()) {
-                        Image(systemName: "bubble.left.and.bubble.right")
-                    }
+                
+                if viewModel.isLoadingMore {
+                    ProgressView()
+                        .padding()
                 }
             }
+            .padding(.vertical)
+        }
+        .refreshable {
+            await viewModel.refresh()
         }
     }
 }

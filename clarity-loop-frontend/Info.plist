@@ -53,6 +53,20 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	
+	<!-- Background Modes -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
+	
+	<!-- Background Task Identifiers -->
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.novamindnyc.clarity-loop-frontend.healthDataSync</string>
+		<string>com.novamindnyc.clarity-loop-frontend.appRefresh</string>
+	</array>
+	
 	<!-- Security & Privacy -->
 	<key>NSAllowsArbitraryLoads</key>
 	<false/>

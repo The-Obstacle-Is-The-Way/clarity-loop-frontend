@@ -9,6 +9,7 @@ import FirebaseAuth
 import FirebaseCore
 import SwiftData
 import SwiftUI
+import BackgroundTasks
 
 @main
 struct ClarityPulseApp: App {
@@ -25,6 +26,7 @@ struct ClarityPulseApp: App {
     private let apiClient: APIClientProtocol
     private let insightsRepository: InsightsRepositoryProtocol
     private let healthDataRepository: HealthDataRepositoryProtocol
+    private let backgroundTaskManager: BackgroundTaskManagerProtocol
 
     // MARK: - Initializer
     
@@ -49,6 +51,20 @@ struct ClarityPulseApp: App {
         self.insightsRepository = RemoteInsightsRepository(apiClient: client)
         self.healthDataRepository = RemoteHealthDataRepository(apiClient: client)
         
+        // Initialize service locator for background tasks
+        ServiceLocator.shared.healthKitService = healthKitService
+        ServiceLocator.shared.healthDataRepository = healthDataRepository
+        ServiceLocator.shared.insightsRepository = insightsRepository
+        
+        // Initialize background task manager
+        self.backgroundTaskManager = BackgroundTaskManager(
+            healthKitService: healthKitService,
+            healthDataRepository: healthDataRepository
+        )
+        
+        // Register background tasks
+        backgroundTaskManager.registerBackgroundTasks()
+        
         // The AuthViewModel is created with the concrete AuthService instance.
         _authViewModel = State(initialValue: AuthViewModel(authService: service))
     }
@@ -65,6 +81,19 @@ struct ClarityPulseApp: App {
                 .environment(\.insightsRepository, insightsRepository)
                 .environment(\.healthDataRepository, healthDataRepository)
                 .modelContainer(PersistenceController.shared.container)
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                    // Schedule background tasks when app enters background
+                    backgroundTaskManager.scheduleHealthDataSync()
+                    backgroundTaskManager.scheduleAppRefresh()
+                }
+                .onChange(of: authViewModel.isAuthenticated) { _, newValue in
+                    // Update service locator with current user ID
+                    if newValue {
+                        ServiceLocator.shared.currentUserId = Auth.auth().currentUser?.uid
+                    } else {
+                        ServiceLocator.shared.currentUserId = nil
+                    }
+                }
         }
     }
 } 
