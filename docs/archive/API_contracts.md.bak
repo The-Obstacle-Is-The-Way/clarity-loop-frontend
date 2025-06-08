@@ -2,12 +2,13 @@
 
 > **⚠️ DOCUMENT STATUS: PARTIALLY OUTDATED** 
 > 
-> **API BASE URL CORRECTED**: The base URL examples in this document are WRONG.
+> **API BASE URL CONFIGURATION**: URL is now managed via Info.plist configuration.
 > 
-> **✅ CORRECT URL**: `https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run`
-> **❌ WRONG URL**: `https://api.clarity.health` (redirects to psychology website)
+> **✅ CURRENT PRODUCTION URL**: `https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run`
+> **✅ CONFIGURATION METHOD**: Info.plist `APIBaseURL` key with fallback in `AppConfig.swift`
+> **❌ DEPRECATED**: Hardcoded URLs scattered throughout codebase
 > 
-> **📄 See**: `AUTHENTICATION_AUDIT_UPDATE.md` for current implementation status
+> **📄 See**: `AppConfig.swift` for centralized configuration implementation
 > 
 > ---
 
@@ -476,7 +477,7 @@ We will implement a dedicated networking service (API client) using modern Swift
 
 We define an `APIClient` class (or a set of classes grouped by feature) responsible for constructing requests, performing HTTP calls, and decoding responses. This client will handle **authentication**, **JSON encoding/decoding**, and **error handling** centrally:
 
-* Use a base URL for the backend (e.g. `https://crave-trinity--clarity-backend-fastapi-app.modal.run/api/v1`). We can store this in one place so if the version or domain changes, it’s easy to update.
+* Use a base URL for the backend (e.g. `https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run/api/v1`). We can store this in one place so if the version or domain changes, it’s easy to update.
 * Inject an auth token provider – for example, a closure or delegate that returns the latest Firebase JWT. The APIClient will attach the `Authorization: Bearer <token>` header to authenticated requests. All endpoints except registration/login and health checks require this JWT, so the client will automatically include it when calling those methods.
 * Utilize a single `URLSession` (or `URLSession.shared`) for requests. Because we target iOS 17+, `URLSession` supports async `data(for:)` which we will use for clarity.
 
@@ -484,7 +485,7 @@ We can organize methods by endpoint category for readability, e.g.:
 
 ```swift
 class APIClient {
-    let baseURL = URL(string: "https://crave-trinity--clarity-backend-fastapi-app.modal.run/api/v1")!
+    let baseURL = URL(string: AppConfig.apiBaseURL + "/api/v1")!
     var tokenProvider: () async -> String?   // e.g. use FirebaseAuth to get current ID token
     
     // MARK: Auth Endpoints

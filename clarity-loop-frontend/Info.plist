@@ -23,6 +23,10 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.novamindnyc.clarity-loop-frontend</string>
 	
+	<!-- API Configuration -->
+	<key>APIBaseURL</key>
+	<string>https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run</string>
+	
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	

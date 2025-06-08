@@ -7,14 +7,21 @@ struct AppConfig {
     // MARK: - API Configuration
     
     /// Base URL for the CLARITY backend API
-    /// TODO: Move to environment-based configuration (Info.plist or xcconfig) for proper dev/staging/prod switching
-    static let apiBaseURL = "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run"
+    /// Reads from Info.plist APIBaseURL key with fallback to production URL
+    static var apiBaseURL: String {
+        Bundle.main.object(forInfoDictionaryKey: "APIBaseURL") as? String
+        ?? "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run"
+    }
     
     // MARK: - Preview Configuration
     
     /// Base URL specifically for SwiftUI previews
-    /// Uses the same production URL for now, but can be overridden for preview-specific needs
-    static let previewAPIBaseURL = apiBaseURL
+    /// Uses the same API URL but can be overridden for preview-specific needs
+    static var previewAPIBaseURL: String {
+        // For previews, you can override this to use a different URL if needed
+        // For now, use the same configuration as the main app
+        return apiBaseURL
+    }
     
     // MARK: - Environment Detection
     
@@ -39,31 +46,38 @@ struct AppConfig {
 
 // MARK: - Future Enhancement Ideas
 
-/// TODO: Add environment-based configuration
-/// Example structure for future implementation:
+/// Example: Environment-based configuration with multiple Info.plist keys
+/// You can extend this pattern by adding more keys to Info.plist:
+/// - APIBaseURL_Dev, APIBaseURL_Staging, APIBaseURL_Prod
+/// - Then use build configurations to switch between them
 /*
 extension AppConfig {
     enum Environment {
         case development
-        case staging
+        case staging  
         case production
         
-        var baseURL: String {
+        var configKey: String {
             switch self {
-            case .development:
-                return "https://crave-trinity-dev--clarity-backend-fastapi-app.modal.run"
-            case .staging:
-                return "https://crave-trinity-staging--clarity-backend-fastapi-app.modal.run"
-            case .production:
-                return "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run"
+            case .development: return "APIBaseURL_Dev"
+            case .staging: return "APIBaseURL_Staging"
+            case .production: return "APIBaseURL_Prod"
             }
         }
     }
     
     static var currentEnvironment: Environment {
-        // Read from Info.plist, xcconfig, or environment variable
-        // For now, default to production
+        #if DEBUG
+        return .development
+        #else
         return .production
+        #endif
+    }
+    
+    static var environmentSpecificURL: String {
+        let environment = currentEnvironment
+        return Bundle.main.object(forInfoDictionaryKey: environment.configKey) as? String
+        ?? apiBaseURL // fallback to main APIBaseURL
     }
 }
 */

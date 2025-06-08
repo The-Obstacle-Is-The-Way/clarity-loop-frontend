@@ -222,7 +222,22 @@ If you encounter compilation errors like:
 **Problem**: Missing GoogleService-Info.plist
 **Solution**: Ensure Firebase config file is properly added to project
 
-## API Integration
+## API Configuration
+
+### Environment Management
+- **Configuration Source**: Info.plist with `APIBaseURL` key
+- **Centralized Config**: `Core/Utilities/AppConfig.swift` provides single source of truth
+- **Fallback Strategy**: Production URL hardcoded as fallback if Info.plist missing
+- **Preview Support**: Separate `previewAPIBaseURL` for SwiftUI previews
+
+```swift
+// Reading API URL - handled automatically by AppConfig
+let url = AppConfig.apiBaseURL  // Reads from Info.plist or fallback
+
+// Info.plist configuration
+<key>APIBaseURL</key>
+<string>https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run</string>
+```
 
 ### Backend Endpoints
 - Authentication: `/auth/*` 
