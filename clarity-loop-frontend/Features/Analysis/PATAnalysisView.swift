@@ -1,5 +1,5 @@
-import SwiftUI
 import Charts
+import SwiftUI
 
 struct PATAnalysisView: View {
     @State private var viewModel: PATAnalysisViewModel
@@ -246,7 +246,7 @@ private struct PATFeaturesView: View {
             
             LazyVGrid(columns: [
                 GridItem(.flexible()),
-                GridItem(.flexible())
+                GridItem(.flexible()),
             ], spacing: 16) {
                 ForEach(Array(relevantFeatures.enumerated()), id: \.offset) { _, feature in
                     if let value = features[feature.key] {
@@ -269,7 +269,7 @@ private struct PATFeaturesView: View {
             ("wake_after_sleep_onset", "WASO", "min", "eye.fill"),
             ("sleep_latency", "Sleep Latency", "min", "timer"),
             ("rem_percentage", "REM Sleep", "%", "brain.head.profile"),
-            ("deep_sleep_percentage", "Deep Sleep", "%", "zzz")
+            ("deep_sleep_percentage", "Deep Sleep", "%", "zzz"),
         ]
     }
     

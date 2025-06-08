@@ -5,8 +5,8 @@
 //  Debug view to test token extraction and validation
 //
 
-import SwiftUI
 import FirebaseAuth
+import SwiftUI
 
 struct TokenDebugView: View {
     @State private var tokenInfo = "Tap button to get token info"
@@ -96,7 +96,7 @@ struct TokenDebugView: View {
         }
     }
     
-    private func testBackendAuthCheck() {
+    func testBackendAuthCheck() {
         isLoading = true
         tokenInfo = "Testing backend auth check endpoint..."
         

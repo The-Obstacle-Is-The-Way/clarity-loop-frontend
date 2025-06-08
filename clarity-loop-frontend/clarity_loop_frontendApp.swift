@@ -5,11 +5,11 @@
 //  Created by Raymond Jung on 6/6/25.
 //
 
+import BackgroundTasks
 import FirebaseAuth
 import FirebaseCore
 import SwiftData
 import SwiftUI
-import BackgroundTasks
 #if canImport(UIKit) && DEBUG
 import UIKit
 #endif

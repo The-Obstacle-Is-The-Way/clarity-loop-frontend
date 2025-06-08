@@ -5,8 +5,8 @@
 //  Created by Raymond Jung on 6/7/25.
 //
 
-import SwiftUI
 import FirebaseAuth
+import SwiftUI
 
 struct MainTabView: View {
     var body: some View {

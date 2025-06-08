@@ -5,10 +5,10 @@
 //  Created by Raymond Jung on 6/7/25.
 //
 
-import Foundation
-import SwiftUI
 import FirebaseAuth
+import Foundation
 import Observation
+import SwiftUI
 
 /// A struct to hold all the necessary data for the dashboard.
 /// This will be expanded as more data sources are integrated.

@@ -5,8 +5,8 @@
 //  Created by Assistant on 6/8/25.
 //
 
-import SwiftUI
 import FirebaseAuth
+import SwiftUI
 
 struct InsightsListView: View {
     @Environment(\.insightsRepository) private var insightsRepository

@@ -1,7 +1,7 @@
 import Foundation
+import Observation
 import SwiftUI
 import UIKit
-import Observation
 
 @Observable
 final class SessionTimeoutService {
@@ -63,7 +63,7 @@ final class SessionTimeoutService {
             TimeoutOption(title: "15 minutes", interval: 900),
             TimeoutOption(title: "30 minutes", interval: 1800),
             TimeoutOption(title: "1 hour", interval: 3600),
-            TimeoutOption(title: "Never", interval: 0)
+            TimeoutOption(title: "Never", interval: 0),
         ]
     }
     

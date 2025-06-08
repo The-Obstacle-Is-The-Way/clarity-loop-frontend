@@ -1,6 +1,6 @@
+import FirebaseAuth
 import Foundation
 import UIKit
-import FirebaseAuth
 
 final class AnalyzePATDataUseCase {
     
@@ -45,7 +45,7 @@ final class AnalyzePATDataUseCase {
                     "consistencyScore": AnyCodable(stepData.dailyStepPattern.consistencyScore),
                     "activityLevel": AnyCodable(stepData.activityInsights.activityLevel),
                     "goalProgress": AnyCodable(stepData.activityInsights.goalProgress),
-                    "estimatedCaloriesBurned": AnyCodable(stepData.healthMetrics.estimatedCaloriesBurned)
+                    "estimatedCaloriesBurned": AnyCodable(stepData.healthMetrics.estimatedCaloriesBurned),
                 ]
             }
             
@@ -84,7 +84,7 @@ final class AnalyzePATDataUseCase {
                     "sleepLatency": AnyCodable(actigraphyData.sleepMetrics.sleepLatency),
                     "dailyActivityScore": AnyCodable(actigraphyData.activityPatterns.dailyActivityScore),
                     "circadianPhase": AnyCodable(actigraphyData.circadianRhythm.phase),
-                    "circadianAmplitude": AnyCodable(actigraphyData.circadianRhythm.amplitude)
+                    "circadianAmplitude": AnyCodable(actigraphyData.circadianRhythm.amplitude),
                 ]
             }
             

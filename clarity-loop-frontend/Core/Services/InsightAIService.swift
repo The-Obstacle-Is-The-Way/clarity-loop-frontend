@@ -102,7 +102,7 @@ final class InsightAIService {
         
         var analysisResults: [String: Any] = [
             "user_question": userMessage,
-            "conversation_context": conversationContext
+            "conversation_context": conversationContext,
         ]
         
         // Include health context if available

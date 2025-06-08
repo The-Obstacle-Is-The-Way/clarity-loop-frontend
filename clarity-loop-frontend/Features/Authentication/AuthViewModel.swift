@@ -1,7 +1,7 @@
 import Combine
 import Foundation
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Manages the global authentication state for the entire application.
 ///

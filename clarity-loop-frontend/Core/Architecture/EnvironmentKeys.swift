@@ -25,7 +25,7 @@ struct AuthServiceKey: EnvironmentKey {
 /// Note: This is kept for backwards compatibility, but the app uses the new iOS 17+ @Environment(Type.self) pattern
 struct AuthViewModelKey: EnvironmentKey {
     typealias Value = AuthViewModel?
-    static var defaultValue: AuthViewModel? = nil
+    static var defaultValue: AuthViewModel?
 }
 
 private struct APIClientKey: EnvironmentKey {

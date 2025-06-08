@@ -1,7 +1,7 @@
 import Foundation
+import Observation
 import SwiftUI
 import UIKit
-import Observation
 
 @Observable
 final class AppSecurityService {
@@ -116,7 +116,7 @@ final class AppSecurityService {
             logoImageView.centerXAnchor.constraint(equalTo: blurEffectView.centerXAnchor),
             logoImageView.centerYAnchor.constraint(equalTo: blurEffectView.centerYAnchor),
             logoImageView.widthAnchor.constraint(equalToConstant: 80),
-            logoImageView.heightAnchor.constraint(equalToConstant: 80)
+            logoImageView.heightAnchor.constraint(equalToConstant: 80),
         ])
         
         // Add app name label
@@ -131,7 +131,7 @@ final class AppSecurityService {
         
         NSLayoutConstraint.activate([
             appNameLabel.centerXAnchor.constraint(equalTo: blurEffectView.centerXAnchor),
-            appNameLabel.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 16)
+            appNameLabel.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 16),
         ])
         
         window.addSubview(blurEffectView)
@@ -170,7 +170,7 @@ final class AppSecurityService {
             "/usr/libexec/ssh-keysign",
             "/bin/sh",
             "/etc/apt",
-            "/usr/bin/ssh"
+            "/usr/bin/ssh",
         ]
         
         for path in jailbreakPaths {

@@ -111,7 +111,7 @@ final class SyncHealthDataUseCase {
                 endDate: sleepEnd,
                 metadata: [
                     "sleep_efficiency": AnyCodable(sleepData.sleepEfficiency),
-                    "total_time_in_bed": AnyCodable(sleepData.totalTimeInBed / 60.0)
+                    "total_time_in_bed": AnyCodable(sleepData.totalTimeInBed / 60.0),
                 ],
                 sourceRevision: createSourceRevision()
             ))

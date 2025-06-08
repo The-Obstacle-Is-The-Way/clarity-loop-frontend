@@ -5,8 +5,8 @@
 //  Debug view to test API connectivity
 //
 
-import SwiftUI
 import FirebaseAuth
+import SwiftUI
 #if canImport(UIKit) && DEBUG
 import UIKit
 #endif
@@ -53,7 +53,7 @@ struct DebugAPIView: View {
         .padding()
     }
     
-    private func testHealthEndpoint() {
+    func testHealthEndpoint() {
         isLoading = true
         statusMessage = "Testing health endpoint..."
         
@@ -77,7 +77,7 @@ struct DebugAPIView: View {
         }
     }
     
-    private func testInsightsStatus() {
+    func testInsightsStatus() {
         isLoading = true
         statusMessage = "Testing insights status..."
         
@@ -101,7 +101,7 @@ struct DebugAPIView: View {
         }
     }
     
-    private func testGenerateInsight() {
+    func testGenerateInsight() {
         isLoading = true
         statusMessage = "Testing generate insight with auth..."
         
@@ -142,7 +142,7 @@ struct DebugAPIView: View {
                     "context": "Test from iOS debug view",
                     "insight_type": "chat_response",
                     "include_recommendations": false,
-                    "language": "en"
+                    "language": "en",
                 ]
                 
                 request.httpBody = try JSONSerialization.data(withJSONObject: payload)

@@ -241,7 +241,7 @@ private struct SkeletonRow: View {
             colors: [
                 Color(.systemGray5),
                 Color(.systemGray4),
-                Color(.systemGray5)
+                Color(.systemGray5),
             ],
             startPoint: animateGradient ? .leading : .trailing,
             endPoint: animateGradient ? .trailing : .leading

@@ -237,7 +237,7 @@ class HealthKitService: HealthKitServiceProtocol {
             guard let quantityType = dataType as? HKQuantityType else { continue }
             
             return try await withCheckedThrowingContinuation { continuation in
-                healthStore.enableBackgroundDelivery(for: quantityType, frequency: .hourly) { success, error in
+                healthStore.enableBackgroundDelivery(for: quantityType, frequency: .hourly) { _, error in
                     if let error = error {
                         continuation.resume(throwing: error)
                     } else {
@@ -253,7 +253,7 @@ class HealthKitService: HealthKitServiceProtocol {
             guard let quantityType = dataType as? HKQuantityType else { continue }
             
             return try await withCheckedThrowingContinuation { continuation in
-                healthStore.disableBackgroundDelivery(for: quantityType) { success, error in
+                healthStore.disableBackgroundDelivery(for: quantityType) { _, error in
                     if let error = error {
                         continuation.resume(throwing: error)
                     } else {
@@ -268,7 +268,7 @@ class HealthKitService: HealthKitServiceProtocol {
         for dataType in readTypes {
             // Only create observer queries for sample types (not category types)
             guard let sampleType = dataType as? HKSampleType else { continue }
-            let query = HKObserverQuery(sampleType: sampleType, predicate: nil) { [weak self] query, completionHandler, error in
+            let query = HKObserverQuery(sampleType: sampleType, predicate: nil) { [weak self] _, completionHandler, error in
                 if let error = error {
                     print("Observer query error: \(error)")
                     return
