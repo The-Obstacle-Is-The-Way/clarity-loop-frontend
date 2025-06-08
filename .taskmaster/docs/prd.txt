@@ -1,0 +1,138 @@
+CLARITY PULSE iOS APPLICATION - PRODUCT REQUIREMENTS DOCUMENT
+=============================================================
+
+PROJECT OVERVIEW
+---------------
+CLARITY Pulse is a HIPAA-compliant iOS health data tracking application built with SwiftUI, following MVVM + Clean Architecture principles. The app integrates with HealthKit, Firebase, and provides secure biometric authentication for sensitive health data management. The backend API is hosted at https://crave-trinity--clarity-backend-fastapi-app.modal.run/api/v1.
+
+CURRENT STATE
+-------------
+- Authentication system: FULLY IMPLEMENTED and working
+- Core architecture: FULLY IMPLEMENTED (MVVM + Clean Architecture)
+- Basic UI structure: IMPLEMENTED
+- Firebase integration: WORKING
+- Basic dashboard: PARTIALLY IMPLEMENTED (needs data integration)
+
+MISSING FEATURES TO IMPLEMENT
+-----------------------------
+
+1. HEALTHKIT INTEGRATION
+   - Complete authorization flow and permission handling
+   - Background delivery setup for automatic data sync
+   - Observer queries for real-time health data updates
+   - Implement comprehensive health metric fetching (steps, heart rate, sleep, HRV, etc.)
+   - BGProcessingTask for bulk HealthKit uploads
+   - BGAppRefreshTask for periodic data sync
+   - HKObserverQuery setup for background notifications
+   - Create HealthKit upload DTOs and mapping functions
+   - Handle simulator vs real device differences gracefully
+
+2. DATA TRANSFER OBJECTS (DTOs)
+   - Implement missing HealthKit Upload DTOs (HealthKitSampleDTO, HealthKitUploadRequestDTO, HealthKitUploadResponseDTO, HealthKitUploadStatusDTO)
+   - Implement missing Health Data DTOs (HealthDataUploadDTO, HealthDataResponseDTO with proper mapping)
+   - Implement PAT Analysis DTOs (StepDataRequestDTO, ActigraphyDataPointDTO, DirectActigraphyRequestDTO, AnalysisResponseDTO, PATAnalysisResponseDTO)
+   - Implement Insights Service DTOs (ServiceStatusResponseDTO, ServiceStatusDataDTO, ModelInfoDTO)
+   - Ensure all DTOs match backend API contracts exactly
+
+3. API ENDPOINTS IMPLEMENTATION
+   - Auth endpoints: refreshToken(), logout(), getCurrentUser(), verifyEmail()
+   - HealthKit endpoints: uploadHealthKit(), getHealthKitUploadStatus()
+   - Health Data endpoints: uploadHealthData(), getProcessingStatus()
+   - PAT Analysis endpoints: analyzeStepData(), analyzeActigraphy(), getPATAnalysis(), getPATServiceHealth()
+   - Insights endpoints: getInsight(), getInsightsServiceStatus()
+   - Ensure proper error handling and JWT token authentication
+
+4. PAT ANALYSIS FEATURE
+   - Create PATAnalysisView with sleep stage hypnogram visualization
+   - Implement PATAnalysisViewModel with analysis state management
+   - Integrate SwiftUI Charts for sleep stage visualization
+   - Display confidence scores with visual indicators
+   - Show clinical insights presentation
+   - Implement polling mechanism for analysis status
+   - Cache analysis results in SwiftData
+
+5. GEMINI AI INSIGHTS FEATURE
+   - Create InsightsListView for displaying insight history
+   - Implement InsightsListViewModel with pagination support
+   - Create "Insight of the Day" card component
+   - Implement ChatView with message bubbles UI
+   - Create ChatViewModel for real-time chat handling
+   - Add typing indicators and async message handling
+   - Integrate with /api/v1/insights endpoints
+   - Store insights locally for offline access
+
+6. DATA SYNCHRONIZATION
+   - Implement SyncManager service for coordinating data sync
+   - Create offline queue for pending uploads using SwiftData
+   - Implement network status monitoring with NWPathMonitor
+   - Add retry logic with exponential backoff
+   - Create sync status indicators in UI
+   - Handle background sync tasks properly
+   - Ensure data consistency between local and remote
+
+7. DASHBOARD IMPROVEMENTS
+   - Fix "No data available" error in simulator
+   - Implement proper empty state handling vs error state
+   - Add graceful fallbacks when HealthKit data unavailable
+   - Create onboarding flow for new users without data
+   - Ensure dashboard displays real data when available
+
+8. SWIFTDATA PERSISTENCE
+   - Complete HealthMetricEntity implementation with all fields
+   - Implement InsightEntity for storing AI insights
+   - Create PATAnalysisEntity for caching analysis results
+   - Implement proper data mapping between DTOs and entities
+   - Add sync timestamps and conflict resolution
+
+TECHNICAL REQUIREMENTS
+----------------------
+- Use iOS 17+ @Observable pattern consistently
+- Implement ViewState<T> pattern for all async operations
+- Use SwiftUI Charts for data visualization
+- Ensure HIPAA compliance in all data handling
+- Follow existing MVVM + Clean Architecture patterns
+- Use Environment-based dependency injection
+- Implement comprehensive error handling
+- Support offline functionality where possible
+- Use async/await for all asynchronous operations
+
+PRIORITY ORDER
+--------------
+1. Complete missing DTOs (foundation for all features)
+2. Implement missing API endpoints
+3. Fix dashboard data loading and error handling
+4. Complete HealthKit integration with background sync
+5. Implement PAT analysis display features
+6. Add Gemini AI insights UI and chat
+7. Implement offline support and data sync
+8. Add background task scheduling
+
+SUCCESS CRITERIA
+----------------
+- App successfully syncs HealthKit data in background
+- Dashboard displays real health metrics on device
+- PAT analysis shows sleep visualization with charts
+- AI insights are generated and displayed properly
+- Chat interface allows interactive health discussions
+- Data syncs reliably with offline support
+- All features work on real iOS devices
+- No critical errors in console during normal usage
+- App maintains HIPAA compliance throughout
+
+CONSTRAINTS
+-----------
+- Must work with existing Modal backend API
+- Must maintain iOS 17+ compatibility
+- Must follow existing architecture patterns
+- Test targets require manual Xcode intervention
+- Must handle simulator limitations gracefully
+- Must ensure secure handling of health data
+
+DELIVERABLES
+------------
+- Fully functional HealthKit integration
+- Complete API client with all endpoints
+- Working PAT analysis visualization
+- Interactive AI insights and chat
+- Reliable data synchronization
+- Production-ready iOS application

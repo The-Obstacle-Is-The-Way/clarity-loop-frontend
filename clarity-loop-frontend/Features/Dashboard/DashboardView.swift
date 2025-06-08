@@ -63,11 +63,25 @@ struct DashboardView: View {
                             .font(.system(size: 60))
                             .foregroundColor(.gray)
                         
-                        Text("No Health Data Available")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
+                        Text("Welcome to CLARITY Pulse!")
+                            .font(.title2)
+                            .fontWeight(.bold)
                         
-                        Text("Allow HealthKit access to see your health metrics and insights.")
+                        #if targetEnvironment(simulator)
+                        Text("You're running in the simulator. To see real health data, run the app on a physical device with HealthKit data.")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        
+                        Button("Load Sample Data") {
+                            Task {
+                                await viewModel.loadSampleData()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        #else
+                        Text("Start tracking your health by walking around with your iPhone or connecting your Apple Watch.")
                             .font(.body)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
@@ -79,6 +93,7 @@ struct DashboardView: View {
                             }
                         }
                         .buttonStyle(.borderedProminent)
+                        #endif
                     }
                     .padding()
                 case .error(let errorMessage):

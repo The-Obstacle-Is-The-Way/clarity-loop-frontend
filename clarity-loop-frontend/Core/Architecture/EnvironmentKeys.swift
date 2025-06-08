@@ -22,18 +22,17 @@ struct AuthServiceKey: EnvironmentKey {
 }
 
 /// The key for accessing the `AuthViewModel` in the SwiftUI Environment.
+/// Note: This is kept for backwards compatibility, but the app uses the new iOS 17+ @Environment(Type.self) pattern
 struct AuthViewModelKey: EnvironmentKey {
-    typealias Value = AuthViewModel
-    static var defaultValue: AuthViewModel {
-        fatalError("AuthViewModel must be explicitly provided in the environment")
-    }
+    typealias Value = AuthViewModel?
+    static var defaultValue: AuthViewModel? = nil
 }
 
 private struct APIClientKey: EnvironmentKey {
     typealias Value = APIClientProtocol
     static let defaultValue: APIClientProtocol = {
         guard let client = APIClient(
-            baseURLString: "https://api.example.com",
+            baseURLString: "https://crave-trinity--clarity-backend-fastapi-app.modal.run",
             tokenProvider: { nil }
         ) else {
             fatalError("Failed to create default APIClient")
@@ -93,7 +92,7 @@ extension EnvironmentValues {
     }
     
     /// Provides access to the `AuthViewModel` throughout the SwiftUI environment.
-    var authViewModel: AuthViewModel {
+    var authViewModel: AuthViewModel? {
         get { self[AuthViewModelKey.self] }
         set { self[AuthViewModelKey.self] = newValue }
     }
