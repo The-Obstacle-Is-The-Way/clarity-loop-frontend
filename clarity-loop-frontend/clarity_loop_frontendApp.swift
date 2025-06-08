@@ -86,7 +86,7 @@ struct ClarityPulseApp: App {
                     backgroundTaskManager.scheduleHealthDataSync()
                     backgroundTaskManager.scheduleAppRefresh()
                 }
-                .onChange(of: authViewModel.isAuthenticated) { _, newValue in
+                .onChange(of: authViewModel.isLoggedIn) { _, newValue in
                     // Update service locator with current user ID
                     if newValue {
                         ServiceLocator.shared.currentUserId = Auth.auth().currentUser?.uid

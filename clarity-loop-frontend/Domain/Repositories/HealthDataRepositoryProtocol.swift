@@ -19,6 +19,28 @@ protocol HealthDataRepositoryProtocol {
     /// - Returns: A `PaginatedMetricsResponseDTO` containing the health data.
     func getHealthData(page: Int, limit: Int) async throws -> PaginatedMetricsResponseDTO
     
-    // For the dashboard, we might want a higher-level summary.
-    // This will be defined later. For now, the protocol is a placeholder.
+    /// Uploads HealthKit data to the backend.
+    /// - Parameter requestDTO: The upload request containing HealthKit samples.
+    /// - Returns: A response indicating the upload status.
+    func uploadHealthKitData(requestDTO: HealthKitUploadRequestDTO) async throws -> HealthKitUploadResponseDTO
+    
+    /// Initiates a sync of HealthKit data for a specific date range.
+    /// - Parameter requestDTO: The sync request parameters.
+    /// - Returns: A response with sync status information.
+    func syncHealthKitData(requestDTO: HealthKitSyncRequestDTO) async throws -> HealthKitSyncResponseDTO
+    
+    /// Gets the status of a HealthKit sync operation.
+    /// - Parameter syncId: The ID of the sync operation.
+    /// - Returns: The current sync status.
+    func getHealthKitSyncStatus(syncId: String) async throws -> HealthKitSyncStatusDTO
+    
+    /// Gets the status of a HealthKit upload operation.
+    /// - Parameter uploadId: The ID of the upload operation.
+    /// - Returns: The current upload status.
+    func getHealthKitUploadStatus(uploadId: String) async throws -> HealthKitUploadStatusDTO
+    
+    /// Gets the processing status of health data.
+    /// - Parameter id: The ID of the processing operation.
+    /// - Returns: The current processing status.
+    func getProcessingStatus(id: UUID) async throws -> HealthDataProcessingStatusDTO
 } 
