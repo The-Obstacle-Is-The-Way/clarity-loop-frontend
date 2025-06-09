@@ -47,6 +47,7 @@
 				Core/Networking/APIClient.swift = (ios, );
 				Core/Networking/APIError.swift = (ios, );
 				Core/Networking/AuthEndpoint.swift = (ios, );
+				Core/Networking/BackendHealthDataEndpoint.swift = (ios, );
 				Core/Networking/HealthDataEndpoint.swift = (ios, );
 				Core/Networking/InsightEndpoint.swift = (ios, );
 				Core/Networking/PATEndpoint.swift = (ios, );
@@ -60,11 +61,13 @@
 				Core/Services/InsightAIService.swift = (ios, );
 				Core/Services/OfflineQueueManager.swift = (ios, );
 				Core/Services/SessionTimeoutService.swift = (ios, );
+				Core/Services/TokenManagementService.swift = (ios, );
 				Core/Utilities/AppConfig.swift = (ios, );
 				Data/DTOs/AnyCodable.swift = (ios, );
 				Data/DTOs/AuthLoginDTOs.swift = (ios, );
 				Data/DTOs/AuthMiscDTOs.swift = (ios, );
 				Data/DTOs/AuthRegistrationDTOs.swift = (ios, );
+				Data/DTOs/BackendHealthDataDTOs.swift = (ios, );
 				Data/DTOs/HealthDataDTOs.swift = (ios, );
 				Data/DTOs/HealthKitUploadDTOs.swift = (ios, );
 				Data/DTOs/InsightsDTOs.swift = (ios, );
@@ -98,8 +101,10 @@
 				Features/Dashboard/DashboardViewModel.swift = (ios, );
 				Features/Insights/ChatView.swift = (ios, );
 				Features/Insights/ChatViewModel.swift = (ios, );
+				Features/Insights/DebugAPIView.swift = (ios, );
 				Features/Insights/InsightsListView.swift = (ios, );
 				Features/Insights/InsightsListViewModel.swift = (ios, );
+				Features/Insights/TokenDebugView.swift = (ios, );
 				Features/Settings/DataManagementView.swift = (ios, );
 				Features/Settings/DataManagementViewModel.swift = (ios, );
 				Features/Settings/SettingsView.swift = (ios, );
@@ -130,6 +135,7 @@
 			platformFiltersByRelativePath = {
 				Core/Architecture/ViewStateTests.swift = (ios, );
 				Core/Networking/APIClientTests.swift = (ios, );
+				Core/Networking/JSONEncodingTests.swift = (ios, );
 				Core/Services/AppSecurityServiceTests.swift = (ios, );
 				Core/Services/AuthServiceTests.swift = (ios, );
 				Core/Services/BiometricAuthServiceTests.swift = (ios, );
