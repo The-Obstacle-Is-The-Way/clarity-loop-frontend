@@ -41,22 +41,12 @@ struct ClarityPulseApp: App {
         guard let client = APIClient(tokenProvider: {
             print("🔍 APP: Token provider called")
             
-            guard let user = Auth.auth().currentUser else {
-                print("❌ APP: No Firebase user found in token provider")
-                return nil
-            }
-            
-            print("✅ APP: User found in token provider: \(user.uid)")
-            
+            // Use centralized token management service
             do {
-                // Force refresh tokens to ensure they're fresh
-                let tokenResult = try await user.getIDTokenResult(forcingRefresh: true)
-                let token = tokenResult.token
+                let token = try await TokenManagementService.shared.getValidToken()
                 
-                print("✅ APP: Token obtained in provider")
+                print("✅ APP: Token obtained from TokenManagementService")
                 print("   - Length: \(token.count)")
-                print("   - aud: \(tokenResult.claims["aud"] ?? "missing")")
-                print("   - iss: \(tokenResult.claims["iss"] ?? "missing")")
                 
                 #if DEBUG
                 // Print the full JWT so we can copy from the console

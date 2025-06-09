@@ -163,8 +163,12 @@ final class AuthService: AuthServiceProtocol {
             print("   - Expires at: \(expirationDate)")
             print("   - Time until expiration: \(timeUntilExpiration) seconds (\(timeUntilExpiration/60) minutes)")
             
-            // If token expires in less than 5 minutes, force refresh
-            let needsRefresh = timeUntilExpiration < 300 // 5 minutes
+            // CRITICAL FIX: More aggressive token refresh
+            // Force refresh if:
+            // 1. Token expires in less than 5 minutes OR
+            // 2. Token is older than 30 minutes (half of Firebase's 1 hour)
+            let tokenAge = Date().timeIntervalSince(tokenResult.issuedAtDate)
+            let needsRefresh = timeUntilExpiration < 300 || tokenAge > 1800 // 5 mins or 30 mins old
             
             let finalTokenResult: AuthTokenResult
             if needsRefresh {

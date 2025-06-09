@@ -7,12 +7,9 @@ import SwiftUI
 /// This ensures that even default/fallback environment values can authenticate
 private let defaultTokenProvider: () async -> String? = {
     do {
-        guard let user = Auth.auth().currentUser else {
-            print("⚠️ Default environment: No Firebase user")
-            return nil
-        }
-        let token = try await user.getIDToken()
-        print("✅ Default environment: Token retrieved for user \(user.uid)")
+        // CRITICAL FIX: Use centralized TokenManagementService
+        let token = try await TokenManagementService.shared.getValidToken()
+        print("✅ Default environment: Token obtained from TokenManagementService")
         return token
     } catch {
         print("⚠️ Default environment failed to get token: \(error)")
