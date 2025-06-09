@@ -40,6 +40,11 @@ struct TokenDebugView: View {
                 testBackendAuthCheck()
             }
             .buttonStyle(.bordered)
+            
+            Button("Test Token Refresh") {
+                testTokenRefresh()
+            }
+            .buttonStyle(.bordered)
         }
         .padding()
     }
@@ -141,6 +146,55 @@ struct TokenDebugView: View {
             } catch {
                 tokenInfo = "❌ Backend test error: \(error)"
             }
+            isLoading = false
+        }
+    }
+    
+    private func testTokenRefresh() {
+        isLoading = true
+        tokenInfo = "Testing token refresh..."
+        
+        Task {
+            do {
+                guard let user = Auth.auth().currentUser else {
+                    tokenInfo = "❌ No user logged in"
+                    isLoading = false
+                    return
+                }
+                
+                var info = "🔄 TOKEN REFRESH TEST\n\n"
+                
+                // Get current token without forcing refresh
+                let tokenResult1 = try await user.getIDTokenResult(forcingRefresh: false)
+                info += "CURRENT TOKEN:\n"
+                info += "- Expires: \(tokenResult1.expirationDate)\n"
+                info += "- Time until expiration: \(tokenResult1.expirationDate.timeIntervalSinceNow) seconds\n"
+                info += "- First 20 chars: \(tokenResult1.token.prefix(20))...\n\n"
+                
+                // Force refresh
+                info += "FORCING REFRESH...\n"
+                let tokenResult2 = try await user.getIDTokenResult(forcingRefresh: true)
+                info += "NEW TOKEN:\n"
+                info += "- Expires: \(tokenResult2.expirationDate)\n"
+                info += "- Time until expiration: \(tokenResult2.expirationDate.timeIntervalSinceNow) seconds\n"
+                info += "- First 20 chars: \(tokenResult2.token.prefix(20))...\n\n"
+                
+                // Compare
+                if tokenResult1.token == tokenResult2.token {
+                    info += "⚠️ TOKENS ARE IDENTICAL (Firebase returned cached token)\n"
+                } else {
+                    info += "✅ TOKENS ARE DIFFERENT (Refresh successful)\n"
+                }
+                
+                info += "\nNOTE: Firebase may return the same token if it's still valid.\n"
+                info += "Tokens expire after 1 hour from creation."
+                
+                tokenInfo = info
+                
+            } catch {
+                tokenInfo = "❌ Error testing token refresh: \(error)"
+            }
+            
             isLoading = false
         }
     }

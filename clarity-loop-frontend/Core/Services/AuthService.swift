@@ -152,14 +152,37 @@ final class AuthService: AuthServiceProtocol {
         
         // Get token result for more debugging info
         do {
-            let tokenResult = try await user.getIDTokenResult(forcingRefresh: true)
-            print("🔍 AUTH: Token claims:")
-            print("   - aud: \(tokenResult.claims["aud"] ?? "missing")")
-            print("   - iss: \(tokenResult.claims["iss"] ?? "missing")")
-            print("   - exp: \(tokenResult.claims["exp"] ?? "missing")")
-            print("   - auth_time: \(tokenResult.claims["auth_time"] ?? "missing")")
+            // First check if current token is still valid
+            let tokenResult = try await user.getIDTokenResult(forcingRefresh: false)
             
-            let token = tokenResult.token
+            // Check expiration
+            let expirationDate = tokenResult.expirationDate
+            let timeUntilExpiration = expirationDate.timeIntervalSinceNow
+            
+            print("🕐 AUTH: Token expiration check:")
+            print("   - Expires at: \(expirationDate)")
+            print("   - Time until expiration: \(timeUntilExpiration) seconds (\(timeUntilExpiration/60) minutes)")
+            
+            // If token expires in less than 5 minutes, force refresh
+            let needsRefresh = timeUntilExpiration < 300 // 5 minutes
+            
+            let finalTokenResult: AuthTokenResult
+            if needsRefresh {
+                print("⚠️ AUTH: Token expiring soon (or expired), forcing refresh...")
+                finalTokenResult = try await user.getIDTokenResult(forcingRefresh: true)
+                print("✅ AUTH: Token refreshed successfully")
+            } else {
+                print("✅ AUTH: Token still valid, using existing token")
+                finalTokenResult = tokenResult
+            }
+            
+            print("🔍 AUTH: Token claims:")
+            print("   - aud: \(finalTokenResult.claims["aud"] ?? "missing")")
+            print("   - iss: \(finalTokenResult.claims["iss"] ?? "missing")")
+            print("   - exp: \(finalTokenResult.claims["exp"] ?? "missing")")
+            print("   - auth_time: \(finalTokenResult.claims["auth_time"] ?? "missing")")
+            
+            let token = finalTokenResult.token
             print("✅ AUTH: Token retrieved successfully")
             print("   - Length: \(token.count) characters")
             print("   - Preview: \(String(token.prefix(50)))...")
