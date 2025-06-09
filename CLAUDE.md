@@ -236,7 +236,7 @@ let url = AppConfig.apiBaseURL  // Reads from Info.plist or fallback
 
 // Info.plist configuration
 <key>APIBaseURL</key>
-<string>https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run</string>
+<string>https://clarity-digital-twin-prod--clarity-backend-fastapi-app.modal.run</string>
 ```
 
 ### Backend Endpoints

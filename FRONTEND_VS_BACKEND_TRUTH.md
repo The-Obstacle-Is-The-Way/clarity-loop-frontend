@@ -10,7 +10,7 @@
 ✅ APP: Token obtained from TokenManagementService
    - Length: 933
 📤 APIClient: Authorization header set: Bearer eyJhbGci...
-📡 APIClient: Sending request to https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run
+📡 APIClient: Sending request to https://clarity-digital-twin-prod--clarity-backend-fastapi-app.modal.run
 📥 APIClient: Response status code: 401
 ```
 

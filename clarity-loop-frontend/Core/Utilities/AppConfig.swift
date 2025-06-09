@@ -10,7 +10,7 @@ struct AppConfig {
     /// Reads from Info.plist APIBaseURL key with fallback to production URL
     static var apiBaseURL: String {
         Bundle.main.object(forInfoDictionaryKey: "APIBaseURL") as? String
-        ?? "https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run"
+        ?? "https://clarity-digital-twin-prod--clarity-backend-fastapi-app.modal.run"
     }
     
     // MARK: - Preview Configuration

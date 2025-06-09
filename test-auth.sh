@@ -7,7 +7,7 @@
 # Step 2: Replace YOUR_TOKEN_HERE with the actual token
 
 TOKEN="YOUR_TOKEN_HERE"
-BASE_URL="https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run"
+BASE_URL="https://clarity-digital-twin-prod--clarity-backend-fastapi-app.modal.run"
 
 echo "Testing health endpoint (no auth required)..."
 curl -X GET "$BASE_URL/api/v1/health-data/health"

@@ -83,7 +83,7 @@ time_remaining = 3600 - 653  # 2947 seconds (~49 minutes)
 ✅ Fresh token obtained at 10:20:55
 ✅ Token expires at 11:20:55 (1 hour lifetime)
 ✅ Token added to Authorization header
-✅ Request sent to: https://crave-trinity-prod--clarity-backend-fastapi-app.modal.run
+✅ Request sent to: https://clarity-digital-twin-prod--clarity-backend-fastapi-app.modal.run
 ✅ Retry logic working (attempts refresh on 401)
 ❌ Always gets 401 response
 ```
