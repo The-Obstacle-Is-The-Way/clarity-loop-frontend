@@ -85,7 +85,7 @@ final class CognitoAuthService: NSObject {
         }
         
         guard var components = URLComponents(url: endSessionEndpoint, resolvingAgainstBaseURL: false) else {
-            throw AuthError.configuration(message: "Invalid endpoint URL")
+            throw AuthError.configurationError
         }
         components.queryItems = [
             URLQueryItem(name: "client_id", value: configuration.clientID),
@@ -143,7 +143,7 @@ final class CognitoAuthService: NSObject {
         
         // Build authorization URL
         guard var components = URLComponents(url: authEndpoint, resolvingAgainstBaseURL: false) else {
-            throw AuthError.configuration(message: "Invalid auth endpoint URL")
+            throw AuthError.configurationError
         }
         components.queryItems = [
             URLQueryItem(name: "response_type", value: "code"),

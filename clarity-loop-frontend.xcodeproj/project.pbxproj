@@ -155,7 +155,6 @@
 				Integration/AuthenticationIntegrationTests.swift = (ios, );
 				Integration/BackendIntegrationTests.swift = (ios, );
 				IntegrationTests.swift = (ios, );
-				Mocks/MinimalMockAPIClient.swift = (ios, );
 				Mocks/MockAuthService.swift = (ios, );
 				Performance/MemoryLeakTests.swift = (ios, );
 				SimpleGreenTest.swift = (ios, );
