@@ -98,7 +98,7 @@ final class AuthService: AuthServiceProtocol {
 
     // MARK: - Initializer
     
-    nonisolated init(apiClient: APIClientProtocol) {
+    init(apiClient: APIClientProtocol) {
         self.apiClient = apiClient
     }
 

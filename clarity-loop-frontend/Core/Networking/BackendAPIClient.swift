@@ -175,6 +175,14 @@ final class BackendAPIClient: APIClientProtocol {
         print("🌐 API Request: \(endpoint.method.rawValue) \(url.absoluteString)")
         if let body = request.httpBody {
             print("📤 Request Body: \(String(data: body, encoding: .utf8) ?? "Invalid UTF-8")")
+            // Additional JSON debugging as suggested
+            if let json = try? JSONSerialization.jsonObject(with: body, options: []) {
+                print("🚀 Register payload →", json)
+            }
+        }
+        print("📋 Request Headers:")
+        request.allHTTPHeaderFields?.forEach { key, value in
+            print("   \(key): \(value)")
         }
         #endif
         
