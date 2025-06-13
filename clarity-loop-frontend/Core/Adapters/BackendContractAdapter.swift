@@ -58,7 +58,9 @@ final class BackendContractAdapter: BackendContractAdapterProtocol {
     func adaptLoginRequest(_ frontendRequest: UserLoginRequestDTO) -> BackendUserLogin {
         return BackendUserLogin(
             email: frontendRequest.email,
-            password: frontendRequest.password
+            password: frontendRequest.password,
+            rememberMe: frontendRequest.rememberMe,
+            deviceInfo: frontendRequest.deviceInfo
         )
     }
     

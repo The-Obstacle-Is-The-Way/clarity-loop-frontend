@@ -69,7 +69,7 @@ final class AuthService: AuthServiceProtocol {
     
     // MARK: - Properties
     
-    private let apiClient: APIClientProtocol
+    nonisolated(unsafe) private let apiClient: APIClientProtocol
     private let cognitoAuth = CognitoAuthService()
     private var authStateTask: Task<Void, Never>?
 
@@ -171,7 +171,7 @@ final class AuthService: AuthServiceProtocol {
     
     private func mapCognitoError(_ error: Error) -> Error {
         // Map Cognito-specific errors to our AuthenticationError enum
-        if let urlError = error as? URLError {
+        if error is URLError {
             return AuthenticationError.networkError
         }
         

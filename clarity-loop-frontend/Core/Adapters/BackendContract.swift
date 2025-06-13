@@ -20,6 +20,15 @@ struct BackendUserRegister: Codable {
 struct BackendUserLogin: Codable {
     let email: String
     let password: String
+    let rememberMe: Bool
+    let deviceInfo: [String: AnyCodable]?
+    
+    enum CodingKeys: String, CodingKey {
+        case email
+        case password
+        case rememberMe = "remember_me"
+        case deviceInfo = "device_info"
+    }
 }
 
 /// Backend token response model - matches Python TokenResponse

@@ -149,7 +149,7 @@ struct TokenDebugView: View {
         
         Task {
             do {
-                guard let user = await authService.currentUser else {
+                guard await authService.currentUser != nil else {
                     tokenInfo = "❌ No user logged in"
                     isLoading = false
                     return
