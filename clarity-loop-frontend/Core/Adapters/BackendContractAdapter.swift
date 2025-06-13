@@ -3,7 +3,6 @@ import Foundation
 // MARK: - Backend Contract Adapter Protocol
 
 /// Protocol defining the contract adaptation layer between frontend and backend
-@MainActor
 protocol BackendContractAdapterProtocol {
     func adaptRegistrationRequest(_ frontendRequest: UserRegistrationRequestDTO) -> BackendUserRegister
     func adaptRegistrationResponse(_ backendResponse: BackendTokenResponse) throws -> RegistrationResponseDTO
@@ -22,7 +21,6 @@ protocol BackendContractAdapterProtocol {
 
 /// Concrete implementation of the backend contract adapter
 /// This class handles all transformations between frontend DTOs and backend contract
-@MainActor
 final class BackendContractAdapter: BackendContractAdapterProtocol {
     
     // MARK: - Registration Adaptation

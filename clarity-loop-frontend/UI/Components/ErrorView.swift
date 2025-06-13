@@ -214,6 +214,20 @@ extension ErrorView {
                 systemImage: "exclamationmark.triangle.fill",
                 retryAction: onRetry
             )
+        case .httpError(let statusCode, _):
+            self.init(
+                title: "HTTP Error \(statusCode)",
+                message: "An error occurred while communicating with the server.",
+                systemImage: "network.badge.shield.half.filled",
+                retryAction: onRetry
+            )
+        case .missingAuthToken:
+            self.init(
+                title: "Authentication Missing",
+                message: "Please sign in to continue.",
+                systemImage: "person.badge.key.fill",
+                retryAction: onRetry
+            )
         }
     }
 }

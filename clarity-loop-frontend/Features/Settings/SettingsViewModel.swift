@@ -59,7 +59,7 @@ final class SettingsViewModel {
     func loadUserProfile() async {
         // Load user profile data
         if let user = await authService.currentUser {
-            email = user.email ?? ""
+            email = user.email
             // In a real app, you'd fetch additional profile data from your backend
         }
     }
