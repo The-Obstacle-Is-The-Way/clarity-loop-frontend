@@ -48,8 +48,11 @@ final class SettingsViewModel {
     init(authService: any AuthServiceProtocol, healthKitService: any HealthKitServiceProtocol) {
         self.authService = authService
         self.healthKitService = healthKitService
-        loadUserProfile()
         checkHealthKitStatus()
+        // Load user profile asynchronously after initialization
+        Task {
+            await loadUserProfile()
+        }
     }
     
     // MARK: - Profile Management
@@ -61,10 +64,10 @@ final class SettingsViewModel {
         }
     }
     
-    func startEditingProfile() {
+    func startEditingProfile() async {
         isEditingProfile = true
         // Pre-populate fields with current values
-        loadUserProfile()
+        await loadUserProfile()
     }
     
     func cancelEditingProfile() {
