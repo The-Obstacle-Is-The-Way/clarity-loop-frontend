@@ -70,7 +70,9 @@ struct SettingsContentView: View {
                             .foregroundColor(.secondary)
                     }
                     .onTapGesture {
-                        viewModel.startEditingProfile()
+                        Task {
+                            await viewModel.startEditingProfile()
+                        }
                     }
                 }
             }
@@ -195,7 +197,9 @@ struct SettingsContentView: View {
         .alert("Sign Out", isPresented: $viewModel.showingSignOutAlert) {
             Button("Cancel", role: .cancel) { }
             Button("Sign Out", role: .destructive) {
-                viewModel.signOut()
+                Task {
+                    await viewModel.signOut()
+                }
             }
         } message: {
             Text("Are you sure you want to sign out?")

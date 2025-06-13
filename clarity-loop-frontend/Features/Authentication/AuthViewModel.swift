@@ -28,8 +28,10 @@ final class AuthViewModel {
         self.authService = authService
         setupSubscribers()
         
-        // Initial check
-        self.isLoggedIn = authService.currentUser != nil
+        // Initial check - do async in a task since currentUser is async
+        Task {
+            self.isLoggedIn = await authService.currentUser != nil
+        }
     }
     
     // MARK: - Private Methods
@@ -46,9 +48,9 @@ final class AuthViewModel {
     }
     
     /// A convenience method to sign out the user.
-    func signOut() {
+    func signOut() async {
         do {
-            try authService.signOut()
+            try await authService.signOut()
         } catch {
             // Handle sign-out error, e.g., by logging it.
             print("Error signing out: \(error.localizedDescription)")
