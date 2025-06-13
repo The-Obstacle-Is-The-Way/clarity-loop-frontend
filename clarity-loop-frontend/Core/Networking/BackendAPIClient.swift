@@ -33,9 +33,11 @@ final class BackendAPIClient: APIClientProtocol {
         
         self.decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         self.encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
+        encoder.keyEncodingStrategy = .convertToSnakeCase
     }
     
     // MARK: - Authentication Methods
@@ -154,7 +156,13 @@ final class BackendAPIClient: APIClientProtocol {
         
         // Add authentication
         if requiresAuth {
-            let token = accessToken ?? (await tokenProvider())
+            let token: String?
+            if let providedToken = accessToken {
+                token = providedToken
+            } else {
+                token = await tokenProvider()
+            }
+            
             if let token = token {
                 request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
             } else {

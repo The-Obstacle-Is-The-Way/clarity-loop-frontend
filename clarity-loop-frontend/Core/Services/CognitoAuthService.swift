@@ -99,7 +99,7 @@ final class CognitoAuthService: NSObject {
     }
     
     func getCurrentUser() async throws -> AuthUser? {
-        guard let token = accessToken, let userInfo = userInfo else {
+        guard accessToken != nil, let userInfo = userInfo else {
             return nil
         }
         

@@ -107,7 +107,7 @@ final class AuthService: AuthServiceProtocol {
     func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
         do {
             // Sign in with Cognito
-            let authUser = try await cognitoAuth.signIn(email: email, password: password)
+            _ = try await cognitoAuth.signIn(email: email, password: password)
             
             // Create backend login request
             let loginDTO = UserLoginRequestDTO(email: email, password: password, rememberMe: true, deviceInfo: nil)

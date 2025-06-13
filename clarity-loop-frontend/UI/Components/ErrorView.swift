@@ -228,6 +228,13 @@ extension ErrorView {
                 systemImage: "person.badge.key.fill",
                 retryAction: onRetry
             )
+        case .invalidResponse:
+            self.init(
+                title: "Invalid Response",
+                message: "The server response was not in the expected format.",
+                systemImage: "exclamationmark.arrow.circlepath",
+                retryAction: onRetry
+            )
         }
     }
 }
