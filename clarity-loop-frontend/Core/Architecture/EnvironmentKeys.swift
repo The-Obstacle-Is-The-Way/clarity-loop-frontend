@@ -32,7 +32,7 @@ struct AuthServiceKey: EnvironmentKey {
     static var defaultValue: AuthServiceProtocol {
         // Create a default APIClient for the default AuthService
         let defaultAPIClient: APIClientProtocol = {
-            guard let client = APIClient(
+            guard let client = BackendAPIClient(
                 baseURLString: AppConfig.apiBaseURL,
                 tokenProvider: defaultTokenProvider
             ) else {
@@ -60,7 +60,7 @@ struct AuthViewModelKey: EnvironmentKey {
 private struct APIClientKey: EnvironmentKey {
     typealias Value = APIClientProtocol
     static let defaultValue: APIClientProtocol = {
-        guard let client = APIClient(
+        guard let client = BackendAPIClient(
             baseURLString: AppConfig.apiBaseURL,
             tokenProvider: defaultTokenProvider
         ) else {
@@ -76,7 +76,7 @@ private struct HealthDataRepositoryKey: EnvironmentKey {
     typealias Value = HealthDataRepositoryProtocol
     // Use real implementation since mocks are maintained in test target only
     static let defaultValue: HealthDataRepositoryProtocol = {
-        guard let client = APIClient(
+        guard let client = BackendAPIClient(
             baseURLString: AppConfig.apiBaseURL,
             tokenProvider: defaultTokenProvider
         ) else {
@@ -89,7 +89,7 @@ private struct HealthDataRepositoryKey: EnvironmentKey {
 private struct InsightsRepositoryKey: EnvironmentKey {
     typealias Value = InsightsRepositoryProtocol
     static let defaultValue: InsightsRepositoryProtocol = {
-        guard let client = APIClient(
+        guard let client = BackendAPIClient(
             baseURLString: AppConfig.apiBaseURL,
             tokenProvider: defaultTokenProvider
         ) else {
@@ -102,7 +102,7 @@ private struct InsightsRepositoryKey: EnvironmentKey {
 private struct UserRepositoryKey: EnvironmentKey {
     typealias Value = UserRepositoryProtocol
     static let defaultValue: UserRepositoryProtocol = {
-        guard let client = APIClient(
+        guard let client = BackendAPIClient(
             baseURLString: AppConfig.apiBaseURL,
             tokenProvider: defaultTokenProvider
         ) else {
@@ -116,7 +116,7 @@ private struct HealthKitServiceKey: EnvironmentKey {
     typealias Value = HealthKitServiceProtocol
     static let defaultValue: HealthKitServiceProtocol = {
         let defaultAPIClient: APIClientProtocol = {
-            guard let client = APIClient(
+            guard let client = BackendAPIClient(
                 baseURLString: AppConfig.apiBaseURL,
                 tokenProvider: defaultTokenProvider
             ) else {

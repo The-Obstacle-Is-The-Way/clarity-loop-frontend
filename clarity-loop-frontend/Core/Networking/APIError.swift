@@ -27,6 +27,12 @@ enum APIError: Error, LocalizedError {
     
     /// Validation error for invalid input data
     case validationError(String)
+    
+    /// HTTP error with status code and response data
+    case httpError(statusCode: Int, data: Data)
+    
+    /// Missing authentication token
+    case missingAuthToken
 
     /// Provides a user-friendly description for each error case.
     public var errorDescription: String? {
@@ -47,6 +53,10 @@ enum APIError: Error, LocalizedError {
             return "This functionality is not yet implemented."
         case .validationError(let message):
             return "Validation error: \(message)"
+        case .httpError(let statusCode, _):
+            return "HTTP error: \(statusCode)"
+        case .missingAuthToken:
+            return "Authentication token is missing"
         }
     }
 } 
