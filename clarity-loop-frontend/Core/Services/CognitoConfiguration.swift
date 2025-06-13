@@ -10,9 +10,9 @@ import Foundation
 struct CognitoConfiguration {
     static let shared = CognitoConfiguration()
     
-    // OIDC Configuration from AWS Cognito - PRODUCTION us-east-1
-    let issuer = "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_1G5jYI8FO"
-    let clientID = "66qdivmqgs1oqmmo0b5r9d9hjo"
+    // OIDC Configuration from AWS Cognito - PRODUCTION us-east-1 (REAL VALUES)
+    let issuer = "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_efXaR5EcP"
+    let clientID = "7sm7ckrkovg78b03n1595euc71"
     let redirectURI = "clarityai://auth"  // Using custom URL scheme for native app
     let logoutURI = "clarityai://logout"
     
