@@ -98,7 +98,7 @@ final class AuthService: AuthServiceProtocol {
 
     // MARK: - Initializer
     
-    init(apiClient: APIClientProtocol) {
+    nonisolated init(apiClient: APIClientProtocol) {
         self.apiClient = apiClient
     }
 
@@ -109,8 +109,10 @@ final class AuthService: AuthServiceProtocol {
             // Sign in with Cognito
             _ = try await cognitoAuth.signIn(email: email, password: password)
             
-            // Create backend login request
-            let loginDTO = UserLoginRequestDTO(email: email, password: password, rememberMe: true, deviceInfo: nil)
+            // Create backend login request with device info
+            // TODO: Switch to generateDeviceInfo() after testing
+            let deviceInfo = DeviceInfoHelper.generateMinimalDeviceInfo()  // Using minimal info to avoid escape sequence issues
+            let loginDTO = UserLoginRequestDTO(email: email, password: password, rememberMe: true, deviceInfo: deviceInfo)
             let response = try await apiClient.login(requestDTO: loginDTO)
             
             return response.user

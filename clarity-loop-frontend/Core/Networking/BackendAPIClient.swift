@@ -174,10 +174,26 @@ final class BackendAPIClient: APIClientProtocol {
         #if DEBUG
         print("🌐 API Request: \(endpoint.method.rawValue) \(url.absoluteString)")
         if let body = request.httpBody {
-            print("📤 Request Body: \(String(data: body, encoding: .utf8) ?? "Invalid UTF-8")")
-            // Additional JSON debugging as suggested
+            // Enhanced logging to catch escape sequence issues
+            if let jsonString = String(data: body, encoding: .utf8) {
+                print("📤 Raw JSON String: \(jsonString)")
+                
+                // Check for problematic escape sequences
+                if jsonString.contains("\\\\") {
+                    print("⚠️ WARNING: Double backslash detected in JSON!")
+                }
+                if jsonString.contains("\\'") || jsonString.contains("\\\"") {
+                    print("⚠️ WARNING: Escaped quotes detected in JSON!")
+                }
+                
+                // Log hex representation to see exact bytes
+                let hexBytes = body.map { String(format: "%02x", $0) }.joined(separator: " ")
+                print("📤 Hex bytes (first 200): \(String(hexBytes.prefix(200)))")
+            }
+            
+            // Additional JSON debugging
             if let json = try? JSONSerialization.jsonObject(with: body, options: []) {
-                print("🚀 Register payload →", json)
+                print("🚀 Parsed JSON →", json)
             }
         }
         print("📋 Request Headers:")
