@@ -6,113 +6,38 @@
 //
 
 import Foundation
-import FirebaseAuth
 
 /// Central token management service that ensures tokens are always fresh
 @MainActor
 final class TokenManagementService: ObservableObject {
     static let shared = TokenManagementService()
     
-    private var cachedToken: String?
-    private var tokenExpirationDate: Date?
-    private var tokenIssuedDate: Date?
+    private var authService: AuthServiceProtocol?
     
     private init() {}
     
-    /// Maximum token age before forcing refresh (30 minutes)
-    private let maxTokenAge: TimeInterval = 1800 // 30 minutes
-    
-    /// Minimum time before expiration to refresh (5 minutes)
-    private let minTimeBeforeExpiration: TimeInterval = 300 // 5 minutes
+    /// Configure the service with an auth service instance
+    func configure(with authService: AuthServiceProtocol) {
+        self.authService = authService
+    }
     
     /// Get a valid token, forcing refresh if needed
     func getValidToken() async throws -> String {
-        print("🔐 TokenManagement: Checking token validity...")
+        print("🔐 TokenManagement: Getting valid token...")
         
-        // Check if we need a new token
-        if shouldRefreshToken() {
-            print("⚠️ TokenManagement: Token needs refresh")
-            return try await forceRefreshToken()
-        }
-        
-        // Return cached token if still valid
-        if let cachedToken = cachedToken {
-            print("✅ TokenManagement: Using cached token (still fresh)")
-            return cachedToken
-        }
-        
-        // No cached token, get a new one
-        print("🔄 TokenManagement: No cached token, fetching new one")
-        return try await forceRefreshToken()
-    }
-    
-    /// Check if token should be refreshed
-    private func shouldRefreshToken() -> Bool {
-        guard let expirationDate = tokenExpirationDate,
-              let issuedDate = tokenIssuedDate else {
-            return true // No token info, need refresh
-        }
-        
-        let now = Date()
-        let timeUntilExpiration = expirationDate.timeIntervalSince(now)
-        let tokenAge = now.timeIntervalSince(issuedDate)
-        
-        print("⏱️ TokenManagement: Token age check:")
-        print("   - Issued at: \(issuedDate)")
-        print("   - Expires at: \(expirationDate)")
-        print("   - Token age: \(tokenAge/60) minutes")
-        print("   - Time until expiration: \(timeUntilExpiration/60) minutes")
-        
-        // Refresh if:
-        // 1. Token is expired
-        // 2. Token expires soon (< 5 minutes)
-        // 3. Token is old (> 30 minutes)
-        if timeUntilExpiration <= 0 {
-            print("❌ TokenManagement: Token is EXPIRED")
-            return true
-        }
-        
-        if timeUntilExpiration < minTimeBeforeExpiration {
-            print("⚠️ TokenManagement: Token expires in < 5 minutes")
-            return true
-        }
-        
-        if tokenAge > maxTokenAge {
-            print("⚠️ TokenManagement: Token is > 30 minutes old")
-            return true
-        }
-        
-        return false
-    }
-    
-    /// Force refresh the token
-    private func forceRefreshToken() async throws -> String {
-        guard let user = Auth.auth().currentUser else {
-            print("❌ TokenManagement: No authenticated user")
+        guard let authService = authService else {
+            print("❌ TokenManagement: Auth service not configured")
             throw APIError.notAuthenticated
         }
         
-        print("🔄 TokenManagement: Forcing token refresh...")
-        
-        let tokenResult = try await user.getIDTokenResult(forcingRefresh: true)
-        
-        // Cache the new token
-        cachedToken = tokenResult.token
-        tokenExpirationDate = tokenResult.expirationDate
-        tokenIssuedDate = tokenResult.issuedAtDate
-        
-        print("✅ TokenManagement: Token refreshed successfully")
-        print("   - New expiration: \(tokenResult.expirationDate)")
-        print("   - Token will be valid for: \(tokenResult.expirationDate.timeIntervalSinceNow/60) minutes")
-        
-        return tokenResult.token
+        // Cognito handles token refresh internally
+        // Just get the current token which will be refreshed if needed
+        return try await authService.getCurrentUserToken()
     }
     
     /// Clear cached token (for logout)
     func clearCache() {
-        cachedToken = nil
-        tokenExpirationDate = nil
-        tokenIssuedDate = nil
+        // Cognito manages its own token cache
         print("🧹 TokenManagement: Token cache cleared")
     }
 }

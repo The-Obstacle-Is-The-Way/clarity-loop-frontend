@@ -7,7 +7,7 @@
 # Step 2: Replace YOUR_TOKEN_HERE with the actual token
 
 TOKEN="YOUR_TOKEN_HERE"
-BASE_URL="https://clarity-backend-282877548076.us-central1.run.app"
+BASE_URL="http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com"
 
 echo "Testing health endpoint (no auth required)..."
 curl -X GET "$BASE_URL/api/v1/health-data/health"

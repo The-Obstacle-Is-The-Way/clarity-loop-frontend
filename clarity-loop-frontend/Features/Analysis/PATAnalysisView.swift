@@ -475,12 +475,15 @@ enum SleepStage: String, CaseIterable {
         return Text("Failed to create preview client")
     }
     
+    let previewAuthService = AuthService(apiClient: previewAPIClient)
+    
     return PATAnalysisView(
         analysisId: nil,
         viewModel: PATAnalysisViewModel(
             analyzePATDataUseCase: AnalyzePATDataUseCase(
                 apiClient: previewAPIClient,
-                healthKitService: HealthKitService(apiClient: previewAPIClient)
+                healthKitService: HealthKitService(apiClient: previewAPIClient),
+                authService: previewAuthService
             ),
             apiClient: previewAPIClient
         )

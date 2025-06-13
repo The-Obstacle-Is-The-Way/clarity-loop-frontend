@@ -1,4 +1,3 @@
-import FirebaseAuth
 import SwiftUI
 
 // MARK: - Shared Token Provider
@@ -34,7 +33,10 @@ struct AuthServiceKey: EnvironmentKey {
             return client
         }()
         
-        return AuthService(apiClient: defaultAPIClient)
+        let authService = AuthService(apiClient: defaultAPIClient)
+        // Configure TokenManagementService with the auth service
+        TokenManagementService.shared.configure(with: authService)
+        return authService
     }
 }
 
@@ -50,15 +52,7 @@ private struct APIClientKey: EnvironmentKey {
     static let defaultValue: APIClientProtocol = {
         guard let client = APIClient(
             baseURLString: AppConfig.apiBaseURL,
-            tokenProvider: { 
-                // Try to get Firebase token for default environment
-                do {
-                    return try await FirebaseAuth.Auth.auth().currentUser?.getIDToken()
-                } catch {
-                    print("⚠️ Default APIClient failed to get token: \(error)")
-                    return nil
-                }
-            }
+            tokenProvider: defaultTokenProvider
         ) else {
             fatalError("Failed to create default APIClient")
         }
@@ -74,15 +68,7 @@ private struct HealthDataRepositoryKey: EnvironmentKey {
     static let defaultValue: HealthDataRepositoryProtocol = {
         guard let client = APIClient(
             baseURLString: AppConfig.apiBaseURL,
-            tokenProvider: { 
-                // Try to get Firebase token for default environment
-                do {
-                    return try await FirebaseAuth.Auth.auth().currentUser?.getIDToken()
-                } catch {
-                    print("⚠️ Default HealthDataRepository failed to get token: \(error)")
-                    return nil
-                }
-            }
+            tokenProvider: defaultTokenProvider
         ) else {
             fatalError("Failed to create default APIClient for HealthDataRepository")
         }
@@ -95,15 +81,7 @@ private struct InsightsRepositoryKey: EnvironmentKey {
     static let defaultValue: InsightsRepositoryProtocol = {
         guard let client = APIClient(
             baseURLString: AppConfig.apiBaseURL,
-            tokenProvider: { 
-                // Try to get Firebase token for default environment
-                do {
-                    return try await FirebaseAuth.Auth.auth().currentUser?.getIDToken()
-                } catch {
-                    print("⚠️ Default InsightsRepository failed to get token: \(error)")
-                    return nil
-                }
-            }
+            tokenProvider: defaultTokenProvider
         ) else {
             fatalError("Failed to create default APIClient for InsightsRepository")
         }
@@ -116,15 +94,7 @@ private struct UserRepositoryKey: EnvironmentKey {
     static let defaultValue: UserRepositoryProtocol = {
         guard let client = APIClient(
             baseURLString: AppConfig.apiBaseURL,
-            tokenProvider: { 
-                // Try to get Firebase token for default environment
-                do {
-                    return try await FirebaseAuth.Auth.auth().currentUser?.getIDToken()
-                } catch {
-                    print("⚠️ Default UserRepository failed to get token: \(error)")
-                    return nil
-                }
-            }
+            tokenProvider: defaultTokenProvider
         ) else {
             fatalError("Failed to create default APIClient for UserRepository")
         }
@@ -138,15 +108,7 @@ private struct HealthKitServiceKey: EnvironmentKey {
         let defaultAPIClient: APIClientProtocol = {
             guard let client = APIClient(
                 baseURLString: AppConfig.apiBaseURL,
-                tokenProvider: { 
-                    // Try to get Firebase token for default environment
-                    do {
-                        return try await FirebaseAuth.Auth.auth().currentUser?.getIDToken()
-                    } catch {
-                        print("⚠️ Default HealthKitService failed to get token: \(error)")
-                        return nil
-                    }
-                }
+                tokenProvider: defaultTokenProvider
             ) else {
                 fatalError("Failed to create default APIClient for HealthKitService")
             }
@@ -201,4 +163,4 @@ extension EnvironmentValues {
 // Default values are provided above for each environment key
 // These will be used in previews and when services aren't explicitly injected
 
-// NOTE: Add other service keys here as needed (e.g., for HealthKit, Networking, etc.) 
+// NOTE: Add other service keys here as needed (e.g., for HealthKit, Networking, etc.)

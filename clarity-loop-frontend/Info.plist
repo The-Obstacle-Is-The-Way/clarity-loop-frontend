@@ -25,7 +25,18 @@
 	
 	<!-- API Configuration -->
 	<key>APIBaseURL</key>
-	<string>https://clarity-backend-282877548076.us-central1.run.app</string>
+	<string>http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com</string>
+	
+	<!-- URL Schemes for AWS Cognito -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>clarityai</string>
+			</array>
+		</dict>
+	</array>
 	
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
@@ -81,14 +92,14 @@
 		<false/>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>us-central1.run.app</key>
+			<key>clarity-alb-1762715656.us-east-1.elb.amazonaws.com</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<false/>
-				<key>NSExceptionMinimumTLSVersion</key>
-				<string>TLSv1.2</string>
-				<key>NSExceptionRequiresForwardSecrecy</key>
 				<true/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.0</string>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
 			</dict>
 		</dict>
 	</dict>

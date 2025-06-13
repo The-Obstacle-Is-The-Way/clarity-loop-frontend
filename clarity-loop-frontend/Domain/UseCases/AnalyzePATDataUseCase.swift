@@ -1,4 +1,3 @@
-import FirebaseAuth
 import Foundation
 import UIKit
 
@@ -6,13 +5,16 @@ final class AnalyzePATDataUseCase {
     
     private let apiClient: APIClientProtocol
     private let healthKitService: HealthKitServiceProtocol
+    private let authService: AuthServiceProtocol
     
     init(
         apiClient: APIClientProtocol,
-        healthKitService: HealthKitServiceProtocol
+        healthKitService: HealthKitServiceProtocol,
+        authService: AuthServiceProtocol
     ) {
         self.apiClient = apiClient
         self.healthKitService = healthKitService
+        self.authService = authService
     }
     
     func executeStepAnalysis(
@@ -23,7 +25,7 @@ final class AnalyzePATDataUseCase {
         let stepData = try await collectStepData(from: startDate, to: endDate)
         
         // Create request DTO
-        let userId = FirebaseAuth.Auth.auth().currentUser?.uid ?? "unknown"
+        let userId = await authService.currentUser?.id ?? "unknown"
         let request = StepDataRequestDTO(
             userId: userId,
             stepData: stepData,
@@ -61,7 +63,7 @@ final class AnalyzePATDataUseCase {
     }
     
     func executeActigraphyAnalysis(actigraphyData: [ActigraphyDataPointDTO]) async throws -> PATAnalysisResult {
-        let userId = FirebaseAuth.Auth.auth().currentUser?.uid ?? "unknown"
+        let userId = await authService.currentUser?.id ?? "unknown"
         let startDate = actigraphyData.first?.timestamp ?? Date()
         let endDate = actigraphyData.last?.timestamp ?? Date()
         let request = DirectActigraphyRequestDTO(

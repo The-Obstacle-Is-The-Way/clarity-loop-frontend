@@ -1,4 +1,3 @@
-import FirebaseAuth
 import Foundation
 #if canImport(UIKit) && DEBUG
 import UIKit
@@ -59,13 +58,15 @@ enum AuthenticationError: LocalizedError {
     }
 }
 
-/// The concrete implementation of the authentication service, using Firebase.
+/// The concrete implementation of the authentication service using AWS Cognito.
+@MainActor
 final class AuthService: AuthServiceProtocol {
     
     // MARK: - Properties
     
     private let apiClient: APIClientProtocol
-    private var authStateHandle: AuthStateDidChangeListenerHandle?
+    private let cognitoAuth = CognitoAuthService()
+    private var authStateTask: Task<Void, Never>?
 
     /// A continuation to drive the `authState` async stream.
     private var authStateContinuation: AsyncStream<AuthUser?>.Continuation?
@@ -74,17 +75,26 @@ final class AuthService: AuthServiceProtocol {
     lazy var authState: AsyncStream<AuthUser?> = {
         AsyncStream { continuation in
             self.authStateContinuation = continuation
-            continuation.yield(Auth.auth().currentUser.map(AuthUser.init))
             
-            // Store the handle to keep the listener active.
-            self.authStateHandle = Auth.auth().addStateDidChangeListener { _, user in
-                continuation.yield(user.map(AuthUser.init))
+            // Subscribe to Cognito auth state changes
+            self.authStateTask = Task { [weak self] in
+                for await user in self?.cognitoAuth.authStatePublisher.values ?? AsyncPublisher(AnyPublisher<AuthUser?, Never>.empty()).values {
+                    continuation.yield(user)
+                }
+            }
+            
+            // Get current user state
+            Task { [weak self] in
+                let user = try? await self?.cognitoAuth.getCurrentUser()
+                continuation.yield(user)
             }
         }
     }()
     
     var currentUser: AuthUser? {
-        Auth.auth().currentUser.map(AuthUser.init)
+        get async {
+            try? await cognitoAuth.getCurrentUser()
+        }
     }
 
     // MARK: - Initializer
@@ -97,151 +107,97 @@ final class AuthService: AuthServiceProtocol {
 
     func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
         do {
-            try await Auth.auth().signIn(withEmail: email, password: password)
+            // Sign in with Cognito
+            let authUser = try await cognitoAuth.signIn(email: email, password: password)
             
+            // Create backend login request
             let loginDTO = UserLoginRequestDTO(email: email, password: password, rememberMe: true, deviceInfo: nil)
             let response = try await apiClient.login(requestDTO: loginDTO)
             
             return response.user
         } catch {
-            throw mapFirebaseError(error)
+            throw mapCognitoError(error)
         }
     }
     
     func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO {
         do {
-            // Step 1: Create Firebase user
-            let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
+            // Note: Cognito will handle registration through hosted UI
+            // For now, we'll initiate the sign-up flow
+            _ = try await cognitoAuth.signUp(email: email, password: password, fullName: details.fullName)
             
-            // Step 2: Send email verification
-            try await authResult.user.sendEmailVerification()
-            
-            // Step 3: Register with our backend
+            // Register with our backend
             let response = try await apiClient.register(requestDTO: details)
             return response
         } catch {
-            // If Firebase registration failed, provide specific error
-            throw mapFirebaseError(error)
+            throw mapCognitoError(error)
         }
     }
     
     func signOut() throws {
-        try Auth.auth().signOut()
-        // Here you would also clear any local user data / cache.
+        Task {
+            try await cognitoAuth.signOut()
+        }
     }
     
     func sendPasswordReset(to email: String) async throws {
-        do {
-            try await Auth.auth().sendPasswordReset(withEmail: email)
-        } catch {
-            throw mapFirebaseError(error)
-        }
+        // Cognito password reset is handled through the hosted UI
+        // For now, we'll throw an error indicating this
+        throw AuthenticationError.unknown("Password reset is available through the Cognito hosted UI")
     }
     
     func getCurrentUserToken() async throws -> String {
         print("🔍 AUTH: getCurrentUserToken() called")
         
-        guard let user = Auth.auth().currentUser else {
-            print("❌ AUTH: No current user found!")
-            throw APIError.unauthorized
-        }
+        let token = try await cognitoAuth.getIDToken()
         
-        print("✅ AUTH: Current user exists - UID: \(user.uid)")
-        print("📧 AUTH: User email: \(user.email ?? "no email")")
-        print("✉️ AUTH: Email verified: \(user.isEmailVerified)")
+        print("✅ AUTH: Token retrieved successfully")
+        print("   - Length: \(token.count) characters")
+        print("   - Preview: \(String(token.prefix(50)))...")
         
-        // Get token result for more debugging info
-        do {
-            // First check if current token is still valid
-            let tokenResult = try await user.getIDTokenResult(forcingRefresh: false)
-            
-            // Check expiration
-            let expirationDate = tokenResult.expirationDate
-            let timeUntilExpiration = expirationDate.timeIntervalSinceNow
-            
-            print("🕐 AUTH: Token expiration check:")
-            print("   - Expires at: \(expirationDate)")
-            print("   - Time until expiration: \(timeUntilExpiration) seconds (\(timeUntilExpiration/60) minutes)")
-            
-            // CRITICAL FIX: More aggressive token refresh
-            // Force refresh if:
-            // 1. Token expires in less than 5 minutes OR
-            // 2. Token is older than 30 minutes (half of Firebase's 1 hour)
-            let tokenAge = Date().timeIntervalSince(tokenResult.issuedAtDate)
-            let needsRefresh = timeUntilExpiration < 300 || tokenAge > 1800 // 5 mins or 30 mins old
-            
-            let finalTokenResult: AuthTokenResult
-            if needsRefresh {
-                print("⚠️ AUTH: Token expiring soon (or expired), forcing refresh...")
-                finalTokenResult = try await user.getIDTokenResult(forcingRefresh: true)
-                print("✅ AUTH: Token refreshed successfully")
-            } else {
-                print("✅ AUTH: Token still valid, using existing token")
-                finalTokenResult = tokenResult
-            }
-            
-            print("🔍 AUTH: Token claims:")
-            print("   - aud: \(finalTokenResult.claims["aud"] ?? "missing")")
-            print("   - iss: \(finalTokenResult.claims["iss"] ?? "missing")")
-            print("   - exp: \(finalTokenResult.claims["exp"] ?? "missing")")
-            print("   - auth_time: \(finalTokenResult.claims["auth_time"] ?? "missing")")
-            
-            let token = finalTokenResult.token
-            print("✅ AUTH: Token retrieved successfully")
-            print("   - Length: \(token.count) characters")
-            print("   - Preview: \(String(token.prefix(50)))...")
-            
-            #if DEBUG
-            // 1️⃣  Print the full JWT so we can copy from the console
-            print("🧪 FULL_ID_TOKEN → \(token)")
+        #if DEBUG
+        // 1️⃣  Print the full JWT so we can copy from the console
+        print("🧪 FULL_ID_TOKEN → \(token)")
 
-            // 2️⃣  Copy to clipboard for CLI use
-            #if canImport(UIKit)
-            UIPasteboard.general.string = token
-            print("📋 Token copied to clipboard")
-            #endif
-            #endif
-            
-            return token
-        } catch {
-            print("❌ AUTH: Failed to get ID token: \(error)")
-            throw error
-        }
+        // 2️⃣  Copy to clipboard for CLI use
+        #if canImport(UIKit)
+        UIPasteboard.general.string = token
+        print("📋 Token copied to clipboard")
+        #endif
+        #endif
+        
+        return token
     }
     
     // MARK: - Private Error Mapping
     
-    private func mapFirebaseError(_ error: Error) -> Error {
-        guard let authError = error as? AuthErrorCode else {
-            // Handle non-Firebase errors
-            if error is URLError {
-                return AuthenticationError.networkError
-            }
-            return AuthenticationError.unknown(error.localizedDescription)
+    private func mapCognitoError(_ error: Error) -> Error {
+        // Map Cognito-specific errors to our AuthenticationError enum
+        if let urlError = error as? URLError {
+            return AuthenticationError.networkError
         }
         
-        switch authError.code {
-        case .emailAlreadyInUse:
+        // Check for specific Cognito error messages
+        let errorMessage = error.localizedDescription.lowercased()
+        
+        if errorMessage.contains("email") && errorMessage.contains("exist") {
             return AuthenticationError.emailAlreadyInUse
-        case .weakPassword:
+        } else if errorMessage.contains("password") {
             return AuthenticationError.weakPassword
-        case .invalidEmail:
+        } else if errorMessage.contains("invalid") && errorMessage.contains("email") {
             return AuthenticationError.invalidEmail
-        case .userDisabled:
+        } else if errorMessage.contains("disabled") {
             return AuthenticationError.userDisabled
-        case .networkError:
+        } else if errorMessage.contains("network") {
             return AuthenticationError.networkError
-        case .tooManyRequests:
-            return AuthenticationError.unknown("Too many attempts. Please try again later.")
-        case .userTokenExpired:
-            return AuthenticationError.unknown("Session expired. Please sign in again.")
-        case .invalidAPIKey:
+        } else if errorMessage.contains("configuration") {
             return AuthenticationError.configurationError
-        case .appNotAuthorized:
-            return AuthenticationError.configurationError
-        default:
-            return AuthenticationError.unknown("Authentication failed: \(authError.localizedDescription)")
         }
+        
+        return AuthenticationError.unknown(error.localizedDescription)
     }
-} 
- 
+    
+    deinit {
+        authStateTask?.cancel()
+    }
+}

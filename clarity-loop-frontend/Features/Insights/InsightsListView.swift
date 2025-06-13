@@ -5,11 +5,11 @@
 //  Created by Assistant on 6/8/25.
 //
 
-import FirebaseAuth
 import SwiftUI
 
 struct InsightsListView: View {
     @Environment(\.insightsRepository) private var insightsRepository
+    @Environment(\.authService) private var authService
     @State private var viewModel: InsightsListViewModel?
     
     var body: some View {
@@ -32,10 +32,11 @@ struct InsightsListView: View {
             InsightsContentView(viewModel: viewModel)
         } else {
             ProgressView()
-                .onAppear {
+                .task {
+                    let userId = await authService.currentUser?.id ?? ""
                     self.viewModel = InsightsListViewModel(
                         insightsRepository: insightsRepository,
-                        userId: Auth.auth().currentUser?.uid ?? ""
+                        userId: userId
                     )
                 }
         }

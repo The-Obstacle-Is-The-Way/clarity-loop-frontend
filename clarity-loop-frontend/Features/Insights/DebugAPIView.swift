@@ -5,13 +5,13 @@
 //  Debug view to test API connectivity
 //
 
-import FirebaseAuth
 import SwiftUI
 #if canImport(UIKit) && DEBUG
 import UIKit
 #endif
 
 struct DebugAPIView: View {
+    @Environment(\.authService) private var authService
     @State private var statusMessage = "Tap buttons to test API"
     @State private var isLoading = false
     
@@ -107,8 +107,8 @@ struct DebugAPIView: View {
         
         Task {
             do {
-                // Get Firebase token
-                guard let token = try? await Auth.auth().currentUser?.getIDToken() else {
+                // Get auth token
+                guard let token = try? await authService.getCurrentUserToken() else {
                     statusMessage = "No auth token available"
                     isLoading = false
                     return
@@ -165,7 +165,7 @@ struct DebugAPIView: View {
         statusMessage = "Getting current token..."
         
         Task {
-            if let token = try? await Auth.auth().currentUser?.getIDToken() {
+            if let token = try? await authService.getCurrentUserToken() {
                 // Show first and last 10 chars for security
                 let start = token.prefix(10)
                 let end = token.suffix(10)

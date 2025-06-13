@@ -10,7 +10,7 @@ struct AppConfig {
     /// Reads from Info.plist APIBaseURL key with fallback to production URL
     static var apiBaseURL: String {
         Bundle.main.object(forInfoDictionaryKey: "APIBaseURL") as? String
-        ?? "https://clarity-backend-282877548076.us-central1.run.app"
+        ?? "http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com"
     }
     
     // MARK: - Preview Configuration

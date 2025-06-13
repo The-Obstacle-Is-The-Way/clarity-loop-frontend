@@ -5,10 +5,10 @@
 //  Debug view to test token extraction and validation
 //
 
-import FirebaseAuth
 import SwiftUI
 
 struct TokenDebugView: View {
+    @Environment(\.authService) private var authService
     @State private var tokenInfo = "Tap button to get token info"
     @State private var isLoading = false
     
@@ -54,37 +54,30 @@ struct TokenDebugView: View {
         tokenInfo = "Getting token info..."
         
         Task {
-            guard let user = Auth.auth().currentUser else {
+            guard let user = await authService.currentUser else {
                 tokenInfo = "❌ No user logged in"
                 isLoading = false
                 return
             }
             
             do {
-                let tokenResult = try await user.getIDTokenResult(forcingRefresh: true)
-                let token = tokenResult.token
+                let token = try await authService.getCurrentUserToken()
                 
                 var info = "✅ Token Retrieved Successfully\n\n"
                 info += "USER INFO:\n"
-                info += "- UID: \(user.uid)\n"
-                info += "- Email: \(user.email ?? "none")\n"
-                info += "- Email Verified: \(user.isEmailVerified)\n\n"
+                info += "- UID: \(user.id)\n"
+                info += "- Email: \(user.email)\n\n"
                 
                 info += "TOKEN INFO:\n"
-                info += "- Length: \(token.count) characters\n"
-                info += "- Expiration: \(tokenResult.expirationDate)\n"
-                info += "- Auth Time: \(tokenResult.authDate)\n\n"
+                info += "- Length: \(token.count) characters\n\n"
                 
-                info += "TOKEN CLAIMS:\n"
-                for (key, value) in tokenResult.claims {
-                    info += "- \(key): \(value)\n"
-                }
+                // Note: Token details like expiration and claims are not available
+                // through AuthService. The token is a JWT that can be decoded
+                // on the backend to extract this information.
+                info += "Note: Token expiration and claims are embedded in the JWT\n"
+                info += "and can be decoded on the backend.\n\n"
                 
-                info += "\n🔍 CRITICAL FOR BACKEND:\n"
-                info += "- aud (audience): \(tokenResult.claims["aud"] ?? "MISSING")\n"
-                info += "- iss (issuer): \(tokenResult.claims["iss"] ?? "MISSING")\n"
-                
-                info += "\n📋 FULL TOKEN (tap to copy):\n"
+                info += "📋 FULL TOKEN (tap to copy):\n"
                 info += token
                 
                 tokenInfo = info
@@ -107,8 +100,8 @@ struct TokenDebugView: View {
         
         Task {
             do {
-                // Get Firebase token
-                guard let token = try? await Auth.auth().currentUser?.getIDToken(forcingRefresh: true) else {
+                // Get auth token
+                guard let token = try? await authService.getCurrentUserToken() else {
                     tokenInfo = "❌ No auth token available"
                     isLoading = false
                     return
@@ -156,7 +149,7 @@ struct TokenDebugView: View {
         
         Task {
             do {
-                guard let user = Auth.auth().currentUser else {
+                guard let user = await authService.currentUser else {
                     tokenInfo = "❌ No user logged in"
                     isLoading = false
                     return
@@ -164,30 +157,29 @@ struct TokenDebugView: View {
                 
                 var info = "🔄 TOKEN REFRESH TEST\n\n"
                 
-                // Get current token without forcing refresh
-                let tokenResult1 = try await user.getIDTokenResult(forcingRefresh: false)
+                // Get current token
+                let token1 = try await authService.getCurrentUserToken()
                 info += "CURRENT TOKEN:\n"
-                info += "- Expires: \(tokenResult1.expirationDate)\n"
-                info += "- Time until expiration: \(tokenResult1.expirationDate.timeIntervalSinceNow) seconds\n"
-                info += "- First 20 chars: \(tokenResult1.token.prefix(20))...\n\n"
+                info += "- First 20 chars: \(token1.prefix(20))...\n\n"
                 
-                // Force refresh
-                info += "FORCING REFRESH...\n"
-                let tokenResult2 = try await user.getIDTokenResult(forcingRefresh: true)
+                // Wait a moment
+                info += "Waiting 2 seconds...\n"
+                try await Task.sleep(nanoseconds: 2_000_000_000)
+                
+                // Get token again (may trigger refresh if needed)
+                let token2 = try await authService.getCurrentUserToken()
                 info += "NEW TOKEN:\n"
-                info += "- Expires: \(tokenResult2.expirationDate)\n"
-                info += "- Time until expiration: \(tokenResult2.expirationDate.timeIntervalSinceNow) seconds\n"
-                info += "- First 20 chars: \(tokenResult2.token.prefix(20))...\n\n"
+                info += "- First 20 chars: \(token2.prefix(20))...\n\n"
                 
                 // Compare
-                if tokenResult1.token == tokenResult2.token {
-                    info += "⚠️ TOKENS ARE IDENTICAL (Firebase returned cached token)\n"
+                if token1 == token2 {
+                    info += "⚠️ TOKENS ARE IDENTICAL (Token still valid)\n"
                 } else {
-                    info += "✅ TOKENS ARE DIFFERENT (Refresh successful)\n"
+                    info += "✅ TOKENS ARE DIFFERENT (Refresh occurred)\n"
                 }
                 
-                info += "\nNOTE: Firebase may return the same token if it's still valid.\n"
-                info += "Tokens expire after 1 hour from creation."
+                info += "\nNOTE: AuthService manages token refresh automatically.\n"
+                info += "Tokens are refreshed when needed."
                 
                 tokenInfo = info
                 

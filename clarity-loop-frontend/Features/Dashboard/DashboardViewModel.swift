@@ -5,7 +5,6 @@
 //  Created by Raymond Jung on 6/7/25.
 //
 
-import FirebaseAuth
 import Foundation
 import Observation
 import SwiftUI
@@ -28,15 +27,18 @@ final class DashboardViewModel {
     
     private let insightsRepo: InsightsRepositoryProtocol
     private let healthKitService: HealthKitServiceProtocol
+    private let authService: AuthServiceProtocol
     
     // MARK: - Initializer
     
     init(
         insightsRepo: InsightsRepositoryProtocol,
-        healthKitService: HealthKitServiceProtocol
+        healthKitService: HealthKitServiceProtocol,
+        authService: AuthServiceProtocol
     ) {
         self.insightsRepo = insightsRepo
         self.healthKitService = healthKitService
+        self.authService = authService
     }
     
     // MARK: - Public Methods
@@ -51,7 +53,7 @@ final class DashboardViewModel {
             
             // Fetch health metrics and insights in parallel
             async let metrics = healthKitService.fetchAllDailyMetrics(for: Date())
-            let userId = Auth.auth().currentUser?.uid ?? "unknown"
+            let userId = await authService.currentUser?.id ?? "unknown"
             async let insightsResponse = insightsRepo.getInsightHistory(userId: userId, limit: 1, offset: 0)
             
             let (dailyMetrics, insights) = try await (metrics, insightsResponse)

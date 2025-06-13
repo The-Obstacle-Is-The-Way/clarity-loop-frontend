@@ -6,8 +6,6 @@
 //
 
 import BackgroundTasks
-import FirebaseAuth
-import FirebaseCore
 import SwiftData
 import SwiftUI
 #if canImport(UIKit) && DEBUG
@@ -35,8 +33,6 @@ struct ClarityPulseApp: App {
     // MARK: - Initializer
     
     init() {
-        FirebaseApp.configure()
-        
         // Initialize the APIClient with proper token provider
         guard let client = APIClient(tokenProvider: {
             print("🔍 APP: Token provider called")
@@ -73,6 +69,10 @@ struct ClarityPulseApp: App {
         // Initialize services with shared APIClient
         let service = AuthService(apiClient: client)
         self.authService = service
+        
+        // Configure TokenManagementService with auth service
+        TokenManagementService.shared.configure(with: service)
+        
         let healthKit = HealthKitService(apiClient: client)
         self.healthKitService = healthKit
         
@@ -132,11 +132,15 @@ struct ClarityPulseApp: App {
                 .onChange(of: authViewModel.isLoggedIn) { _, newValue in
                     // Update service locator with current user ID
                     if newValue {
-                        ServiceLocator.shared.currentUserId = Auth.auth().currentUser?.uid
+                        Task {
+                            if let currentUser = await authService.currentUser {
+                                ServiceLocator.shared.currentUserId = currentUser.id
+                            }
+                        }
                     } else {
                         ServiceLocator.shared.currentUserId = nil
                     }
                 }
         }
     }
-} 
+}

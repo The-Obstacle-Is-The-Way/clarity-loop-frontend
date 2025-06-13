@@ -5,12 +5,12 @@
 //  Created by Raymond Jung on 6/7/25.
 //
 
-import FirebaseAuth
 import SwiftUI
 
 struct DashboardView: View {
     @Environment(\.healthKitService) private var healthKitService
     @Environment(\.insightsRepository) private var insightsRepository
+    @Environment(\.authService) private var authService
     
     @State private var viewModel: DashboardViewModel?
 
@@ -137,7 +137,8 @@ struct DashboardView: View {
                 if viewModel == nil {
                     viewModel = DashboardViewModel(
                         insightsRepo: insightsRepository,
-                        healthKitService: healthKitService
+                        healthKitService: healthKitService,
+                        authService: authService
                     )
                 }
                 
