@@ -136,11 +136,7 @@ final class BackendContractAdapter: BackendContractAdapterProtocol {
     // MARK: - Logout Adaptation
     
     func adaptLogoutResponse(_ backendResponse: BackendLogoutResponse) -> MessageResponseDTO {
-        return MessageResponseDTO(
-            success: true,
-            message: backendResponse.message,
-            data: nil
-        )
+        return MessageResponseDTO(message: backendResponse.message)
     }
 }
 

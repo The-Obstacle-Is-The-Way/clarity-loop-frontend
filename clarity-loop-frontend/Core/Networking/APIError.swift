@@ -33,6 +33,9 @@ enum APIError: Error, LocalizedError {
     
     /// Missing authentication token
     case missingAuthToken
+    
+    /// Invalid response from server
+    case invalidResponse
 
     /// Provides a user-friendly description for each error case.
     public var errorDescription: String? {
@@ -57,6 +60,8 @@ enum APIError: Error, LocalizedError {
             return "HTTP error: \(statusCode)"
         case .missingAuthToken:
             return "Authentication token is missing"
+        case .invalidResponse:
+            return "Invalid response from server"
         }
     }
 } 

@@ -371,6 +371,7 @@ enum HTTPMethod: String {
     case post = "POST"
     case put = "PUT"
     case delete = "DELETE"
+    case patch = "PATCH"
 }
 
 /// A helper struct for empty JSON responses.
