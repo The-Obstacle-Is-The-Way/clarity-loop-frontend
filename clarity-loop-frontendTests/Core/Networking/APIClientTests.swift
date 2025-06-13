@@ -197,6 +197,7 @@ class MockURLProtocol: URLProtocol {
     }
 }
 */
+*/
 
 // Placeholder test to keep test suite happy
 final class APIClientTestsPlaceholder: XCTestCase {

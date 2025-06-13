@@ -153,10 +153,12 @@
 				Features/Authentication/LoginViewModelTests.swift = (ios, );
 				Features/Authentication/RegistrationViewModelTests.swift = (ios, );
 				Integration/AuthenticationIntegrationTests.swift = (ios, );
+				Integration/BackendIntegrationTests.swift = (ios, );
 				IntegrationTests.swift = (ios, );
-				Mocks/MockAPIClient.swift = (ios, );
+				Mocks/MinimalMockAPIClient.swift = (ios, );
 				Mocks/MockAuthService.swift = (ios, );
 				Performance/MemoryLeakTests.swift = (ios, );
+				SimpleGreenTest.swift = (ios, );
 				UI/Authentication/SecureFieldRenderingTests.swift = (ios, );
 				UI/Components/ComponentRenderingTests.swift = (ios, );
 				UI/Layout/ConstraintValidationTests.swift = (ios, );
