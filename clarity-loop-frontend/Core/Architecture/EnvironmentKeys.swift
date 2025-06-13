@@ -8,13 +8,23 @@
 import Foundation
 import SwiftUI
 
+// MARK: - TypeAlias for Token Provider
+typealias TokenProvider = () async -> String?
+
 // MARK: - Modern Swift 6 Environment Pattern with @Entry
 
 extension EnvironmentValues {
     /// AuthService using modern @Entry pattern - handles MainActor isolation automatically
     @Entry var authService: AuthServiceProtocol = {
         // Create default APIClient with token provider
-        let tokenProvider: TokenProvider = { TokenManagementService.shared.currentToken }
+        let tokenProvider: TokenProvider = {
+            do {
+                return try await TokenManagementService.shared.getValidToken()
+            } catch {
+                print("⚠️ Default environment failed to get token: \(error)")
+                return nil
+            }
+        }
         
         guard let defaultAPIClient = APIClient(
             baseURLString: AppConfig.apiBaseURL,
@@ -28,7 +38,14 @@ extension EnvironmentValues {
     
     /// APIClient using modern @Entry pattern
     @Entry var apiClient: APIClientProtocol = {
-        let tokenProvider: TokenProvider = { TokenManagementService.shared.currentToken }
+        let tokenProvider: TokenProvider = {
+            do {
+                return try await TokenManagementService.shared.getValidToken()
+            } catch {
+                print("⚠️ Default APIClient failed to get token: \(error)")
+                return nil
+            }
+        }
         
         guard let client = APIClient(
             baseURLString: AppConfig.apiBaseURL,
@@ -42,11 +59,11 @@ extension EnvironmentValues {
     /// HealthKitService using modern @Entry pattern
     @Entry var healthKitService: HealthKitServiceProtocol = HealthKitService()
     
-    /// BiometricAuthService using modern @Entry pattern  
-    @Entry var biometricAuthService: BiometricAuthServiceProtocol = BiometricAuthService()
+    /// BiometricAuthService using modern @Entry pattern (no protocol - use concrete type)
+    @Entry var biometricAuthService: BiometricAuthService = BiometricAuthService()
     
-    /// TokenManagementService using modern @Entry pattern
-    @Entry var tokenManagementService: TokenManagementServiceProtocol = TokenManagementService.shared
+    /// TokenManagementService using modern @Entry pattern (no protocol - use concrete type)
+    @Entry var tokenManagementService: TokenManagementService = TokenManagementService.shared
 }
 
 // MARK: - Legacy Support (if needed for migration)
