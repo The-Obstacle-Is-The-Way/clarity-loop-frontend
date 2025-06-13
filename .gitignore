@@ -89,12 +89,40 @@ fastlane/test_output
 
 iOSInjectionProject/
 
+# SECURITY: Sensitive Configuration Files
 # Firebase
 GoogleService-Info.plist
+GoogleService-Info-*.plist
+
+# AWS Configuration (if using AWS SDK directly)
+aws-exports.js
+awsconfiguration.json
 
 # Environment variables
 .env
 .env.*
+.env.local
+.env.production
+.env.staging
+.env.development
+
+# API Keys and Secrets (if any get added)
+secrets.plist
+config-secrets.plist
+*-secrets.plist
+*.secret
+
+# SECURITY: Certificate and Key Files
+*.p12
+*.cer
+*.certSigningRequest
+*.mobileprovision
+AuthKey_*.p8
+
+# SECURITY: Temporary sensitive files
+*.tmp.json
+*.backup
+*.bak
 
 # macOS
 .DS_Store
@@ -146,4 +174,9 @@ node_modules/
 # OS specific
 # Task files
 tasks.json
-tasks/ 
+tasks/
+
+# PRODUCTION: Test and debug files that might contain sensitive data
+test-auth.sh
+debug-*.json
+staging-config.json 
