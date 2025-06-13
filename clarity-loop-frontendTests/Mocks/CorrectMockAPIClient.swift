@@ -7,20 +7,21 @@ class MockAPIClient: APIClientProtocol {
     // MARK: - Control Properties
     
     var shouldSucceed = true
-    var mockError: Error = APIError.unknown("Mock error")
+    var mockError: Error = APIError.unauthorized
     
     // Mock responses
     var mockInsightHistory = InsightHistoryResponseDTO(
         success: true,
-        insights: [],
-        pagination: PaginationMetadataDTO(
-            currentPage: 1,
-            totalPages: 1,
-            totalItems: 0,
-            itemsPerPage: 10,
-            hasNext: false,
-            hasPrevious: false
-        )
+        data: InsightHistoryDataDTO(
+            insights: [],
+            totalCount: 0,
+            hasMore: false,
+            pagination: PaginationMetaDTO(
+                page: 1,
+                limit: 10
+            )
+        ),
+        metadata: nil
     )
     
     // MARK: - Authentication
@@ -37,23 +38,65 @@ class MockAPIClient: APIClientProtocol {
     }
     
     func login(requestDTO: UserLoginRequestDTO) async throws -> LoginResponseDTO {
-        throw NSError(domain: "MockError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Not implemented"])
+        guard shouldSucceed else { throw mockError }
+        return LoginResponseDTO(
+            user: UserSessionResponseDTO(
+                userId: UUID(),
+                firstName: "Test",
+                lastName: "User",
+                email: requestDTO.email,
+                role: "patient",
+                permissions: ["read_own_data"],
+                status: "active",
+                mfaEnabled: false,
+                emailVerified: true,
+                createdAt: Date(),
+                lastLogin: Date()
+            ),
+            tokens: TokenResponseDTO(
+                accessToken: "mock_access_token",
+                refreshToken: "mock_refresh_token",
+                tokenType: "bearer",
+                expiresIn: 3600
+            )
+        )
     }
     
     func refreshToken(requestDTO: RefreshTokenRequestDTO) async throws -> TokenResponseDTO {
-        throw NSError(domain: "MockError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Not implemented"])
+        guard shouldSucceed else { throw mockError }
+        return TokenResponseDTO(
+            accessToken: "mock_refreshed_token",
+            refreshToken: requestDTO.refreshToken,
+            tokenType: "bearer",
+            expiresIn: 3600
+        )
     }
     
     func logout() async throws -> MessageResponseDTO {
-        throw NSError(domain: "MockError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Not implemented"])
+        guard shouldSucceed else { throw mockError }
+        return MessageResponseDTO(message: "Successfully logged out")
     }
     
     func getCurrentUser() async throws -> UserSessionResponseDTO {
-        throw NSError(domain: "MockError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Not implemented"])
+        guard shouldSucceed else { throw mockError }
+        return UserSessionResponseDTO(
+            userId: UUID(),
+            firstName: "Test",
+            lastName: "User",
+            email: "test@example.com",
+            role: "patient",
+            permissions: ["read_own_data"],
+            status: "active",
+            mfaEnabled: false,
+            emailVerified: true,
+            createdAt: Date(),
+            lastLogin: Date()
+        )
     }
     
     func verifyEmail(code: String) async throws -> MessageResponseDTO {
-        throw NSError(domain: "MockError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Not implemented"])
+        guard shouldSucceed else { throw mockError }
+        return MessageResponseDTO(message: "Email verified successfully")
     }
     
     // MARK: - Health Data
@@ -85,7 +128,8 @@ class MockAPIClient: APIClientProtocol {
     // MARK: - Insights
     
     func getInsightHistory(userId: String, limit: Int, offset: Int) async throws -> InsightHistoryResponseDTO {
-        throw NSError(domain: "MockError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Not implemented"])
+        guard shouldSucceed else { throw mockError }
+        return mockInsightHistory
     }
     
     func generateInsight(requestDTO: InsightGenerationRequestDTO) async throws -> InsightGenerationResponseDTO {

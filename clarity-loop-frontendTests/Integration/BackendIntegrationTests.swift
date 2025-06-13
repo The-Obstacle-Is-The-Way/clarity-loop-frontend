@@ -246,7 +246,7 @@ final class BackendIntegrationTests: XCTestCase {
                     
                     // 5. Logout
                     let logoutResponse = try await authenticatedClient.logout()
-                    XCTAssertTrue(logoutResponse.success)
+                    XCTAssertEqual(logoutResponse.message, "Successfully logged out")
                     print("✅ Logout successful")
                     
                 } catch {
@@ -292,7 +292,9 @@ extension BackendIntegrationTests {
         // Test Login DTO
         let backendLogin = BackendUserLogin(
             email: "test@example.com",
-            password: "password123"
+            password: "password123",
+            rememberMe: true,
+            deviceInfo: nil
         )
         
         let loginData = try encoder.encode(backendLogin)
@@ -300,6 +302,7 @@ extension BackendIntegrationTests {
         
         XCTAssertNotNil(loginJSON?["email"])
         XCTAssertNotNil(loginJSON?["password"])
-        XCTAssertEqual(loginJSON?.count, 2) // Only these fields
+        XCTAssertNotNil(loginJSON?["remember_me"])
+        // device_info can be nil so we don't assert it
     }
 }

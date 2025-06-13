@@ -289,41 +289,9 @@ final class APIClient: APIClientProtocol {
                 }
             case 401:
                 print("❌ APIClient: Unauthorized (401)")
-                // Try refreshing token once if we have auth
                 if requiresAuth {
-                    print("🔄 APIClient: Attempting token refresh...")
-                    if let refreshedToken = await tokenProvider() {
-                        print("🔑 APIClient: Retrying with refreshed token...")
-                        
-                        #if DEBUG
-                        // 1️⃣  Print the full JWT so we can copy from the console
-                        print("FULL_ID_TOKEN → \(refreshedToken)")
-
-                        // 2️⃣  Copy to clipboard for CLI use
-                        #if canImport(UIKit)
-                        UIPasteboard.general.string = refreshedToken
-                        #endif
-
-                        print("✅ ID-token copied to clipboard (length: \(refreshedToken.count))")
-                        #endif
-                        
-                        authorizedRequest.setValue("Bearer \(refreshedToken)", forHTTPHeaderField: "Authorization")
-                        
-                        // Retry the request once with fresh token
-                        if let retryData = try? await session.data(for: authorizedRequest),
-                           let retryResponse = retryData.1 as? HTTPURLResponse,
-                           retryResponse.statusCode >= 200 && retryResponse.statusCode < 300 {
-                            print("✅ APIClient: Retry succeeded after token refresh")
-                            do {
-                                if retryData.0.isEmpty, let empty = EmptyResponse() as? T {
-                                    return empty
-                                }
-                                return try decoder.decode(T.self, from: retryData.0)
-                            } catch {
-                                print("❌ APIClient: Retry decoding error: \(error)")
-                                throw APIError.decodingError(error)
-                            }
-                        }
+                    if let result: T = await retryWithRefreshedToken(authorizedRequest) {
+                        return result
                     }
                 }
                 throw APIError.unauthorized
@@ -342,6 +310,48 @@ final class APIClient: APIClientProtocol {
             throw APIError.networkError(error)
         } catch {
             throw APIError.unknown(error)
+        }
+    }
+    
+    private func retryWithRefreshedToken<T: Decodable>(_ request: URLRequest) async -> T? {
+        print("🔄 APIClient: Attempting token refresh...")
+        guard let refreshedToken = await tokenProvider() else {
+            return nil
+        }
+        
+        print("🔑 APIClient: Retrying with refreshed token...")
+        
+        #if DEBUG
+        // 1️⃣  Print the full JWT so we can copy from the console
+        print("FULL_ID_TOKEN → \(refreshedToken)")
+
+        // 2️⃣  Copy to clipboard for CLI use
+        #if canImport(UIKit)
+        UIPasteboard.general.string = refreshedToken
+        #endif
+
+        print("✅ ID-token copied to clipboard (length: \(refreshedToken.count))")
+        #endif
+        
+        var authorizedRequest = request
+        authorizedRequest.setValue("Bearer \(refreshedToken)", forHTTPHeaderField: "Authorization")
+        
+        // Retry the request once with fresh token
+        guard let retryData = try? await session.data(for: authorizedRequest),
+              let retryResponse = retryData.1 as? HTTPURLResponse,
+              retryResponse.statusCode >= 200 && retryResponse.statusCode < 300 else {
+            return nil
+        }
+        
+        print("✅ APIClient: Retry succeeded after token refresh")
+        do {
+            if retryData.0.isEmpty, let empty = EmptyResponse() as? T {
+                return empty
+            }
+            return try decoder.decode(T.self, from: retryData.0)
+        } catch {
+            print("❌ APIClient: Retry decoding error: \(error)")
+            return nil
         }
     }
 }

@@ -2,6 +2,7 @@ import Foundation
 import Combine
 @testable import clarity_loop_frontend
 
+@MainActor
 class MockAuthService: AuthServiceProtocol {
     var shouldSucceed = true
     var mockUserSession = UserSessionResponseDTO(
@@ -57,7 +58,7 @@ class MockAuthService: AuthServiceProtocol {
         }
     }
     
-    func signOut() throws {
+    func signOut() async throws {
         mockCurrentUser = nil
     }
     

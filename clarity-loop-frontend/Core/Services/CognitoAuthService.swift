@@ -84,7 +84,9 @@ final class CognitoAuthService: NSObject {
             throw AuthError.configurationError
         }
         
-        var components = URLComponents(url: endSessionEndpoint, resolvingAgainstBaseURL: false)!
+        guard var components = URLComponents(url: endSessionEndpoint, resolvingAgainstBaseURL: false) else {
+            throw AuthError.configuration(message: "Invalid endpoint URL")
+        }
         components.queryItems = [
             URLQueryItem(name: "client_id", value: configuration.clientID),
             URLQueryItem(name: "logout_uri", value: configuration.logoutURI)
@@ -140,7 +142,9 @@ final class CognitoAuthService: NSObject {
         }
         
         // Build authorization URL
-        var components = URLComponents(url: authEndpoint, resolvingAgainstBaseURL: false)!
+        guard var components = URLComponents(url: authEndpoint, resolvingAgainstBaseURL: false) else {
+            throw AuthError.configuration(message: "Invalid auth endpoint URL")
+        }
         components.queryItems = [
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "client_id", value: configuration.clientID),
@@ -310,7 +314,10 @@ final class CognitoAuthService: NSObject {
     }
     
     private func generateCodeChallenge() -> String {
-        let data = codeVerifier.data(using: .utf8)!
+        guard let data = codeVerifier.data(using: .utf8) else {
+            // This should never happen with valid ASCII characters
+            return ""
+        }
         let hash = SHA256.hash(data: data)
         return Data(hash).base64EncodedString()
             .replacingOccurrences(of: "+", with: "-")

@@ -1,13 +1,14 @@
 import XCTest
 @testable import clarity_loop_frontend
 
+@MainActor
 final class AuthServiceTests: XCTestCase {
     
     var authService: MockAuthService!
     
     override func setUpWithError() throws {
         try super.setUpWithError()
-        authService = MockAuthService()
+        // MockAuthService creation moved to async context in tests
     }
     
     override func tearDownWithError() throws {
@@ -17,6 +18,7 @@ final class AuthServiceTests: XCTestCase {
     
     func testSignInSuccess() async throws {
         // Given
+        authService = MockAuthService()
         authService.shouldSucceed = true
         let email = "test@example.com"
         let password = "password123"
@@ -38,6 +40,7 @@ final class AuthServiceTests: XCTestCase {
     
     func testSignInFailure() async throws {
         // Given
+        authService = MockAuthService()
         authService.shouldSucceed = false
         let email = "test@example.com"
         let password = "wrongpassword"
@@ -53,6 +56,7 @@ final class AuthServiceTests: XCTestCase {
     
     func testRegisterSuccess() async throws {
         // Given
+        authService = MockAuthService()
         authService.shouldSucceed = true
         let email = "newuser@example.com"
         let password = "password123"
@@ -75,13 +79,14 @@ final class AuthServiceTests: XCTestCase {
         XCTAssertTrue(response.verificationEmailSent)
     }
     
-    func testSignOut() throws {
+    func testSignOut() async throws {
         // Given - user is signed in
+        authService = MockAuthService()
         authService.mockCurrentUser = AuthUser(uid: "test-uid", email: "test@example.com")
         XCTAssertNotNil(authService.currentUser)
         
         // When
-        try authService.signOut()
+        try await authService.signOut()
         
         // Then
         XCTAssertNil(authService.currentUser)
@@ -89,6 +94,7 @@ final class AuthServiceTests: XCTestCase {
     
     func testGetCurrentUserToken() async throws {
         // Given
+        authService = MockAuthService()
         authService.shouldSucceed = true
         
         // When
@@ -100,6 +106,7 @@ final class AuthServiceTests: XCTestCase {
     
     func testGetCurrentUserTokenFailure() async throws {
         // Given
+        authService = MockAuthService()
         authService.shouldSucceed = false
         
         // When/Then
@@ -113,6 +120,7 @@ final class AuthServiceTests: XCTestCase {
     
     func testAuthStateStream() async throws {
         // Given
+        authService = MockAuthService()
         let expectedUser = AuthUser(uid: "test-uid", email: "test@example.com", isEmailVerified: true)
         authService.mockCurrentUser = expectedUser
         
@@ -197,12 +205,13 @@ final class AuthServiceTests: XCTestCase {
         }
     }
 
-    func testLogout_Success() throws {
+    func testLogout_Success() async throws {
         // Given
+        authService = MockAuthService()
         authService.mockCurrentUser = AuthUser(uid: "test-uid", email: "test@example.com", isEmailVerified: true)
         
         // When
-        try authService.signOut()
+        try await authService.signOut()
         
         // Then
         XCTAssertNil(authService.currentUser)
