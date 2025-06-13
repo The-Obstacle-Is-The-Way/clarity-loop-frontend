@@ -1,5 +1,13 @@
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#endif
+
+// Import the protocols and DTOs used in this file
+import HealthKit
+
+// Note: The actual protocol imports will depend on your project structure
+// Add these as needed based on your file organization
 
 final class SyncHealthDataUseCase {
     
@@ -40,7 +48,7 @@ final class SyncHealthDataUseCase {
                 let dailyMetrics = try await healthKitService.fetchAllDailyMetrics(for: currentDate)
                 
                 // Convert to HealthKit upload format
-                let uploadRequest = try buildUploadRequest(from: dailyMetrics, date: currentDate)
+                let uploadRequest = try await buildUploadRequest(from: dailyMetrics, date: currentDate)
                 
                 // Upload to backend (direct API call since this is an infrastructure operation)
                 let uploadResponse = try await apiClient.uploadHealthKitData(requestDTO: uploadRequest)
@@ -65,7 +73,7 @@ final class SyncHealthDataUseCase {
         return syncResult
     }
     
-    private func buildUploadRequest(from dailyMetrics: DailyHealthMetrics, date: Date) throws -> HealthKitUploadRequestDTO {
+    private func buildUploadRequest(from dailyMetrics: DailyHealthMetrics, date: Date) async throws -> HealthKitUploadRequestDTO {
         var samples: [HealthKitSampleDTO] = []
         
         // Add step count sample
@@ -117,8 +125,8 @@ final class SyncHealthDataUseCase {
             ))
         }
         
-        // Get current user ID from auth service
-        guard let currentUser = authService.currentUser else {
+        // Get current user ID from auth service - now properly awaited
+        guard let currentUser = await authService.currentUser else {
             throw SyncError.userNotAuthenticated
         }
         

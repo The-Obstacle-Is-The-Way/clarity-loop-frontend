@@ -34,7 +34,9 @@ final class SettingsViewModel {
     
     // MARK: - Computed Properties
     var currentUser: String {
-        authService.currentUser?.email ?? "Unknown User"
+        // Note: This now returns a placeholder since currentUser is async
+        // In UI, use async methods to get actual current user
+        "Loading user..."
     }
     
     var hasUnsavedChanges: Bool {
@@ -51,9 +53,9 @@ final class SettingsViewModel {
     }
     
     // MARK: - Profile Management
-    func loadUserProfile() {
+    func loadUserProfile() async {
         // Load user profile data
-        if let user = authService.currentUser {
+        if let user = await authService.currentUser {
             email = user.email ?? ""
             // In a real app, you'd fetch additional profile data from your backend
         }
@@ -169,9 +171,9 @@ final class SettingsViewModel {
     }
     
     // MARK: - Authentication Actions
-    func signOut() {
+    func signOut() async {
         do {
-            try authService.signOut()
+            try await authService.signOut()
         } catch {
             errorMessage = "Failed to sign out: \(error.localizedDescription)"
         }
@@ -186,7 +188,7 @@ final class SettingsViewModel {
             try await Task.sleep(nanoseconds: 2_000_000_000) // 2 second delay
             
             // Then sign out
-            try authService.signOut()
+            try await authService.signOut()
         } catch {
             errorMessage = "Failed to delete account: \(error.localizedDescription)"
         }

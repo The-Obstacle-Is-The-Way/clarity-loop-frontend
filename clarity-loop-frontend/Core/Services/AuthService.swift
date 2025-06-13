@@ -4,6 +4,9 @@ import Combine
 import UIKit
 #endif
 
+// Import required protocols and types
+// Note: These imports may need to be adjusted based on your project structure
+
 /// Defines the contract for a service that manages user authentication.
 /// This protocol allows for dependency injection and mocking for testing purposes.
 @MainActor
@@ -95,7 +98,7 @@ final class AuthService: AuthServiceProtocol {
 
     // MARK: - Initializer
     
-    init(apiClient: APIClientProtocol) {
+    nonisolated init(apiClient: APIClientProtocol) {
         self.apiClient = apiClient
     }
 
