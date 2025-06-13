@@ -115,9 +115,22 @@ final class BackendAPIClient: APIClientProtocol {
     
     // MARK: - Private Request Methods
     
+    private func performBackendRequest<Response: Decodable>(
+        for endpoint: Endpoint,
+        requiresAuth: Bool = true,
+        accessToken: String? = nil
+    ) async throws -> Response {
+        return try await performBackendRequest(
+            for: endpoint,
+            body: EmptyBody(),
+            requiresAuth: requiresAuth,
+            accessToken: accessToken
+        )
+    }
+    
     private func performBackendRequest<Request: Encodable, Response: Decodable>(
         for endpoint: Endpoint,
-        body: Request? = nil,
+        body: Request,
         requiresAuth: Bool = true,
         accessToken: String? = nil
     ) async throws -> Response {
@@ -132,7 +145,7 @@ final class BackendAPIClient: APIClientProtocol {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // Add body if provided
-        if let body = body {
+        if !(body is EmptyBody) {
             request.httpBody = try encoder.encode(body)
         } else if endpoint.method.requiresBody {
             // Use endpoint's body method if no override provided
@@ -267,3 +280,7 @@ private extension HTTPMethod {
         }
     }
 }
+
+// MARK: - Empty Body Type
+
+private struct EmptyBody: Encodable {}

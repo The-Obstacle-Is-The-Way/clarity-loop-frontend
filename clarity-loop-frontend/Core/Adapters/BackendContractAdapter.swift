@@ -15,6 +15,8 @@ protocol BackendContractAdapterProtocol {
     
     func adaptRefreshTokenRequest(_ refreshToken: String) -> BackendRefreshTokenRequest
     func adaptLogoutResponse(_ backendResponse: BackendLogoutResponse) -> MessageResponseDTO
+    
+    func adaptErrorResponse(_ errorData: Data) -> Error?
 }
 
 // MARK: - Backend Contract Adapter Implementation
@@ -145,7 +147,7 @@ final class BackendContractAdapter: BackendContractAdapterProtocol {
 extension BackendContractAdapter {
     
     /// Adapt backend error responses to frontend errors
-    func adaptErrorResponse(_ errorData: Data) -> Error? {
+    public func adaptErrorResponse(_ errorData: Data) -> Error? {
         let decoder = JSONDecoder()
         
         // Try to decode as ProblemDetail first
