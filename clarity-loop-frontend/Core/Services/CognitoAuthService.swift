@@ -11,7 +11,7 @@ import Combine
 
 @MainActor
 final class CognitoAuthService: NSObject {
-    private let configuration = CognitoConfiguration.shared
+    private var configuration = CognitoConfiguration.shared
     private var authSession: ASWebAuthenticationSession?
     
     // Store tokens

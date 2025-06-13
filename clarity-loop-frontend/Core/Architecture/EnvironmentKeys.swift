@@ -1,19 +1,59 @@
+//
+//  EnvironmentKeys.swift
+//  clarity-loop-frontend
+//
+//  Created by Claude on 5/10/2025.
+//
+
+import Foundation
 import SwiftUI
 
-// MARK: - Shared Token Provider
+// MARK: - Modern Swift 6 Environment Pattern with @Entry
 
-/// Shared token provider for default environment values
-/// This ensures that even default/fallback environment values can authenticate
-private let defaultTokenProvider: () async -> String? = {
-    do {
-        // CRITICAL FIX: Use centralized TokenManagementService
-        let token = try await TokenManagementService.shared.getValidToken()
-        print("✅ Default environment: Token obtained from TokenManagementService")
-        return token
-    } catch {
-        print("⚠️ Default environment failed to get token: \(error)")
-        return nil
-    }
+extension EnvironmentValues {
+    /// AuthService using modern @Entry pattern - handles MainActor isolation automatically
+    @Entry var authService: AuthServiceProtocol = {
+        // Create default APIClient with token provider
+        let tokenProvider: TokenProvider = { TokenManagementService.shared.currentToken }
+        
+        guard let defaultAPIClient = APIClient(
+            baseURLString: AppConfig.apiBaseURL,
+            tokenProvider: tokenProvider
+        ) else {
+            fatalError("Failed to create default APIClient with baseURL: \(AppConfig.apiBaseURL)")
+        }
+        
+        return AuthService(apiClient: defaultAPIClient)
+    }()
+    
+    /// APIClient using modern @Entry pattern
+    @Entry var apiClient: APIClientProtocol = {
+        let tokenProvider: TokenProvider = { TokenManagementService.shared.currentToken }
+        
+        guard let client = APIClient(
+            baseURLString: AppConfig.apiBaseURL,
+            tokenProvider: tokenProvider
+        ) else {
+            fatalError("Failed to create default APIClient")
+        }
+        return client
+    }()
+    
+    /// HealthKitService using modern @Entry pattern
+    @Entry var healthKitService: HealthKitServiceProtocol = HealthKitService()
+    
+    /// BiometricAuthService using modern @Entry pattern  
+    @Entry var biometricAuthService: BiometricAuthServiceProtocol = BiometricAuthService()
+    
+    /// TokenManagementService using modern @Entry pattern
+    @Entry var tokenManagementService: TokenManagementServiceProtocol = TokenManagementService.shared
+}
+
+// MARK: - Legacy Support (if needed for migration)
+
+/// Default token provider function - nonisolated for thread safety
+private let defaultTokenProvider: TokenProvider = {
+    TokenManagementService.shared.currentToken
 }
 
 // MARK: - AuthService
@@ -33,10 +73,52 @@ struct AuthServiceKey: EnvironmentKey {
             return client
         }()
         
-        let authService = AuthService(apiClient: defaultAPIClient)
-        // Configure TokenManagementService with the auth service
-        TokenManagementService.shared.configure(with: authService)
-        return authService
+        // Use a lazy initialization pattern that will be MainActor-isolated when accessed
+        return AuthServiceWrapper(apiClient: defaultAPIClient)
+    }
+}
+
+/// Wrapper to handle MainActor isolation for AuthService
+private class AuthServiceWrapper: AuthServiceProtocol {
+    private let apiClient: APIClientProtocol
+    private lazy var _authService: AuthService = {
+        Task { @MainActor in
+            let service = AuthService(apiClient: apiClient)
+            TokenManagementService.shared.configure(with: service)
+            return service
+        }
+        // For now, create a basic auth service
+        // This is a temporary workaround for the MainActor isolation issue
+        return AuthService(apiClient: apiClient)
+    }()
+    
+    init(apiClient: APIClientProtocol) {
+        self.apiClient = apiClient
+    }
+    
+    var authState: AsyncStream<AuthUser?> { _authService.authState }
+    var currentUser: AuthUser? { 
+        get async { await _authService.currentUser }
+    }
+    
+    func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
+        try await _authService.signIn(withEmail: email, password: password)
+    }
+    
+    func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO {
+        try await _authService.register(withEmail: email, password: password, details: details)
+    }
+    
+    func signOut() async throws {
+        try await _authService.signOut()
+    }
+    
+    func sendPasswordReset(to email: String) async throws {
+        try await _authService.sendPasswordReset(to: email)
+    }
+    
+    func getCurrentUserToken() async throws -> String {
+        try await _authService.getCurrentUserToken()
     }
 }
 

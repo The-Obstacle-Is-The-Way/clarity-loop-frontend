@@ -1,16 +1,18 @@
 import Foundation
+import Combine
 #if canImport(UIKit) && DEBUG
 import UIKit
 #endif
 
 /// Defines the contract for a service that manages user authentication.
 /// This protocol allows for dependency injection and mocking for testing purposes.
+@MainActor
 protocol AuthServiceProtocol {
     /// An async stream that emits the current user whenever the auth state changes.
     var authState: AsyncStream<AuthUser?> { get }
     
     /// The currently authenticated user, if one exists.
-    var currentUser: AuthUser? { get }
+    var currentUser: AuthUser? { get async }
 
     /// Signs in a user with the given email and password.
     func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO
@@ -19,7 +21,7 @@ protocol AuthServiceProtocol {
     func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO
     
     /// Signs out the current user.
-    func signOut() throws
+    func signOut() async throws
     
     /// Sends a password reset email to the given email address.
     func sendPasswordReset(to email: String) async throws
@@ -78,13 +80,7 @@ final class AuthService: AuthServiceProtocol {
             
             // Subscribe to Cognito auth state changes
             self.authStateTask = Task { [weak self] in
-                for await user in self?.cognitoAuth.authStatePublisher.values ?? AsyncPublisher(AnyPublisher<AuthUser?, Never>.empty()).values {
-                    continuation.yield(user)
-                }
-            }
-            
-            // Get current user state
-            Task { [weak self] in
+                // For now, just yield current user state
                 let user = try? await self?.cognitoAuth.getCurrentUser()
                 continuation.yield(user)
             }
@@ -124,7 +120,8 @@ final class AuthService: AuthServiceProtocol {
         do {
             // Note: Cognito will handle registration through hosted UI
             // For now, we'll initiate the sign-up flow
-            _ = try await cognitoAuth.signUp(email: email, password: password, fullName: details.fullName)
+            let fullName = "\(details.firstName) \(details.lastName)"
+            _ = try await cognitoAuth.signUp(email: email, password: password, fullName: fullName)
             
             // Register with our backend
             let response = try await apiClient.register(requestDTO: details)
@@ -134,10 +131,8 @@ final class AuthService: AuthServiceProtocol {
         }
     }
     
-    func signOut() throws {
-        Task {
-            try await cognitoAuth.signOut()
-        }
+    func signOut() async throws {
+        try await cognitoAuth.signOut()
     }
     
     func sendPasswordReset(to email: String) async throws {
