@@ -5,7 +5,7 @@
 # All endpoints unified in us-east-1
 
 TOKEN="YOUR_TOKEN_HERE"
-API_BASE="http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com"
+API_BASE="https://clarity.novamindnyc.com"
 
 echo "🚀 TESTING CLARITY AWS BACKEND (us-east-1)"
 echo "==========================================="

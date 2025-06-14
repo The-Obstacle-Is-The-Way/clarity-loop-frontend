@@ -37,7 +37,7 @@ func testLogin() async {
     print("=" * 50)
     
     // Backend API URL from Info.plist
-    let apiBaseURL = "http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com"
+    let apiBaseURL = "https://clarity.novamindnyc.com"
     let loginEndpoint = "\(apiBaseURL)/api/v1/auth/login"
     
     print("📍 Backend URL: \(apiBaseURL)")

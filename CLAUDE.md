@@ -240,9 +240,10 @@ let url = AppConfig.apiBaseURL  // Reads from Info.plist or fallback
 ```
 
 ### Backend Endpoints
-- Authentication: `/auth/*` 
-- Health Data: `/health/*`
-- Insights: `/insights/*`
+- Base URL: `https://clarity.novamindnyc.com`
+- Authentication: `/api/v1/auth/*` 
+- Health Data: `/api/v1/health/*`
+- Insights: `/api/v1/insights/*`
 
 ### Error Handling
 - Use `APIError` enum for structured error handling
