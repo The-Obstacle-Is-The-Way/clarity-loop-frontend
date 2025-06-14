@@ -106,6 +106,10 @@ awsconfiguration.json
 .env.staging
 .env.development
 
+# MCP Configuration (contains API keys)
+.mcp.json
+mcp.json
+
 # API Keys and Secrets (if any get added)
 secrets.plist
 config-secrets.plist

@@ -26,14 +26,9 @@ private let defaultTokenProvider: () async -> String? = {
 // MARK: - AuthService
 
 /// The key for accessing the `AuthServiceProtocol` in the SwiftUI Environment.
-struct AuthServiceKey: EnvironmentKey {
-    typealias Value = AuthServiceProtocol
-    static var defaultValue: AuthServiceProtocol {
-        // AuthService is @MainActor isolated and must be created on the main actor.
-        // It should be explicitly injected at the app's entry point.
-        // This fatal error helps catch configuration issues during development.
-        fatalError("AuthService must be explicitly injected into the environment as it is @MainActor-isolated. Inject it in your App struct using .environment(\\.authService, authServiceInstance)")
-    }
+private struct AuthServiceKey: EnvironmentKey {
+    typealias Value = AuthServiceProtocol?
+    static let defaultValue: AuthServiceProtocol? = nil // Make it optional!
 }
 
 /// The key for accessing the `AuthViewModel` in the SwiftUI Environment.
@@ -120,7 +115,16 @@ private struct HealthKitServiceKey: EnvironmentKey {
 extension EnvironmentValues {
     /// Provides access to the `AuthService` throughout the SwiftUI environment.
     var authService: AuthServiceProtocol {
-        get { self[AuthServiceKey.self] }
+        get { 
+            if let service = self[AuthServiceKey.self] {
+                return service
+            } else {
+                print("🚨 AuthService accessed before injection!")
+                print("🔍 Call stack:")
+                Thread.callStackSymbols.prefix(5).forEach { print("   \($0)") }
+                fatalError("AuthService must be explicitly injected into the environment. Inject it in your App struct using .environment(\\.authService, authServiceInstance)")
+            }
+        }
         set { self[AuthServiceKey.self] = newValue }
     }
     

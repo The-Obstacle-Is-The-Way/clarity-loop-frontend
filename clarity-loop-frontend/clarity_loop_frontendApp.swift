@@ -115,12 +115,10 @@ struct ClarityPulseApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(authViewModel)
-                .environment(\.authService, authService)
-                .environment(\.healthKitService, healthKitService)
-                .environment(\.apiClient, apiClient)
-                .environment(\.insightsRepository, insightsRepository)
-                .environment(\.healthDataRepository, healthDataRepository)
+                .onAppear {
+                    print("🔥 CONTENTVIEW APPEARED")
+                    print("🔥 ENVIRONMENT AVAILABLE: AuthService type = \(type(of: authService))")
+                }
                 .modelContainer(PersistenceController.shared.container)
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
                     // Schedule background tasks when app enters background
@@ -140,5 +138,11 @@ struct ClarityPulseApp: App {
                     }
                 }
         }
+        .environment(authViewModel)
+        .environment(\.authService, authService)
+        .environment(\.healthKitService, healthKitService)
+        .environment(\.apiClient, apiClient)
+        .environment(\.insightsRepository, insightsRepository)
+        .environment(\.healthDataRepository, healthDataRepository)
     }
 }

@@ -8,47 +8,75 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @State private var selectedTab = 0
+    
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             NavigationStack {
-                DashboardView()
+                LazyTabContent(tab: 0, selectedTab: selectedTab) {
+                    DashboardView()
+                }
             }
             .tabItem {
                 Image(systemName: "heart.fill")
                 Text("Dashboard")
             }
+            .tag(0)
             
             NavigationStack {
-                ChatView()
+                LazyTabContent(tab: 1, selectedTab: selectedTab) {
+                    ChatView()
+                }
             }
             .tabItem {
                 Image(systemName: "message.fill")
                 Text("AI Chat")
             }
+            .tag(1)
             
             NavigationStack {
-                SettingsView()
+                LazyTabContent(tab: 2, selectedTab: selectedTab) {
+                    SettingsView()
+                }
             }
             .tabItem {
                 Image(systemName: "gearshape.fill")
                 Text("Settings")
             }
+            .tag(2)
             
             NavigationStack {
-                VStack {
-                    DebugAPIView()
-                    
-                    NavigationLink("Token Debug Info", destination: TokenDebugView())
-                        .buttonStyle(.borderedProminent)
-                        .padding()
+                LazyTabContent(tab: 3, selectedTab: selectedTab) {
+                    VStack {
+                        DebugAPIView()
+                        
+                        NavigationLink("Token Debug Info", destination: TokenDebugView())
+                            .buttonStyle(.borderedProminent)
+                            .padding()
+                    }
                 }
             }
             .tabItem {
                 Image(systemName: "ladybug.fill")
                 Text("Debug")
             }
+            .tag(3)
         }
         .accentColor(.red)
+    }
+}
+
+struct LazyTabContent<Content: View>: View {
+    let tab: Int
+    let selectedTab: Int
+    let content: () -> Content
+    
+    var body: some View {
+        if tab == selectedTab {
+            content()
+        } else {
+            Color.clear
+        }
     }
 }
 
