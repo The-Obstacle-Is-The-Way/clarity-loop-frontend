@@ -284,7 +284,7 @@ final class BackendContractValidationTests: XCTestCase {
     func testContentTypeHeaders() {
         // Verify all endpoints use correct content types
         let endpoints: [any Endpoint] = [
-            AuthEndpoint.register(UserRegistrationRequestDTO(
+            AuthEndpoint.register(dto: UserRegistrationRequestDTO(
                 email: "test@test.com",
                 password: "pass",
                 firstName: "Test",
@@ -293,7 +293,7 @@ final class BackendContractValidationTests: XCTestCase {
                 termsAccepted: true,
                 privacyPolicyAccepted: true
             )),
-            AuthEndpoint.login(UserLoginRequestDTO(
+            AuthEndpoint.login(dto: UserLoginRequestDTO(
                 email: "test@test.com",
                 password: "pass",
                 rememberMe: true,

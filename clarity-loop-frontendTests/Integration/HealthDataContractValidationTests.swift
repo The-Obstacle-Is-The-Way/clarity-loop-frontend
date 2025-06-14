@@ -219,15 +219,12 @@ final class HealthDataContractValidationTests: XCTestCase {
         XCTAssertEqual(response.processingId.uuidString.lowercased(), "123e4567-e89b-12d3-a456-426614174000")
         XCTAssertEqual(response.status, "completed")
         XCTAssertEqual(response.progress, 1.0)
-        XCTAssertEqual(response.metricsProcessed, 1500)
-        XCTAssertEqual(response.errors.count, 0)
-        XCTAssertNotNil(response.startedAt)
+        XCTAssertEqual(response.processedMetrics, 1500)
+        XCTAssertEqual(response.totalMetrics, 1500)
+        XCTAssertNil(response.estimatedTimeRemaining)
         XCTAssertNotNil(response.completedAt)
-        
-        let summary = response.resultSummary
-        XCTAssertEqual(summary?["heart_rate_samples"]?.value as? Int, 500)
-        XCTAssertEqual(summary?["step_samples"]?.value as? Int, 1000)
-        XCTAssertEqual(summary?["anomalies_detected"]?.value as? Int, 2)
+        XCTAssertEqual(response.errors?.count, 0)
+        XCTAssertEqual(response.message, "Processing completed successfully")
     }
     
     // MARK: - Data Type Validation Tests
