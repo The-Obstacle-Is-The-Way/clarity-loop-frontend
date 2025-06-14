@@ -29,18 +29,10 @@ private let defaultTokenProvider: () async -> String? = {
 struct AuthServiceKey: EnvironmentKey {
     typealias Value = AuthServiceProtocol
     static var defaultValue: AuthServiceProtocol {
-        // Create a default APIClient for the default AuthService
-        let defaultAPIClient: APIClientProtocol = {
-            guard let client = BackendAPIClient(
-                baseURLString: AppConfig.apiBaseURL,
-                tokenProvider: defaultTokenProvider
-            ) else {
-                fatalError("Failed to create default APIClient")
-            }
-            return client
-        }()
-        
-        return AuthService(apiClient: defaultAPIClient)
+        // AuthService is @MainActor isolated and must be created on the main actor.
+        // It should be explicitly injected at the app's entry point.
+        // This fatal error helps catch configuration issues during development.
+        fatalError("AuthService must be explicitly injected into the environment as it is @MainActor-isolated. Inject it in your App struct using .environment(\\.authService, authServiceInstance)")
     }
 }
 

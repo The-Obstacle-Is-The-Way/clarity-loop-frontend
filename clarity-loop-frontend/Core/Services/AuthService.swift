@@ -69,7 +69,7 @@ final class AuthService: AuthServiceProtocol {
     
     // MARK: - Properties
     
-    nonisolated(unsafe) private let apiClient: APIClientProtocol
+    nonisolated private let apiClient: APIClientProtocol
     // REMOVED: Direct Cognito integration
     // private let cognitoAuth = CognitoAuthService()
     private var authStateTask: Task<Void, Never>?
@@ -101,7 +101,7 @@ final class AuthService: AuthServiceProtocol {
 
     // MARK: - Initializer
     
-    nonisolated init(apiClient: APIClientProtocol) {
+    init(apiClient: APIClientProtocol) {
         self.apiClient = apiClient
     }
 
