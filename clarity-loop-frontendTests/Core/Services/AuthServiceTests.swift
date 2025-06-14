@@ -217,27 +217,6 @@ final class AuthServiceTests: XCTestCase {
         XCTAssertNil(authService.currentUser)
     }
 
-    func testRefreshToken_Success() async throws {
-        // Given
-        authService.shouldSucceed = true
-        
-        // When
-        let response = try await authService.refreshToken(requestDTO: RefreshTokenRequestDTO(refreshToken: "test"))
-        
-        // Then
-        XCTAssertEqual(response.accessToken, "mock-refreshed-access-token")
-    }
-    
-    func testRefreshToken_Failure() async throws {
-        // Given
-        authService.shouldSucceed = false
-        
-        // When/Then
-        do {
-            _ = try await authService.refreshToken(requestDTO: RefreshTokenRequestDTO(refreshToken: "test"))
-            XCTFail("Expected token refresh to fail")
-        } catch {
-            XCTAssertTrue(error is APIError)
-        }
-    }
+    // Note: refreshToken is not part of AuthServiceProtocol
+    // Token refresh is handled by APIClient/BackendAPIClient
 } 

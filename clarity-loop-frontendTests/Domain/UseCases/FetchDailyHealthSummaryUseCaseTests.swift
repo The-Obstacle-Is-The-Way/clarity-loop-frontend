@@ -5,18 +5,22 @@ final class FetchDailyHealthSummaryUseCaseTests: XCTestCase {
 
     var fetchDailyHealthSummaryUseCase: FetchDailyHealthSummaryUseCase!
     var mockHealthDataRepository: MockHealthDataRepository!
+    var mockHealthKitService: MockHealthKitService!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
         mockHealthDataRepository = MockHealthDataRepository()
+        mockHealthKitService = MockHealthKitService()
         fetchDailyHealthSummaryUseCase = FetchDailyHealthSummaryUseCase(
-            healthDataRepository: mockHealthDataRepository
+            healthDataRepository: mockHealthDataRepository,
+            healthKitService: mockHealthKitService
         )
     }
 
     override func tearDownWithError() throws {
         fetchDailyHealthSummaryUseCase = nil
         mockHealthDataRepository = nil
+        mockHealthKitService = nil
         try super.tearDownWithError()
     }
 
@@ -31,7 +35,8 @@ final class FetchDailyHealthSummaryUseCaseTests: XCTestCase {
         
         // Then
         XCTAssertNotNil(summary)
-        XCTAssertGreaterThan(summary.data.count, 0)
+        XCTAssertGreaterThan(summary.remoteMetrics.count, 0)
+        XCTAssertTrue(summary.hasCompleteData)
     }
 
     func testExecute_Failure() async throws {
@@ -48,14 +53,21 @@ final class FetchDailyHealthSummaryUseCaseTests: XCTestCase {
     }
 
     func testExecute_NoData() async throws {
-        // Given - Mock repository returns empty data
-        mockHealthDataRepository.shouldReturnEmpty = true
+        // Given - Mock returns empty data
+        mockHealthDataRepository.shouldSucceed = true
+        mockHealthKitService.mockDailyMetrics = DailyHealthMetrics(
+            date: Date(),
+            stepCount: 0,
+            restingHeartRate: nil,
+            sleepData: nil
+        )
         
         // When
         let summary = try await fetchDailyHealthSummaryUseCase.execute(for: Date())
         
         // Then
         XCTAssertNotNil(summary)
-        XCTAssertEqual(summary.data.count, 0)
+        XCTAssertEqual(summary.remoteMetrics.count, 0)
+        XCTAssertFalse(summary.hasCompleteData)
     }
 } 
