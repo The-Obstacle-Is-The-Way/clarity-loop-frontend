@@ -3,7 +3,7 @@ CLARITY PULSE iOS APPLICATION - PRODUCT REQUIREMENTS DOCUMENT
 
 PROJECT OVERVIEW
 ---------------
-CLARITY Pulse is a HIPAA-compliant iOS health data tracking application built with SwiftUI, following MVVM + Clean Architecture principles. The app integrates with HealthKit, Firebase, and provides secure biometric authentication for sensitive health data management. The backend API is hosted at https://crave-trinity--clarity-backend-fastapi-app.modal.run/api/v1.
+CLARITY Pulse is a HIPAA-compliant iOS health data tracking application built with SwiftUI, following MVVM + Clean Architecture principles. The app integrates with HealthKit, Firebase, and provides secure biometric authentication for sensitive health data management. The backend API is migrating from http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com to https://clarity.novamindnyc.com.
 
 CURRENT STATE
 -------------
@@ -15,6 +15,16 @@ CURRENT STATE
 
 MISSING FEATURES TO IMPLEMENT
 -----------------------------
+
+0. BACKEND URL MIGRATION (URGENT)
+   - Update Info.plist APIBaseURL from http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com to https://clarity.novamindnyc.com
+   - Update AppConfig.swift fallback URL to use new HTTPS domain
+   - Update BackendIntegrationTests.swift baseURL to new domain
+   - Update validate_backend_contract.swift script URL
+   - Remove NSAppTransportSecurity exception for old ALB domain
+   - Ensure all API calls work with HTTPS protocol
+   - Run comprehensive test suite to verify connectivity
+   - Perform security audit of HTTPS implementation
 
 1. HEALTHKIT INTEGRATION
    - Complete authorization flow and permission handling
@@ -98,6 +108,7 @@ TECHNICAL REQUIREMENTS
 
 PRIORITY ORDER
 --------------
+0. Backend URL migration to HTTPS (CRITICAL - blocks all API calls)
 1. Complete missing DTOs (foundation for all features)
 2. Implement missing API endpoints
 3. Fix dashboard data loading and error handling

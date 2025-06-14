@@ -25,7 +25,7 @@
 	
 	<!-- API Configuration -->
 	<key>APIBaseURL</key>
-	<string>http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com</string>
+	<string>https://clarity.novamindnyc.com</string>
 	
 	<!-- URL Schemes for AWS Cognito -->
 	<key>CFBundleURLTypes</key>
@@ -90,18 +90,6 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>clarity-alb-1762715656.us-east-1.elb.amazonaws.com</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSExceptionMinimumTLSVersion</key>
-				<string>TLSv1.2</string>
-				<key>NSExceptionRequiresForwardSecrecy</key>
-				<false/>
-			</dict>
-		</dict>
 	</dict>
 </dict>
 </plist>

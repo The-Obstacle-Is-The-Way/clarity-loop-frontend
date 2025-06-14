@@ -10,7 +10,7 @@ final class BackendIntegrationTests: XCTestCase {
     private var apiClient: BackendAPIClient!
     private let testEmail = "integration_test_\(UUID().uuidString)@clarity.health"
     private let testPassword = "TestPass123!"
-    private let backendURL = "http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com"
+    private let backendURL = "https://clarity.novamindnyc.com"
     
     // MARK: - Setup
     

@@ -6,7 +6,7 @@ import Foundation
 // This script validates that frontend DTOs match backend API expectations
 // Run this in CI/CD to catch contract mismatches early
 
-let backendURL = "http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com"
+let backendURL = "https://clarity.novamindnyc.com"
 
 // MARK: - Validation Results
 
