@@ -387,5 +387,18 @@ struct FeatureRow: View {
 // MARK: - Preview
 
 #Preview {
-    OnboardingView()
+    // Create preview-safe services
+    guard let previewAPIClient = APIClient(
+        baseURLString: AppConfig.previewAPIBaseURL,
+        tokenProvider: { nil }
+    ) else {
+        return Text("Failed to create preview client")
+    }
+    
+    let previewAuthService = AuthService(apiClient: previewAPIClient)
+    let previewHealthKitService = HealthKitService(apiClient: previewAPIClient)
+    
+    return OnboardingView()
+        .environment(\.authService, previewAuthService)
+        .environment(\.healthKitService, previewHealthKitService)
 } 

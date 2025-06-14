@@ -33,6 +33,8 @@ struct InsightsListView: View {
         } else {
             ProgressView()
                 .task {
+                    // Small delay to ensure environment is fully propagated
+                    try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
                     let userId = await authService.currentUser?.id ?? ""
                     self.viewModel = InsightsListViewModel(
                         insightsRepository: insightsRepository,
@@ -320,5 +322,14 @@ struct InsightDetailView: View {
 }
 
 #Preview {
-    InsightsListView()
+    guard let previewAPIClient = APIClient(
+        baseURLString: AppConfig.previewAPIBaseURL,
+        tokenProvider: { nil }
+    ) else {
+        return Text("Failed to create preview client")
+    }
+    
+    return InsightsListView()
+        .environment(\.authService, AuthService(apiClient: previewAPIClient))
+        .environment(\.insightsRepository, RemoteInsightsRepository(apiClient: previewAPIClient))
 }

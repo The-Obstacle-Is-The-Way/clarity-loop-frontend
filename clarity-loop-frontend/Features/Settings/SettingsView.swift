@@ -219,6 +219,15 @@ struct SettingsContentView: View {
 
 #if DEBUG
 #Preview {
-    SettingsView()
+    guard let previewAPIClient = APIClient(
+        baseURLString: AppConfig.previewAPIBaseURL,
+        tokenProvider: { nil }
+    ) else {
+        return Text("Failed to create preview client")
+    }
+    
+    return SettingsView()
+        .environment(\.authService, AuthService(apiClient: previewAPIClient))
+        .environment(\.healthKitService, HealthKitService(apiClient: previewAPIClient))
 }
 #endif

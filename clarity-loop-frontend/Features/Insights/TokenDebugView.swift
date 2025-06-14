@@ -193,5 +193,13 @@ struct TokenDebugView: View {
 }
 
 #Preview {
-    TokenDebugView()
+    guard let previewAPIClient = APIClient(
+        baseURLString: AppConfig.previewAPIBaseURL,
+        tokenProvider: { nil }
+    ) else {
+        return Text("Failed to create preview client")
+    }
+    
+    return TokenDebugView()
+        .environment(\.authService, AuthService(apiClient: previewAPIClient))
 }

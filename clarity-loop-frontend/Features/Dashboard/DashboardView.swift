@@ -155,10 +155,11 @@ struct DashboardView: View {
         baseURLString: AppConfig.previewAPIBaseURL,
         tokenProvider: { nil }
     ) else {
-        return DashboardView()
+        return Text("Failed to create preview client")
     }
     
     return DashboardView()
+        .environment(\.authService, AuthService(apiClient: previewAPIClient))
         .environment(\.healthKitService, HealthKitService(apiClient: previewAPIClient))
         .environment(\.insightsRepository, RemoteInsightsRepository(apiClient: previewAPIClient))
 } 
