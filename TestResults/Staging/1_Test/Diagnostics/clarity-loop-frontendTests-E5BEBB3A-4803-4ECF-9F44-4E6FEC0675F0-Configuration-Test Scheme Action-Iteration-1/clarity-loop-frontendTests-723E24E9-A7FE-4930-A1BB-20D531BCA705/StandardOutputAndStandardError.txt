@@ -1,0 +1,631 @@
+2025-06-14 08:32:33.634856-0400 clarity-loop-frontend[43653:2315094] [BackgroundTaskManager] Background tasks registered successfully
+2025-06-14 08:32:33.709537-0400 clarity-loop-frontend[43653:2315094] [OfflineQueueManager] Started offline queue monitoring
+2025-06-14 08:32:33.713266-0400 clarity-loop-frontend[43653:2315328] [OfflineQueueManager] Starting queue processing
+2025-06-14 08:32:33.718843-0400 clarity-loop-frontend[43653:2315328] [ModelContext] SwiftData.ModelContext: Unbinding from the main queue. This context was instantiated on the main queue but is being used off it. ModelContexts are not Sendable, consider using a ModelActor.
+2025-06-14 08:32:33.722622-0400 clarity-loop-frontend[43653:2315328] [OfflineQueueManager] Queue processing completed
+2025-06-14 08:32:33.740764-0400 clarity-loop-frontend[43653:2315094] [library] load_eligibility_plist: Failed to open /Users/ray/Library/Developer/XCTestDevices/15B8D087-358F-4450-ABF4-933E4C7AF899/data/Containers/Data/Application/51AB8BDF-2291-4221-93C4-12624544EA5B/private/var/db/eligibilityd/eligibility.plist: No such file or directory(2)
+2025-06-14 08:32:33.898301-0400 clarity-loop-frontend[43653:2315328] [General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+2025-06-14 08:32:33.957840-0400 clarity-loop-frontend[43653:2315328] [General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+Test Suite 'RemoteUserRepositoryTests' started at 2025-06-14 08:32:34.332.
+Test Case '-[clarity_loop_frontendTests.RemoteUserRepositoryTests testFetchUserProfile_Failure]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Data/Repositories/RemoteUserRepositoryTests.swift:30: error: -[clarity_loop_frontendTests.RemoteUserRepositoryTests testFetchUserProfile_Failure] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.RemoteUserRepositoryTests testFetchUserProfile_Failure]' failed (0.350 seconds).
+Test Case '-[clarity_loop_frontendTests.RemoteUserRepositoryTests testFetchUserProfile_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Data/Repositories/RemoteUserRepositoryTests.swift:25: error: -[clarity_loop_frontendTests.RemoteUserRepositoryTests testFetchUserProfile_Success] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.RemoteUserRepositoryTests testFetchUserProfile_Success]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.RemoteUserRepositoryTests testUpdateUserProfile_Failure]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Data/Repositories/RemoteUserRepositoryTests.swift:40: error: -[clarity_loop_frontendTests.RemoteUserRepositoryTests testUpdateUserProfile_Failure] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.RemoteUserRepositoryTests testUpdateUserProfile_Failure]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.RemoteUserRepositoryTests testUpdateUserProfile_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Data/Repositories/RemoteUserRepositoryTests.swift:35: error: -[clarity_loop_frontendTests.RemoteUserRepositoryTests testUpdateUserProfile_Success] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.RemoteUserRepositoryTests testUpdateUserProfile_Success]' failed (0.012 seconds).
+Test Suite 'RemoteUserRepositoryTests' failed at 2025-06-14 08:32:34.697.
+	 Executed 4 tests, with 4 failures (0 unexpected) in 0.364 (0.365) seconds
+Test Suite 'SyncHealthDataUseCaseTests' started at 2025-06-14 08:32:34.726.
+Test Case '-[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_HealthKitFetchFails]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Domain/UseCases/SyncHealthDataUseCaseTests.swift:28: error: -[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_HealthKitFetchFails] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_HealthKitFetchFails]' failed (0.360 seconds).
+Test Case '-[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_NoNewDataToSync]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Domain/UseCases/SyncHealthDataUseCaseTests.swift:38: error: -[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_NoNewDataToSync] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_NoNewDataToSync]' failed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_RemoteUploadFails]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Domain/UseCases/SyncHealthDataUseCaseTests.swift:33: error: -[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_RemoteUploadFails] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_RemoteUploadFails]' failed (0.004 seconds).
+Test Case '-[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_SyncSuccess]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Domain/UseCases/SyncHealthDataUseCaseTests.swift:23: error: -[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_SyncSuccess] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.SyncHealthDataUseCaseTests testExecute_SyncSuccess]' failed (0.001 seconds).
+Test Suite 'SyncHealthDataUseCaseTests' failed at 2025-06-14 08:32:35.094.
+	 Executed 4 tests, with 4 failures (0 unexpected) in 0.367 (0.368) seconds
+Test Suite 'ViewStateTests' started at 2025-06-14 08:32:35.127.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testErrorStateHandling]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testErrorStateHandling]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testErrorStateNumericProperties]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testErrorStateNumericProperties]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testNoNaNValuesInViewStateTransitions]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testNoNaNValuesInViewStateTransitions]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testObservableBindingStability]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testObservableBindingStability]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testValidNumericPropertiesInLoadingState]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testValidNumericPropertiesInLoadingState]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewState_EquatableConformance]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewState_EquatableConformance]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewState_ErrorState]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewState_ErrorState]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewState_InitialState]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewState_InitialState]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewState_LoadedState_Success]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewState_LoadedState_Success]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewState_LoadingState]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewState_LoadingState]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewStateBindingWithSwiftUI]' started.
+Test Case '-[clarity_loop_frontendTests.ViewStateTests testViewStateBindingWithSwiftUI]' passed (0.000 seconds).
+Test Suite 'ViewStateTests' passed at 2025-06-14 08:32:36.152.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.005 (1.026) seconds
+Test Suite 'InsightAIServiceTests' started at 2025-06-14 08:32:36.192.
+Test Case '-[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_APIError]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/InsightAIServiceTests.swift:39: error: -[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_APIError] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_APIError]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_EmptyData]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/InsightAIServiceTests.swift:29: error: -[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_EmptyData] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_EmptyData]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_InvalidData]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/InsightAIServiceTests.swift:34: error: -[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_InvalidData] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_InvalidData]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_RateLimit]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/InsightAIServiceTests.swift:44: error: -[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_RateLimit] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_RateLimit]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/InsightAIServiceTests.swift:24: error: -[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_Success] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.InsightAIServiceTests testGenerateInsights_Success]' failed (0.060 seconds).
+Test Suite 'InsightAIServiceTests' failed at 2025-06-14 08:32:37.110.
+	 Executed 5 tests, with 5 failures (0 unexpected) in 0.065 (0.918) seconds
+Test Suite 'DTOValidationTests' started at 2025-06-14 08:32:37.128.
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testDateTimeFormatValidation]' started.
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testDateTimeFormatValidation]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testDTOJSONRoundTrip]' started.
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testDTOJSONRoundTrip]' passed (0.027 seconds).
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testHealthDataDTONumericFields]' started.
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testHealthDataDTONumericFields]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testInsightDTOConfidenceScore]' started.
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testInsightDTOConfidenceScore]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testMalformedJSONHandling]' started.
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testMalformedJSONHandling]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testRegistrationDTOValidation]' started.
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testRegistrationDTOValidation]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testTimestampValidation]' started.
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testTimestampValidation]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testTokenResponseDTOValidation]' started.
+Test Case '-[clarity_loop_frontendTests.DTOValidationTests testTokenResponseDTOValidation]' passed (0.000 seconds).
+Test Suite 'DTOValidationTests' passed at 2025-06-14 08:32:37.160.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.030 (0.031) seconds
+Test Suite 'BiometricAuthServiceTests' started at 2025-06-14 08:32:37.172.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testAuthenticationResultSecurity]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testAuthenticationResultSecurity]' passed (0.215 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testAuthenticationWithBiometrics_Failure]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testAuthenticationWithBiometrics_Failure]' passed (0.015 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testAuthenticationWithBiometrics_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/BiometricAuthServiceTests.swift:194: error: -[clarity_loop_frontendTests.BiometricAuthServiceTests testAuthenticationWithBiometrics_Success] : failed: caught error: "notAvailable"
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testAuthenticationWithBiometrics_Success]' failed (0.008 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricAppLaunchAuthentication]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricAppLaunchAuthentication]' passed (0.095 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricAuthenticationTimeout]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricAuthenticationTimeout]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricAvailabilityCheck]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricAvailabilityCheck]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricLockoutHandling]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricLockoutHandling]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricLoginIntegration]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricLoginIntegration]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricNotAvailableError]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricNotAvailableError]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricPolicyEvaluation]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricPolicyEvaluation]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricPromptCustomization]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricPromptCustomization]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricTypeDetection]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricTypeDetection]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricUIStateMangement]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometricUIStateMangement]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometryType_FaceID]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometryType_FaceID]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometryType_None]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometryType_None]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometryType_TouchID]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testBiometryType_TouchID]' passed (0.005 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testConcurrentAccess]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testConcurrentAccess]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testEvaluatePolicyDomainState]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testEvaluatePolicyDomainState]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testFailedBiometricAuthentication]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testFailedBiometricAuthentication]' passed (0.112 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testFallbackToPasscode]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testFallbackToPasscode]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testSecureContextHandling]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testSecureContextHandling]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testSendableConformanceCompilation]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testSendableConformanceCompilation]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testSuccessfulBiometricAuthentication]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testSuccessfulBiometricAuthentication]' passed (0.214 seconds).
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testSystemErrorHandling]' started.
+Test Case '-[clarity_loop_frontendTests.BiometricAuthServiceTests testSystemErrorHandling]' passed (0.002 seconds).
+Test Suite 'BiometricAuthServiceTests' failed at 2025-06-14 08:32:38.271.
+	 Executed 24 tests, with 1 failure (1 unexpected) in 0.707 (1.100) seconds
+Test Suite 'AnalyzePATDataUseCaseTests' started at 2025-06-14 08:32:38.292.
+Test Case '-[clarity_loop_frontendTests.AnalyzePATDataUseCaseTests testExecute_Failure]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Domain/UseCases/AnalyzePATDataUseCaseTests.swift:28: error: -[clarity_loop_frontendTests.AnalyzePATDataUseCaseTests testExecute_Failure] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.AnalyzePATDataUseCaseTests testExecute_Failure]' failed (0.046 seconds).
+Test Case '-[clarity_loop_frontendTests.AnalyzePATDataUseCaseTests testExecute_NoData]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Domain/UseCases/AnalyzePATDataUseCaseTests.swift:33: error: -[clarity_loop_frontendTests.AnalyzePATDataUseCaseTests testExecute_NoData] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.AnalyzePATDataUseCaseTests testExecute_NoData]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AnalyzePATDataUseCaseTests testExecute_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Domain/UseCases/AnalyzePATDataUseCaseTests.swift:23: error: -[clarity_loop_frontendTests.AnalyzePATDataUseCaseTests testExecute_Success] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.AnalyzePATDataUseCaseTests testExecute_Success]' failed (0.086 seconds).
+Test Suite 'AnalyzePATDataUseCaseTests' failed at 2025-06-14 08:32:38.425.
+	 Executed 3 tests, with 3 failures (0 unexpected) in 0.133 (0.134) seconds
+Test Suite 'HealthDataContractValidationTests' started at 2025-06-14 08:32:38.444.
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthDataErrorResponses]' started.
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthDataErrorResponses]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthDataProcessingStatusContract]' started.
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthDataProcessingStatusContract]' passed (0.005 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthKitSyncRequestContract]' started.
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthKitSyncRequestContract]' passed (0.006 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthKitUploadRequestContract]' started.
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthKitUploadRequestContract]' passed (0.019 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthKitUploadResponseContract]' started.
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthKitUploadResponseContract]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthMetricUnits]' started.
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testHealthMetricUnits]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testPaginatedMetricsResponseContract]' started.
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testPaginatedMetricsResponseContract]' passed (0.015 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testSupportedHealthKitDataTypes]' started.
+Test Case '-[clarity_loop_frontendTests.HealthDataContractValidationTests testSupportedHealthKitDataTypes]' passed (0.001 seconds).
+Test Suite 'HealthDataContractValidationTests' passed at 2025-06-14 08:32:38.497.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.051 (0.052) seconds
+Test Suite 'RemoteHealthDataRepositoryTests' started at 2025-06-14 08:32:38.524.
+Test Case '-[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testFetchHealthData_Failure]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Data/Repositories/RemoteHealthDataRepositoryTests.swift:30: error: -[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testFetchHealthData_Failure] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testFetchHealthData_Failure]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testFetchHealthData_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Data/Repositories/RemoteHealthDataRepositoryTests.swift:25: error: -[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testFetchHealthData_Success] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testFetchHealthData_Success]' failed (0.021 seconds).
+Test Case '-[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testUploadHealthData_Failure]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Data/Repositories/RemoteHealthDataRepositoryTests.swift:40: error: -[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testUploadHealthData_Failure] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testUploadHealthData_Failure]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testUploadHealthData_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Data/Repositories/RemoteHealthDataRepositoryTests.swift:35: error: -[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testUploadHealthData_Success] : failed - Test not implemented.
+Test Case '-[clarity_loop_frontendTests.RemoteHealthDataRepositoryTests testUploadHealthData_Success]' failed (0.005 seconds).
+Test Suite 'RemoteHealthDataRepositoryTests' failed at 2025-06-14 08:32:38.553.
+	 Executed 4 tests, with 4 failures (0 unexpected) in 0.028 (0.029) seconds
+Test Suite 'PATContractValidationTests' started at 2025-06-14 08:32:38.556.
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testActigraphyAnalysisResponseContract]' started.
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testActigraphyAnalysisResponseContract]' passed (0.028 seconds).
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testActigraphyRequestContract]' started.
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testActigraphyRequestContract]' passed (0.009 seconds).
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testPATAnalysisResponseContract]' started.
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testPATAnalysisResponseContract]' passed (0.008 seconds).
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testPATDateFormatting]' started.
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testPATDateFormatting]' passed (0.004 seconds).
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testPATErrorResponseContract]' started.
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testPATErrorResponseContract]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testStepAnalysisResponseContract]' started.
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testStepAnalysisResponseContract]' passed (0.024 seconds).
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testStepDataRequestContract]' started.
+Test Case '-[clarity_loop_frontendTests.PATContractValidationTests testStepDataRequestContract]' passed (0.006 seconds).
+Test Suite 'PATContractValidationTests' passed at 2025-06-14 08:32:38.638.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.080 (0.081) seconds
+Test Suite 'LoginViewModelTests' started at 2025-06-14 08:32:38.645.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testBiometricAuthenticationIntegration]' started.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testBiometricAuthenticationIntegration]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testEmailValidation]' started.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testEmailValidation]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testFailedLoginInvalidCredentials]' started.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testFailedLoginInvalidCredentials]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testFailedLoginNetworkError]' started.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testFailedLoginNetworkError]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testFormResetAfterError]' started.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testFormResetAfterError]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testLoadingStateManagement]' started.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testLoadingStateManagement]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testObservablePatternStateUpdates]' started.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testObservablePatternStateUpdates]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testPasswordValidation]' started.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testPasswordValidation]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testSensitiveDataClearing]' started.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testSensitiveDataClearing]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testSuccessfulLogin]' started.
+Test Case '-[clarity_loop_frontendTests.LoginViewModelTests testSuccessfulLogin]' passed (0.001 seconds).
+Test Suite 'LoginViewModelTests' passed at 2025-06-14 08:32:38.686.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.004 (0.041) seconds
+Test Suite 'HealthKitServiceTests' started at 2025-06-14 08:32:38.689.
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testFetchHealthData_Error]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/HealthKitServiceTests.swift:47: error: -[clarity_loop_frontendTests.HealthKitServiceTests testFetchHealthData_Error] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testFetchHealthData_Error]' failed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testFetchHealthData_NoData]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/HealthKitServiceTests.swift:42: error: -[clarity_loop_frontendTests.HealthKitServiceTests testFetchHealthData_NoData] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testFetchHealthData_NoData]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testFetchHealthData_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/HealthKitServiceTests.swift:37: error: -[clarity_loop_frontendTests.HealthKitServiceTests testFetchHealthData_Success] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testFetchHealthData_Success]' failed (0.023 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testRequestAuthorization_Failure]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/HealthKitServiceTests.swift:32: error: -[clarity_loop_frontendTests.HealthKitServiceTests testRequestAuthorization_Failure] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testRequestAuthorization_Failure]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testRequestAuthorization_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/HealthKitServiceTests.swift:27: error: -[clarity_loop_frontendTests.HealthKitServiceTests testRequestAuthorization_Success] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testRequestAuthorization_Success]' failed (0.017 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testSaveHealthData_Error]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/HealthKitServiceTests.swift:57: error: -[clarity_loop_frontendTests.HealthKitServiceTests testSaveHealthData_Error] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testSaveHealthData_Error]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testSaveHealthData_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/HealthKitServiceTests.swift:52: error: -[clarity_loop_frontendTests.HealthKitServiceTests testSaveHealthData_Success] : failed - Test not implemented
+Test Case '-[clarity_loop_frontendTests.HealthKitServiceTests testSaveHealthData_Success]' failed (0.001 seconds).
+Test Suite 'HealthKitServiceTests' failed at 2025-06-14 08:32:38.738.
+	 Executed 7 tests, with 7 failures (0 unexpected) in 0.047 (0.048) seconds
+Test Suite 'APIClientTestsPlaceholder' started at 2025-06-14 08:32:38.754.
+Test Case '-[clarity_loop_frontendTests.APIClientTestsPlaceholder testPlaceholder]' started.
+Test Case '-[clarity_loop_frontendTests.APIClientTestsPlaceholder testPlaceholder]' passed (0.001 seconds).
+Test Suite 'APIClientTestsPlaceholder' passed at 2025-06-14 08:32:38.754.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'AppSecurityServiceTests' started at 2025-06-14 08:32:38.762.
+Test Case '-[clarity_loop_frontendTests.AppSecurityServiceTests testAppMovedToBackground_ShouldBlur]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/AppSecurityServiceTests.swift:54: error: -[clarity_loop_frontendTests.AppSecurityServiceTests testAppMovedToBackground_ShouldBlur] : XCTAssertTrue failed - isAppObscured should be true when app enters background.
+Test Case '-[clarity_loop_frontendTests.AppSecurityServiceTests testAppMovedToBackground_ShouldBlur]' failed (0.116 seconds).
+Test Case '-[clarity_loop_frontendTests.AppSecurityServiceTests testAppMovedToForeground_ShouldUnblur]' started.
+Test Case '-[clarity_loop_frontendTests.AppSecurityServiceTests testAppMovedToForeground_ShouldUnblur]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AppSecurityServiceTests testIsJailbroken_DeviceIsJailbroken]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/AppSecurityServiceTests.swift:32: error: -[clarity_loop_frontendTests.AppSecurityServiceTests testIsJailbroken_DeviceIsJailbroken] : failed - Test not implemented. Requires mocking file system checks.
+Test Case '-[clarity_loop_frontendTests.AppSecurityServiceTests testIsJailbroken_DeviceIsJailbroken]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AppSecurityServiceTests testIsJailbroken_DeviceIsNotJailbroken]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/AppSecurityServiceTests.swift:37: error: -[clarity_loop_frontendTests.AppSecurityServiceTests testIsJailbroken_DeviceIsNotJailbroken] : failed - Test not implemented. Requires mocking file system checks.
+Test Case '-[clarity_loop_frontendTests.AppSecurityServiceTests testIsJailbroken_DeviceIsNotJailbroken]' failed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AppSecurityServiceTests testPreventScreenshots_NotificationHandled]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Core/Services/AppSecurityServiceTests.swift:47: error: -[clarity_loop_frontendTests.AppSecurityServiceTests testPreventScreenshots_NotificationHandled] : failed - Test not implemented. Requires verifiable action on screenshot.
+Test Case '-[clarity_loop_frontendTests.AppSecurityServiceTests testPreventScreenshots_NotificationHandled]' failed (0.365 seconds).
+Test Suite 'AppSecurityServiceTests' failed at 2025-06-14 08:32:39.634.
+	 Executed 5 tests, with 4 failures (0 unexpected) in 0.484 (0.872) seconds
+Test Suite 'BackendIntegrationTests' started at 2025-06-14 08:32:39.650.
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testAuthHealthCheck]' started.
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testAuthHealthCheck]' passed (0.398 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testBackendContractValidation]' started.
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testBackendContractValidation]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testBackendHealthCheck]' started.
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testBackendHealthCheck]' passed (0.042 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testCompleteAuthenticationFlow]' started.
+🌐 API Request: POST http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com/api/v1/auth/register
+📤 Raw JSON String: {"email":"integration_test_9EB37507-05AA-4D00-BC00-71F972AC0273@clarity.health","password":"TestPass123!","display_name":"E2E Test"}
+📤 Hex bytes (first 200): 7b 22 65 6d 61 69 6c 22 3a 22 69 6e 74 65 67 72 61 74 69 6f 6e 5f 74 65 73 74 5f 39 45 42 33 37 35 30 37 2d 30 35 41 41 2d 34 44 30 30 2d 42 43 30 30 2d 37 31 46 39 37 32 41 43 30 32 37 33 40 63 6c 61
+🚀 Parsed JSON → {
+    "display_name" = "E2E Test";
+    email = "integration_test_9EB37507-05AA-4D00-BC00-71F972AC0273@clarity.health";
+    password = "TestPass123!";
+}
+📋 Request Headers:
+   Content-Type: application/json
+📥 Response Status: 500
+📥 Response Body: {"detail":{"type":"registration_error","title":"Registration Failed","status":500,"detail":"Failed to register user","instance":"https://api.clarity.health/requests/139630620737152","trace_id":null,"errors":null,"help_url":null}}
+❌ API Error: httpError(statusCode: 500, data: 229 bytes)
+⚠️ Registration failed (user might exist): httpError(statusCode: 500, data: 229 bytes)
+🌐 API Request: POST http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com/api/v1/auth/login
+📤 Raw JSON String: {"remember_me":true,"password":"TestPass123!","email":"integration_test_9EB37507-05AA-4D00-BC00-71F972AC0273@clarity.health"}
+📤 Hex bytes (first 200): 7b 22 72 65 6d 65 6d 62 65 72 5f 6d 65 22 3a 74 72 75 65 2c 22 70 61 73 73 77 6f 72 64 22 3a 22 54 65 73 74 50 61 73 73 31 32 33 21 22 2c 22 65 6d 61 69 6c 22 3a 22 69 6e 74 65 67 72 61 74 69 6f 6e 5f
+🚀 Parsed JSON → {
+    email = "integration_test_9EB37507-05AA-4D00-BC00-71F972AC0273@clarity.health";
+    password = "TestPass123!";
+    "remember_me" = 1;
+}
+📋 Request Headers:
+   Content-Type: application/json
+📥 Response Status: 500
+📥 Response Body: {"detail":{"type":"authentication_error","title":"Authentication Failed","status":500,"detail":"Failed to authenticate user","instance":"https://api.clarity.health/requests/139630620376512","trace_id":null,"errors":null,"help_url":null}}
+❌ API Error: httpError(statusCode: 500, data: 237 bytes)
+❌ Auth flow error: httpError(statusCode: 500, data: 237 bytes)
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testCompleteAuthenticationFlow]' passed (1.373 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testDTOContractConformance]' started.
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testDTOContractConformance]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testLoginWithBackendContract]' started.
+🌐 API Request: POST http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com/api/v1/auth/login
+📤 Raw JSON String: {"email":"test@clarity.health","remember_me":true,"password":"TestPass123!"}
+📤 Hex bytes (first 200): 7b 22 65 6d 61 69 6c 22 3a 22 74 65 73 74 40 63 6c 61 72 69 74 79 2e 68 65 61 6c 74 68 22 2c 22 72 65 6d 65 6d 62 65 72 5f 6d 65 22 3a 74 72 75 65 2c 22 70 61 73 73 77 6f 72 64 22 3a 22 54 65 73 74 50
+🚀 Parsed JSON → {
+    email = "test@clarity.health";
+    password = "TestPass123!";
+    "remember_me" = 1;
+}
+📋 Request Headers:
+   Content-Type: application/json
+📥 Response Status: 500
+📥 Response Body: {"detail":{"type":"authentication_error","title":"Authentication Failed","status":500,"detail":"Failed to authenticate user","instance":"https://api.clarity.health/requests/139630620369792","trace_id":null,"errors":null,"help_url":null}}
+❌ API Error: httpError(statusCode: 500, data: 237 bytes)
+Login test error: httpError(statusCode: 500, data: 237 bytes)
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testLoginWithBackendContract]' passed (0.240 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testRegistrationErrorHandling]' started.
+🌐 API Request: POST http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com/api/v1/auth/register
+📤 Raw JSON String: {"email":"invalid-email","display_name":"Test User","password":"TestPass123!"}
+📤 Hex bytes (first 200): 7b 22 65 6d 61 69 6c 22 3a 22 69 6e 76 61 6c 69 64 2d 65 6d 61 69 6c 22 2c 22 64 69 73 70 6c 61 79 5f 6e 61 6d 65 22 3a 22 54 65 73 74 20 55 73 65 72 22 2c 22 70 61 73 73 77 6f 72 64 22 3a 22 54 65 73
+🚀 Parsed JSON → {
+    "display_name" = "Test User";
+    email = "invalid-email";
+    password = "TestPass123!";
+}
+📋 Request Headers:
+   Content-Type: application/json
+📥 Response Status: 422
+📥 Response Body: {"detail":[{"type":"value_error","loc":["body","email"],"msg":"value is not a valid email address: An email address must have an @-sign.","input":"invalid-email","ctx":{"reason":"An email address must have an @-sign."}}]}
+❌ API Error: unknown("Validation error: value is not a valid email address: An email address must have an @-sign.")
+Got expected error: unknown("Validation error: value is not a valid email address: An email address must have an @-sign.")
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testRegistrationErrorHandling]' passed (0.110 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testRegistrationWithBackendContract]' started.
+🌐 API Request: POST http://clarity-alb-1762715656.us-east-1.elb.amazonaws.com/api/v1/auth/register
+📤 Raw JSON String: {"password":"TestPass123!","email":"integration_test_8BF1AA6F-B512-441F-8BB2-596ED8A6B985@clarity.health","display_name":"Test User"}
+📤 Hex bytes (first 200): 7b 22 70 61 73 73 77 6f 72 64 22 3a 22 54 65 73 74 50 61 73 73 31 32 33 21 22 2c 22 65 6d 61 69 6c 22 3a 22 69 6e 74 65 67 72 61 74 69 6f 6e 5f 74 65 73 74 5f 38 42 46 31 41 41 36 46 2d 42 35 31 32 2d
+🚀 Parsed JSON → {
+    "display_name" = "Test User";
+    email = "integration_test_8BF1AA6F-B512-441F-8BB2-596ED8A6B985@clarity.health";
+    password = "TestPass123!";
+}
+📋 Request Headers:
+   Content-Type: application/json
+📥 Response Status: 500
+📥 Response Body: {"detail":{"type":"registration_error","title":"Registration Failed","status":500,"detail":"Failed to register user","instance":"https://api.clarity.health/requests/139630620376512","trace_id":null,"errors":null,"help_url":null}}
+❌ API Error: httpError(statusCode: 500, data: 229 bytes)
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Integration/BackendIntegrationTests.swift:100: error: -[clarity_loop_frontendTests.BackendIntegrationTests testRegistrationWithBackendContract] : failed - Unexpected error: httpError(statusCode: 500, data: 229 bytes)
+Test Case '-[clarity_loop_frontendTests.BackendIntegrationTests testRegistrationWithBackendContract]' failed (0.909 seconds).
+Test Suite 'BackendIntegrationTests' failed at 2025-06-14 08:32:42.727.
+	 Executed 8 tests, with 1 failure (0 unexpected) in 3.076 (3.077) seconds
+Test Suite 'SessionTimeoutServiceTests' started at 2025-06-14 08:32:42.921.
+Test Case '-[clarity_loop_frontendTests.SessionTimeoutServiceTests testAppMovedToBackground_LocksSession]' started.
+Test Case '-[clarity_loop_frontendTests.SessionTimeoutServiceTests testAppMovedToBackground_LocksSession]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.SessionTimeoutServiceTests testAppMovedToForeground_ResetsTimer]' started.
+Test Case '-[clarity_loop_frontendTests.SessionTimeoutServiceTests testAppMovedToForeground_ResetsTimer]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.SessionTimeoutServiceTests testLockSession_TimerInvalidated]' started.
+Test Case '-[clarity_loop_frontendTests.SessionTimeoutServiceTests testLockSession_TimerInvalidated]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.SessionTimeoutServiceTests testSessionReset_TimerInvalidated]' started.
+Test Case '-[clarity_loop_frontendTests.SessionTimeoutServiceTests testSessionReset_TimerInvalidated]' passed (0.072 seconds).
+Test Case '-[clarity_loop_frontendTests.SessionTimeoutServiceTests testSessionTimeout_NotificationPosted]' started.
+Test Case '-[clarity_loop_frontendTests.SessionTimeoutServiceTests testSessionTimeout_NotificationPosted]' passed (1.001 seconds).
+Test Suite 'SessionTimeoutServiceTests' passed at 2025-06-14 08:32:43.997.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 1.075 (1.076) seconds
+Test Suite 'RegistrationViewModelTests' started at 2025-06-14 08:32:44.019.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testCompleteFormValidation]' started.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testCompleteFormValidation]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testEmailValidation]' started.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testEmailValidation]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testEmptyPasswordConfirmationError]' started.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testEmptyPasswordConfirmationError]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testFormValidationPreventesRegistration]' started.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testFormValidationPreventesRegistration]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testObservablePatternBindings]' started.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testObservablePatternBindings]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testPasswordConfirmationMatching]' started.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testPasswordConfirmationMatching]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testPasswordStrengthValidation]' started.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testPasswordStrengthValidation]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testRegistrationNetworkError]' started.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testRegistrationNetworkError]' passed (0.033 seconds).
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testRegistrationWithPasswordMismatch]' started.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testRegistrationWithPasswordMismatch]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testSuccessfulRegistration]' started.
+Test Case '-[clarity_loop_frontendTests.RegistrationViewModelTests testSuccessfulRegistration]' passed (0.001 seconds).
+Test Suite 'RegistrationViewModelTests' passed at 2025-06-14 08:32:44.068.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.038 (0.049) seconds
+Test Suite 'AuthenticationIntegrationTests' started at 2025-06-14 08:32:44.111.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testAppSecurityFeaturesIntegration]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testAppSecurityFeaturesIntegration]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testAuthenticationPerformance]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testAuthenticationPerformance]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testAuthenticationStateNavigation]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testAuthenticationStateNavigation]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testAuthenticationWithDataSyncError]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testAuthenticationWithDataSyncError]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testCompleteLoginFlow]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testCompleteLoginFlow]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testCompleteRegistrationFlow]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testCompleteRegistrationFlow]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testConcurrentAuthenticationAttempts]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testConcurrentAuthenticationAttempts]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testLoginWithBiometricAuthentication]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testLoginWithBiometricAuthentication]' passed (0.873 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testLoginWithInvalidCredentials]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testLoginWithInvalidCredentials]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testLogoutNavigationFlow]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testLogoutNavigationFlow]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testOfflineAuthenticationBehavior]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testOfflineAuthenticationBehavior]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testRecoveryFromCriticalErrors]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testRecoveryFromCriticalErrors]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testRegistrationNetworkFailure]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testRegistrationNetworkFailure]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testRegistrationWithValidationErrors]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testRegistrationWithValidationErrors]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testSecureDataHandlingThroughoutFlow]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testSecureDataHandlingThroughoutFlow]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testSessionPersistenceAcrossAppLaunches]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testSessionPersistenceAcrossAppLaunches]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testSessionTimeoutHandling]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testSessionTimeoutHandling]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testTokenRefreshFlow]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testTokenRefreshFlow]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testUserDataLoadingAfterAuth]' started.
+Test Case '-[clarity_loop_frontendTests.AuthenticationIntegrationTests testUserDataLoadingAfterAuth]' passed (0.506 seconds).
+Test Suite 'AuthenticationIntegrationTests' passed at 2025-06-14 08:32:46.403.
+	 Executed 19 tests, with 0 failures (0 unexpected) in 1.386 (2.292) seconds
+Test Suite 'ConstraintValidationTests' started at 2025-06-14 08:32:46.525.
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testAutoFillUILayoutIntegration]' started.
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testAutoFillUILayoutIntegration]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testConstraintConflictRecovery]' started.
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testConstraintConflictRecovery]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testDynamicContentLayoutHandling]' started.
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testDynamicContentLayoutHandling]' passed (0.463 seconds).
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testKeyboardConstraintSatisfaction]' started.
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testKeyboardConstraintSatisfaction]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testKeyboardDismissalLayoutStability]' started.
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testKeyboardDismissalLayoutStability]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testLayoutStabilityDuringRotation]' started.
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testLayoutStabilityDuringRotation]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testRegistrationFormLayoutConstraints]' started.
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testRegistrationFormLayoutConstraints]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testSecureFieldAutoFillConstraints]' started.
+Test Case '-[clarity_loop_frontendTests.ConstraintValidationTests testSecureFieldAutoFillConstraints]' passed (0.000 seconds).
+Test Suite 'ConstraintValidationTests' passed at 2025-06-14 08:32:47.005.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.466 (0.479) seconds
+Test Suite 'RemoteInsightsRepositoryTests' started at 2025-06-14 08:32:47.065.
+Test Case '-[clarity_loop_frontendTests.RemoteInsightsRepositoryTests testFetchInsights_Empty]' started.
+Test Case '-[clarity_loop_frontendTests.RemoteInsightsRepositoryTests testFetchInsights_Empty]' passed (0.278 seconds).
+Test Case '-[clarity_loop_frontendTests.RemoteInsightsRepositoryTests testFetchInsights_Failure]' started.
+Test Case '-[clarity_loop_frontendTests.RemoteInsightsRepositoryTests testFetchInsights_Failure]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.RemoteInsightsRepositoryTests testFetchInsights_Success]' started.
+Test Case '-[clarity_loop_frontendTests.RemoteInsightsRepositoryTests testFetchInsights_Success]' passed (0.001 seconds).
+Test Suite 'RemoteInsightsRepositoryTests' passed at 2025-06-14 08:32:47.345.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.280 (0.280) seconds
+Test Suite 'BackendContractValidationTests' started at 2025-06-14 08:32:47.416.
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testContentTypeHeaders]' started.
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testContentTypeHeaders]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testErrorResponseContract]' started.
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testErrorResponseContract]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testISO8601DateFormatting]' started.
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testISO8601DateFormatting]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testLoginRequestContract]' started.
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testLoginRequestContract]' passed (0.673 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testLoginResponseContract]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Integration/BackendContractValidationTests.swift:166: error: -[clarity_loop_frontendTests.BackendContractValidationTests testLoginResponseContract] : failed: caught error: "keyNotFound(CodingKeys(stringValue: "access_token", intValue: nil), Swift.DecodingError.Context(codingPath: [], debugDescription: "No value associated with key CodingKeys(stringValue: \"access_token\", intValue: nil) (\"access_token\").", underlyingError: nil))"
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testLoginResponseContract]' failed (0.016 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testNullVsUndefinedHandling]' started.
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testNullVsUndefinedHandling]' passed (0.854 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testRegistrationRequestContract]' started.
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testRegistrationRequestContract]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testRegistrationResponseContract]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Integration/BackendContractValidationTests.swift:74: error: -[clarity_loop_frontendTests.BackendContractValidationTests testRegistrationResponseContract] : failed: caught error: "keyNotFound(CodingKeys(stringValue: "access_token", intValue: nil), Swift.DecodingError.Context(codingPath: [], debugDescription: "No value associated with key CodingKeys(stringValue: \"access_token\", intValue: nil) (\"access_token\").", underlyingError: nil))"
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testRegistrationResponseContract]' failed (0.372 seconds).
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testSnakeCaseEncoding]' started.
+Test Case '-[clarity_loop_frontendTests.BackendContractValidationTests testSnakeCaseEncoding]' passed (0.003 seconds).
+Test Suite 'BackendContractValidationTests' failed at 2025-06-14 08:32:49.343.
+	 Executed 9 tests, with 2 failures (2 unexpected) in 1.926 (1.927) seconds
+Test Suite 'JSONEncodingTests' started at 2025-06-14 08:32:49.438.
+Test Case '-[clarity_loop_frontendTests.JSONEncodingTests testHealthKitUploadRequestEncoding]' started.
+Test Case '-[clarity_loop_frontendTests.JSONEncodingTests testHealthKitUploadRequestEncoding]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.JSONEncodingTests testInsightGenerationRequestEncoding]' started.
+Test Case '-[clarity_loop_frontendTests.JSONEncodingTests testInsightGenerationRequestEncoding]' passed (0.003 seconds).
+Test Case '-[clarity_loop_frontendTests.JSONEncodingTests testInsightGenerationResponseDecoding]' started.
+Test Case '-[clarity_loop_frontendTests.JSONEncodingTests testInsightGenerationResponseDecoding]' passed (0.004 seconds).
+Test Suite 'JSONEncodingTests' passed at 2025-06-14 08:32:49.447.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.008 (0.008) seconds
+Test Suite 'SimpleGreenTest' started at 2025-06-14 08:32:49.602.
+Test Case '-[clarity_loop_frontendTests.SimpleGreenTest testSimpleBoolean]' started.
+Test Case '-[clarity_loop_frontendTests.SimpleGreenTest testSimpleBoolean]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.SimpleGreenTest testSimpleMath]' started.
+Test Case '-[clarity_loop_frontendTests.SimpleGreenTest testSimpleMath]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.SimpleGreenTest testSimpleString]' started.
+Test Case '-[clarity_loop_frontendTests.SimpleGreenTest testSimpleString]' passed (0.000 seconds).
+Test Suite 'SimpleGreenTest' passed at 2025-06-14 08:32:49.604.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'FetchDailyHealthSummaryUseCaseTests' started at 2025-06-14 08:32:49.677.
+Test Case '-[clarity_loop_frontendTests.FetchDailyHealthSummaryUseCaseTests testExecute_Failure]' started.
+Test Case '-[clarity_loop_frontendTests.FetchDailyHealthSummaryUseCaseTests testExecute_Failure]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.FetchDailyHealthSummaryUseCaseTests testExecute_NoData]' started.
+Test Case '-[clarity_loop_frontendTests.FetchDailyHealthSummaryUseCaseTests testExecute_NoData]' passed (0.004 seconds).
+Test Case '-[clarity_loop_frontendTests.FetchDailyHealthSummaryUseCaseTests testExecute_Success]' started.
+/Users/ray/Desktop/CLARITY-DIGITAL-TWIN/clarity-loop-frontend/clarity-loop-frontendTests/Domain/UseCases/FetchDailyHealthSummaryUseCaseTests.swift:38: error: -[clarity_loop_frontendTests.FetchDailyHealthSummaryUseCaseTests testExecute_Success] : XCTAssertGreaterThan failed: ("0") is not greater than ("0")
+Test Case '-[clarity_loop_frontendTests.FetchDailyHealthSummaryUseCaseTests testExecute_Success]' failed (0.087 seconds).
+Test Suite 'FetchDailyHealthSummaryUseCaseTests' failed at 2025-06-14 08:32:49.770.
+	 Executed 3 tests, with 1 failure (0 unexpected) in 0.092 (0.093) seconds
+Test Suite 'MemoryLeakTests' started at 2025-06-14 08:32:49.876.
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testAPIClientMemoryManagement]' started.
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testAPIClientMemoryManagement]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testConcurrentMemoryAccess]' started.
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testConcurrentMemoryAccess]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testConstraintMemoryManagement]' started.
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testConstraintMemoryManagement]' passed (0.129 seconds).
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testMemoryPressureHandling]' started.
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testMemoryPressureHandling]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testObservableViewModelLeaks]' started.
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testObservableViewModelLeaks]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testSecureFieldMemoryHandling]' started.
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testSecureFieldMemoryHandling]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testViewStateMemoryManagement]' started.
+Test Case '-[clarity_loop_frontendTests.MemoryLeakTests testViewStateMemoryManagement]' passed (0.161 seconds).
+Test Suite 'MemoryLeakTests' passed at 2025-06-14 08:32:50.170.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.292 (0.293) seconds
+Test Suite 'SecureFieldRenderingTests' started at 2025-06-14 08:32:50.196.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testAutoFillPasswordGeneration]' started.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testAutoFillPasswordGeneration]' passed (0.007 seconds).
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testAutoFillPasswordSaving]' started.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testAutoFillPasswordSaving]' passed (0.004 seconds).
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldAutofillBehavior]' started.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldAutofillBehavior]' passed (0.067 seconds).
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldErrorStateRendering]' started.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldErrorStateRendering]' passed (0.007 seconds).
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldKeyboardAndInputBehavior]' started.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldKeyboardAndInputBehavior]' passed (0.004 seconds).
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldLayoutStability]' started.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldLayoutStability]' passed (0.007 seconds).
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldMemoryUsage]' started.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldMemoryUsage]' passed (0.633 seconds).
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldTextBufferManagement]' started.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldTextBufferManagement]' passed (0.005 seconds).
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldTextContentType]' started.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldTextContentType]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldVisibilityAndInteraction]' started.
+Test Case '-[clarity_loop_frontendTests.SecureFieldRenderingTests testSecureFieldVisibilityAndInteraction]' passed (0.001 seconds).
+Test Suite 'SecureFieldRenderingTests' passed at 2025-06-14 08:32:50.934.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.737 (0.738) seconds
+Test Suite 'ComponentRenderingTests' started at 2025-06-14 08:32:51.258.
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testComponentAccessibility]' started.
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testComponentAccessibility]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testComponentDynamicContentHandling]' started.
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testComponentDynamicContentHandling]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testComponentMemoryManagement]' started.
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testComponentMemoryManagement]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testEmptyStateViewRendering]' started.
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testEmptyStateViewRendering]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testErrorViewRendering]' started.
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testErrorViewRendering]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testHealthMetricCardViewNumericValues]' started.
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testHealthMetricCardViewNumericValues]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testInsightCardViewRendering]' started.
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testInsightCardViewRendering]' passed (0.000 seconds).
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testMessageBubbleViewRendering]' started.
+Test Case '-[clarity_loop_frontendTests.ComponentRenderingTests testMessageBubbleViewRendering]' passed (0.160 seconds).
+Test Suite 'ComponentRenderingTests' passed at 2025-06-14 08:32:51.428.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.163 (0.169) seconds
+Test Suite 'GenerateInsightUseCaseTests' started at 2025-06-14 08:32:51.460.
+Test Case '-[clarity_loop_frontendTests.GenerateInsightUseCaseTests testExecute_Failure]' started.
+Test Case '-[clarity_loop_frontendTests.GenerateInsightUseCaseTests testExecute_Failure]' passed (0.004 seconds).
+Test Case '-[clarity_loop_frontendTests.GenerateInsightUseCaseTests testExecute_InsufficientData]' started.
+Test Case '-[clarity_loop_frontendTests.GenerateInsightUseCaseTests testExecute_InsufficientData]' passed (0.004 seconds).
+Test Case '-[clarity_loop_frontendTests.GenerateInsightUseCaseTests testExecute_Success]' started.
+Test Case '-[clarity_loop_frontendTests.GenerateInsightUseCaseTests testExecute_Success]' passed (0.176 seconds).
+Test Suite 'GenerateInsightUseCaseTests' passed at 2025-06-14 08:32:51.645.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.184 (0.185) seconds
+Test Suite 'AuthServiceTests' started at 2025-06-14 08:32:51.663.
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testAuthStateStream]' started.
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testAuthStateStream]' passed (0.002 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testGetCurrentUserTokenFailure]' started.
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testGetCurrentUserTokenFailure]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testGetCurrentUserToken]' started.
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testGetCurrentUserToken]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testLogin_Failure]' started.
+clarity_loop_frontendTests/AuthServiceTests.swift:154: Fatal error: Unexpectedly found nil while implicitly unwrapping an Optional value
+2025-06-14 08:32:51.962969-0400 clarity-loop-frontend[43653:2315094] clarity_loop_frontendTests/AuthServiceTests.swift:154: Fatal error: Unexpectedly found nil while implicitly unwrapping an Optional value
+2025-06-14 08:33:14.660955-0400 clarity-loop-frontend[44829:2323106] [BackgroundTaskManager] Background tasks registered successfully
+2025-06-14 08:33:14.725563-0400 clarity-loop-frontend[44829:2323106] [OfflineQueueManager] Started offline queue monitoring
+2025-06-14 08:33:14.727173-0400 clarity-loop-frontend[44829:2323241] [OfflineQueueManager] Starting queue processing
+2025-06-14 08:33:14.733598-0400 clarity-loop-frontend[44829:2323241] [ModelContext] SwiftData.ModelContext: Unbinding from the main queue. This context was instantiated on the main queue but is being used off it. ModelContexts are not Sendable, consider using a ModelActor.
+2025-06-14 08:33:14.737148-0400 clarity-loop-frontend[44829:2323241] [OfflineQueueManager] Queue processing completed
+2025-06-14 08:33:14.756505-0400 clarity-loop-frontend[44829:2323106] [library] load_eligibility_plist: Failed to open /Users/ray/Library/Developer/XCTestDevices/15B8D087-358F-4450-ABF4-933E4C7AF899/data/Containers/Data/Application/51AB8BDF-2291-4221-93C4-12624544EA5B/private/var/db/eligibilityd/eligibility.plist: No such file or directory(2)
+Test Suite 'AuthServiceTests' started at 2025-06-14 08:33:15.073.
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testLogin_Success]' started.
+clarity_loop_frontendTests/AuthServiceTests.swift:142: Fatal error: Unexpectedly found nil while implicitly unwrapping an Optional value
+2025-06-14 08:33:15.074157-0400 clarity-loop-frontend[44829:2323106] clarity_loop_frontendTests/AuthServiceTests.swift:142: Fatal error: Unexpectedly found nil while implicitly unwrapping an Optional value
+2025-06-14 08:33:39.297340-0400 clarity-loop-frontend[45088:2326527] [BackgroundTaskManager] Background tasks registered successfully
+2025-06-14 08:33:39.363312-0400 clarity-loop-frontend[45088:2326527] [OfflineQueueManager] Started offline queue monitoring
+2025-06-14 08:33:39.364965-0400 clarity-loop-frontend[45088:2326699] [OfflineQueueManager] Starting queue processing
+2025-06-14 08:33:39.369439-0400 clarity-loop-frontend[45088:2326699] [ModelContext] SwiftData.ModelContext: Unbinding from the main queue. This context was instantiated on the main queue but is being used off it. ModelContexts are not Sendable, consider using a ModelActor.
+2025-06-14 08:33:39.373612-0400 clarity-loop-frontend[45088:2326699] [OfflineQueueManager] Queue processing completed
+2025-06-14 08:33:39.391370-0400 clarity-loop-frontend[45088:2326527] [library] load_eligibility_plist: Failed to open /Users/ray/Library/Developer/XCTestDevices/15B8D087-358F-4450-ABF4-933E4C7AF899/data/Containers/Data/Application/51AB8BDF-2291-4221-93C4-12624544EA5B/private/var/db/eligibilityd/eligibility.plist: No such file or directory(2)
+Test Suite 'AuthServiceTests' started at 2025-06-14 08:33:39.770.
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testLogout_Success]' started.
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testLogout_Success]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testRegisterSuccess]' started.
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testRegisterSuccess]' passed (0.001 seconds).
+Test Case '-[clarity_loop_frontendTests.AuthServiceTests testRegistration_Failure]' started.
+clarity_loop_frontendTests/AuthServiceTests.swift:188: Fatal error: Unexpectedly found nil while implicitly unwrapping an Optional value
+2025-06-14 08:33:39.772434-0400 clarity-loop-frontend[45088:2326527] clarity_loop_frontendTests/AuthServiceTests.swift:188: Fatal error: Unexpectedly found nil while implicitly unwrapping an Optional value
