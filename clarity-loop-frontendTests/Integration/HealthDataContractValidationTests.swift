@@ -203,15 +203,12 @@ final class HealthDataContractValidationTests: XCTestCase {
             "processing_id": "123e4567-e89b-12d3-a456-426614174000",
             "status": "completed",
             "progress": 1.0,
-            "metrics_processed": 1500,
-            "errors": [],
-            "started_at": "2025-01-13T10:00:00Z",
+            "processed_metrics": 1500,
+            "total_metrics": 1500,
+            "estimated_time_remaining": null,
             "completed_at": "2025-01-13T10:05:00Z",
-            "result_summary": {
-                "heart_rate_samples": 500,
-                "step_samples": 1000,
-                "anomalies_detected": 2
-            }
+            "errors": [],
+            "message": "Processing completed successfully"
         }
         """
         
