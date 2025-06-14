@@ -8,6 +8,13 @@ struct UserLoginRequestDTO: Codable {
     let password: String
     let rememberMe: Bool
     let deviceInfo: [String: AnyCodable]?
+    
+    enum CodingKeys: String, CodingKey {
+        case email
+        case password
+        case rememberMe = "remember_me"
+        case deviceInfo = "device_info"
+    }
 }
 
 /// DTO for the complete user login response body.

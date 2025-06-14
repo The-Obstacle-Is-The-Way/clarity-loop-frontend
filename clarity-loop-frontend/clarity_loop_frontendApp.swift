@@ -33,15 +33,15 @@ struct ClarityPulseApp: App {
     // MARK: - Initializer
     
     init() {
-        // Initialize the APIClient with proper token provider
-        guard let client = APIClient(tokenProvider: {
+        // Initialize the BackendAPIClient with proper token provider
+        guard let client = BackendAPIClient(tokenProvider: {
             print("🔍 APP: Token provider called")
             
-            // Use centralized token management service
-            do {
-                let token = try await TokenManagementService.shared.getValidToken()
-                
-                print("✅ APP: Token obtained from TokenManagementService")
+            // Use TokenManager directly for backend-centric auth
+            let token = await TokenManager.shared.getAccessToken()
+            
+            if let token = token {
+                print("✅ APP: Token obtained from TokenManager")
                 print("   - Length: \(token.count)")
                 
                 #if DEBUG
@@ -54,14 +54,13 @@ struct ClarityPulseApp: App {
                 print("📋 Token copied to clipboard")
                 #endif
                 #endif
-                
-                return token
-            } catch {
-                print("❌ APP: Failed to get token in provider: \(error)")
-                return nil
+            } else {
+                print("⚠️ APP: No token available")
             }
+            
+            return token
         }) else {
-            fatalError("Failed to initialize APIClient with a valid URL.")
+            fatalError("Failed to initialize BackendAPIClient with a valid URL.")
         }
         
         self.apiClient = client
@@ -70,8 +69,7 @@ struct ClarityPulseApp: App {
         let service = AuthService(apiClient: client)
         self.authService = service
         
-        // Configure TokenManagementService with auth service
-        TokenManagementService.shared.configure(with: service)
+        // TokenManagementService no longer needed - using TokenManager directly
         
         let healthKit = HealthKitService(apiClient: client)
         self.healthKitService = healthKit

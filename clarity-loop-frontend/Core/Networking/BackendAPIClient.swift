@@ -217,6 +217,16 @@ final class BackendAPIClient: APIClientProtocol {
             
             // Handle errors
             if httpResponse.statusCode >= 400 {
+                // Handle 401 Unauthorized with token refresh
+                if httpResponse.statusCode == 401 && requiresAuth {
+                    print("⚠️ BackendAPIClient: Received 401, attempting token refresh...")
+                    
+                    // Try to refresh token once
+                    if let refreshedResponse: Response = await retryWithRefreshedToken(request) {
+                        return refreshedResponse
+                    }
+                }
+                
                 // Try to adapt backend error
                 if let adaptedError = contractAdapter.adaptErrorResponse(data) {
                     throw adaptedError
@@ -235,6 +245,53 @@ final class BackendAPIClient: APIClientProtocol {
             #endif
             throw error
         }
+    }
+    
+    // MARK: - Token Refresh Helper
+    
+    private func retryWithRefreshedToken<Response: Decodable>(_ originalRequest: URLRequest) async -> Response? {
+        print("🔄 BackendAPIClient: Attempting to refresh token...")
+        
+        // Get refresh token from TokenManager
+        guard let refreshToken = await TokenManager.shared.getRefreshToken() else {
+            print("❌ BackendAPIClient: No refresh token available")
+            return nil
+        }
+        
+        do {
+            // Call refresh endpoint
+            let refreshDTO = RefreshTokenRequestDTO(refreshToken: refreshToken)
+            let tokenResponse = try await self.refreshToken(requestDTO: refreshDTO)
+            
+            // Store new tokens
+            await TokenManager.shared.store(
+                accessToken: tokenResponse.accessToken,
+                refreshToken: tokenResponse.refreshToken,
+                expiresIn: tokenResponse.expiresIn
+            )
+            
+            print("✅ BackendAPIClient: Token refreshed successfully")
+            
+            // Retry original request with new token
+            var retryRequest = originalRequest
+            retryRequest.setValue("Bearer \(tokenResponse.accessToken)", forHTTPHeaderField: "Authorization")
+            
+            // Perform retry request
+            let (data, response) = try await session.data(for: retryRequest)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                return nil
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                return try decoder.decode(Response.self, from: data)
+            }
+            
+        } catch {
+            print("❌ BackendAPIClient: Token refresh failed: \(error)")
+        }
+        
+        return nil
     }
     
     // MARK: - Other Protocol Methods (Not Implemented Yet)

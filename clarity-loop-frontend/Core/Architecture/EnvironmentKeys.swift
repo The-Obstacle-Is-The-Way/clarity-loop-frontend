@@ -13,15 +13,14 @@ import SwiftUI
 /// Shared token provider for default environment values
 /// This ensures that even default/fallback environment values can authenticate
 private let defaultTokenProvider: () async -> String? = {
-    do {
-        // CRITICAL FIX: Use centralized TokenManagementService
-        let token = try await TokenManagementService.shared.getValidToken()
-        print("✅ Default environment: Token obtained from TokenManagementService")
-        return token
-    } catch {
-        print("⚠️ Default environment failed to get token: \(error)")
-        return nil
+    // Use TokenManager directly instead of TokenManagementService to avoid circular dependency
+    let token = await TokenManager.shared.getAccessToken()
+    if token != nil {
+        print("✅ Default environment: Token obtained from TokenManager")
+    } else {
+        print("⚠️ Default environment: No token available")
     }
+    return token
 }
 
 // MARK: - AuthService
@@ -41,12 +40,7 @@ struct AuthServiceKey: EnvironmentKey {
             return client
         }()
         
-        let authService = AuthService(apiClient: defaultAPIClient)
-        // Configure TokenManagementService with this auth service
-        Task { @MainActor in
-            TokenManagementService.shared.configure(with: authService)
-        }
-        return authService
+        return AuthService(apiClient: defaultAPIClient)
     }
 }
 

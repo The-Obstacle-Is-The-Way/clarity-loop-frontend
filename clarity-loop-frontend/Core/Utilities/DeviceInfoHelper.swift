@@ -21,29 +21,34 @@ enum DeviceInfoHelper {
         var deviceInfo: [String: AnyCodable] = [:]
         
         // Device ID
-        if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
-            deviceInfo["device_id"] = AnyCodable(sanitizeString(deviceId))
-        }
+        let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+        deviceInfo["device_id"] = AnyCodable(sanitizeString(deviceId))
         
-        // OS Version
-        let osVersion = "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
-        deviceInfo["os_version"] = AnyCodable(sanitizeString(osVersion))
+        // Platform
+        deviceInfo["platform"] = AnyCodable("iOS")
+        
+        // OS Version (just the version number as backend expects)
+        deviceInfo["os_version"] = AnyCodable(sanitizeString(UIDevice.current.systemVersion))
         
         // App Version
-        if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-           let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            let versionString = "\(appVersion) (\(buildNumber))"
-            deviceInfo["app_version"] = AnyCodable(sanitizeString(versionString))
+        var appVersion = "1.0.0"
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            if let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                appVersion = "\(version) (\(buildNumber))"
+            } else {
+                appVersion = version
+            }
         }
+        deviceInfo["app_version"] = AnyCodable(sanitizeString(appVersion))
         
         // Device Model
-        deviceInfo["device_model"] = AnyCodable(sanitizeString(UIDevice.current.model))
+        deviceInfo["model"] = AnyCodable(sanitizeString(UIDevice.current.model))
         
         // Device Name (heavily sanitized)
         let deviceName = UIDevice.current.name
             .replacingOccurrences(of: "'s", with: "")
             .replacingOccurrences(of: "'s", with: "")  // Smart apostrophe variant
-        deviceInfo["device_name"] = AnyCodable(sanitizeString(deviceName))
+        deviceInfo["name"] = AnyCodable(sanitizeString(deviceName))
         
         return deviceInfo
     }

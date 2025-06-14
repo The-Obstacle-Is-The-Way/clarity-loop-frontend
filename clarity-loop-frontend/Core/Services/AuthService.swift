@@ -70,7 +70,8 @@ final class AuthService: AuthServiceProtocol {
     // MARK: - Properties
     
     nonisolated(unsafe) private let apiClient: APIClientProtocol
-    private let cognitoAuth = CognitoAuthService()
+    // REMOVED: Direct Cognito integration
+    // private let cognitoAuth = CognitoAuthService()
     private var authStateTask: Task<Void, Never>?
 
     /// A continuation to drive the `authState` async stream.
@@ -81,18 +82,20 @@ final class AuthService: AuthServiceProtocol {
         AsyncStream { continuation in
             self.authStateContinuation = continuation
             
-            // Subscribe to Cognito auth state changes
+            // FIXED: No more Cognito auth state
             self.authStateTask = Task { [weak self] in
-                // For now, just yield current user state
-                let user = try? await self?.cognitoAuth.getCurrentUser()
-                continuation.yield(user)
+                // Auth state will be managed through backend tokens
+                continuation.yield(nil) // Start with no user
             }
         }
     }()
     
+    private var _currentUser: AuthUser?
+    
     var currentUser: AuthUser? {
         get async {
-            try? await cognitoAuth.getCurrentUser()
+            // Return cached user from last login
+            return _currentUser
         }
     }
 
@@ -106,14 +109,25 @@ final class AuthService: AuthServiceProtocol {
 
     func signIn(withEmail email: String, password: String) async throws -> UserSessionResponseDTO {
         do {
-            // Sign in with Cognito
-            _ = try await cognitoAuth.signIn(email: email, password: password)
+            // FIXED: NO MORE DIRECT COGNITO! Only use backend API
+            // _ = try await cognitoAuth.signIn(email: email, password: password)
             
             // Create backend login request with device info
-            // TODO: Switch to generateDeviceInfo() after testing
-            let deviceInfo = DeviceInfoHelper.generateMinimalDeviceInfo()  // Using minimal info to avoid escape sequence issues
+            let deviceInfo = DeviceInfoHelper.generateDeviceInfo()
             let loginDTO = UserLoginRequestDTO(email: email, password: password, rememberMe: true, deviceInfo: deviceInfo)
             let response = try await apiClient.login(requestDTO: loginDTO)
+            
+            // Store tokens in TokenManager
+            await TokenManager.shared.store(
+                accessToken: response.tokens.accessToken,
+                refreshToken: response.tokens.refreshToken,
+                expiresIn: response.tokens.expiresIn
+            )
+            
+            // Update auth state with the logged in user
+            let user = response.user.authUser
+            self._currentUser = user
+            authStateContinuation?.yield(user)
             
             return response.user
         } catch {
@@ -123,10 +137,9 @@ final class AuthService: AuthServiceProtocol {
     
     func register(withEmail email: String, password: String, details: UserRegistrationRequestDTO) async throws -> RegistrationResponseDTO {
         do {
-            // Note: Cognito will handle registration through hosted UI
-            // For now, we'll initiate the sign-up flow
-            let fullName = "\(details.firstName) \(details.lastName)"
-            _ = try await cognitoAuth.signUp(email: email, password: password, fullName: fullName)
+            // FIXED: Register only through backend
+            // let fullName = "\(details.firstName) \(details.lastName)"
+            // _ = try await cognitoAuth.signUp(email: email, password: password, fullName: fullName)
             
             // Register with our backend
             let response = try await apiClient.register(requestDTO: details)
@@ -137,7 +150,15 @@ final class AuthService: AuthServiceProtocol {
     }
     
     func signOut() async throws {
-        try await cognitoAuth.signOut()
+        // FIXED: Clear local auth state
+        // try await cognitoAuth.signOut()
+        
+        // Clear tokens
+        await TokenManager.shared.clear()
+        
+        // Clear user state
+        self._currentUser = nil
+        authStateContinuation?.yield(nil)
     }
     
     func sendPasswordReset(to email: String) async throws {
@@ -149,7 +170,10 @@ final class AuthService: AuthServiceProtocol {
     func getCurrentUserToken() async throws -> String {
         print("🔍 AUTH: getCurrentUserToken() called")
         
-        let token = try await cognitoAuth.getIDToken()
+        // FIXED: Get token from TokenManager instead of Cognito
+        guard let token = await TokenManager.shared.getAccessToken() else {
+            throw AuthenticationError.unknown("No valid access token")
+        }
         
         print("✅ AUTH: Token retrieved successfully")
         print("   - Length: \(token.count) characters")

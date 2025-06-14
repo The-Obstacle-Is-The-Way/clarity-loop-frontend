@@ -1,0 +1,94 @@
+AUTHENTICATION FIX - URGENT PRODUCT REQUIREMENTS DOCUMENT
+=======================================================
+
+CRITICAL ISSUE
+--------------
+The iOS app is failing to authenticate because it's calling AWS Cognito directly instead of using the backend API. This results in a "BadRequest" error because the Cognito client requires SECRET_HASH which the mobile app cannot provide.
+
+CURRENT BROKEN FLOW
+------------------
+1. iOS AuthService calls cognitoAuth.signIn() directly
+2. Request goes to cognito-idp.us-east-1.amazonaws.com
+3. Cognito returns BadRequest due to missing SECRET_HASH
+4. Backend API at /api/v1/auth/login is never called
+5. User cannot login to the app
+
+REQUIRED SOLUTION
+----------------
+Implement backend-centric authentication where ALL auth flows through the FastAPI backend. The backend handles Cognito complexity including SECRET_HASH computation.
+
+IMPLEMENTATION TASKS
+-------------------
+
+1. REMOVE DIRECT COGNITO CALLS
+   - Comment out cognitoAuth.signIn() in AuthService.swift line 110
+   - Remove all direct Cognito authentication calls
+   - Keep APIClient login as the only auth method
+   - Remove CognitoAuthService dependencies
+
+2. UPDATE AUTH SERVICE
+   - Fix signIn method to ONLY use apiClient.login()
+   - Remove register method's Cognito calls
+   - Update getCurrentUserToken to get from TokenManager
+   - Fix auth state management without Cognito
+
+3. IMPLEMENT TOKEN MANAGER
+   - Create TokenManager to store access/refresh tokens
+   - Use iOS Keychain for secure storage
+   - Track token expiry time
+   - Implement getAccessToken() and getRefreshToken()
+
+4. UPDATE API CLIENT
+   - Ensure login endpoint is /api/v1/auth/login
+   - Add Bearer token to Authorization header
+   - Implement token refresh endpoint
+   - Handle token expiry gracefully
+
+5. CREATE RESPONSE MODELS
+   - LoginResponse with access_token, refresh_token, expires_in
+   - TokenResponse for refresh endpoint
+   - Ensure proper snake_case mapping
+
+6. FIX DEVICE INFO
+   - Update DeviceInfoHelper to return proper struct
+   - Include all required fields for backend
+   - Remove AnyCodable usage
+
+7. REMOVE COGNITO CONFIG
+   - Delete Cognito settings from Info.plist
+   - Remove CognitoConfiguration.swift
+   - Clean up AWS SDK imports
+
+8. UPDATE TESTS
+   - Fix auth tests to mock backend responses
+   - Remove Cognito-specific test cases
+   - Ensure all tests compile and pass
+
+BACKEND ENDPOINTS (Already Working)
+----------------------------------
+- POST /api/v1/auth/login - Accepts email, password, device_info
+- POST /api/v1/auth/refresh - Accepts refresh_token
+- Backend handles all Cognito complexity
+
+SUCCESS CRITERIA
+---------------
+- User can login successfully through backend API
+- No direct Cognito calls remain in codebase
+- Tokens are stored securely and used for API auth
+- App builds without compilation errors
+- All tests pass
+- Manual testing confirms auth works end-to-end
+
+TESTING CHECKLIST
+----------------
+1. Build app in Xcode without errors
+2. Run on simulator
+3. Enter valid credentials
+4. Verify login succeeds
+5. Check network logs show requests to backend not Cognito
+6. Verify Bearer token sent with API requests
+7. Test token refresh mechanism
+
+PRIORITY: CRITICAL
+-----------------
+This blocks all other functionality. Must be fixed immediately.
