@@ -150,11 +150,17 @@
 				Domain/UseCases/FetchDailyHealthSummaryUseCaseTests.swift = (ios, );
 				Domain/UseCases/GenerateInsightUseCaseTests.swift = (ios, );
 				Domain/UseCases/SyncHealthDataUseCaseTests.swift = (ios, );
+				E2E/BackendE2ETests.swift = (ios, );
+				E2E/BackendMockServer.swift = (ios, );
 				Features/Authentication/LoginViewModelTests.swift = (ios, );
 				Features/Authentication/RegistrationViewModelTests.swift = (ios, );
 				Integration/AuthenticationIntegrationTests.swift = (ios, );
+				Integration/BackendContractValidationTests.swift = (ios, );
 				Integration/BackendIntegrationTests.swift = (ios, );
+				Integration/HealthDataContractValidationTests.swift = (ios, );
+				Integration/PATContractValidationTests.swift = (ios, );
 				IntegrationTests.swift = (ios, );
+				Mocks/CorrectMockAPIClient.swift = (ios, );
 				Mocks/MockAuthService.swift = (ios, );
 				Performance/MemoryLeakTests.swift = (ios, );
 				SimpleGreenTest.swift = (ios, );
