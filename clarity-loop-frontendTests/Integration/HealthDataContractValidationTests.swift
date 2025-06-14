@@ -29,24 +29,38 @@ final class HealthDataContractValidationTests: XCTestCase {
     func testHealthKitUploadRequestContract() throws {
         // Given - HealthKit upload request
         let request = HealthKitUploadRequestDTO(
-            dataType: "heart_rate",
+            userId: "test-user-123",
             samples: [
                 HealthKitSampleDTO(
+                    sampleType: "heartRate",
                     value: 72.5,
-                    unit: "bpm",
+                    categoryValue: nil,
+                    unit: "count/min",
                     startDate: Date(),
                     endDate: Date(),
                     metadata: [
                         "device": AnyCodable("Apple Watch"),
                         "workout_type": AnyCodable("running")
-                    ]
+                    ],
+                    sourceRevision: SourceRevisionDTO(
+                        source: SourceDTO(
+                            name: "CLARITY Pulse",
+                            bundleIdentifier: "com.clarity.pulse"
+                        ),
+                        version: "1.0.0",
+                        productType: "iPhone",
+                        operatingSystemVersion: "18.0"
+                    )
                 )
             ],
-            userId: UUID(),
-            uploadId: UUID(),
-            totalSamples: 1,
-            batchNumber: 1,
-            isLastBatch: true
+            deviceInfo: DeviceInfoDTO(
+                deviceModel: "iPhone16,1",
+                systemName: "iOS",
+                systemVersion: "18.0",
+                appVersion: "1.0.0",
+                timeZone: "America/New_York"
+            ),
+            timestamp: Date()
         )
         
         // When - Encode to JSON
@@ -55,21 +69,18 @@ final class HealthDataContractValidationTests: XCTestCase {
         
         // Then - Verify backend contract
         XCTAssertNotNil(json)
-        XCTAssertEqual(json?["data_type"] as? String, "heart_rate")
-        XCTAssertNotNil(json?["user_id"])
-        XCTAssertNotNil(json?["upload_id"])
-        XCTAssertEqual(json?["total_samples"] as? Int, 1)
-        XCTAssertEqual(json?["batch_number"] as? Int, 1)
-        XCTAssertEqual(json?["is_last_batch"] as? Bool, true)
+        XCTAssertEqual(json?["user_id"] as? String, "test-user-123")
+        XCTAssertNotNil(json?["samples"])
+        XCTAssertNotNil(json?["device_info"])
+        XCTAssertNotNil(json?["timestamp"])
         
-        // Verify samples array structure
         let samples = json?["samples"] as? [[String: Any]]
-        XCTAssertNotNil(samples)
         XCTAssertEqual(samples?.count, 1)
         
         let sample = samples?.first
+        XCTAssertEqual(sample?["sample_type"] as? String, "heartRate")
         XCTAssertEqual(sample?["value"] as? Double, 72.5)
-        XCTAssertEqual(sample?["unit"] as? String, "bpm")
+        XCTAssertEqual(sample?["unit"] as? String, "count/min")
         XCTAssertNotNil(sample?["start_date"])
         XCTAssertNotNil(sample?["end_date"])
         
@@ -82,12 +93,12 @@ final class HealthDataContractValidationTests: XCTestCase {
         // Given - Backend upload response
         let backendJSON = """
         {
+            "success": true,
             "upload_id": "123e4567-e89b-12d3-a456-426614174000",
-            "status": "processing",
-            "samples_received": 100,
-            "samples_processed": 0,
-            "created_at": "2025-01-13T10:00:00Z",
-            "estimated_completion": "2025-01-13T10:05:00Z"
+            "processed_samples": 95,
+            "skipped_samples": 5,
+            "errors": ["Duplicate sample at index 5"],
+            "message": "Upload processed successfully"
         }
         """
         
@@ -95,12 +106,12 @@ final class HealthDataContractValidationTests: XCTestCase {
         let response = try decoder.decode(HealthKitUploadResponseDTO.self, from: backendJSON.data(using: .utf8)!)
         
         // Then - Verify all fields decoded correctly
-        XCTAssertEqual(response.uploadId.uuidString.lowercased(), "123e4567-e89b-12d3-a456-426614174000")
-        XCTAssertEqual(response.status, "processing")
-        XCTAssertEqual(response.samplesReceived, 100)
-        XCTAssertEqual(response.samplesProcessed, 0)
-        XCTAssertNotNil(response.createdAt)
-        XCTAssertNotNil(response.estimatedCompletion)
+        XCTAssertTrue(response.success)
+        XCTAssertEqual(response.uploadId, "123e4567-e89b-12d3-a456-426614174000")
+        XCTAssertEqual(response.processedSamples, 95)
+        XCTAssertEqual(response.skippedSamples, 5)
+        XCTAssertEqual(response.errors?.first, "Duplicate sample at index 5")
+        XCTAssertEqual(response.message, "Upload processed successfully")
     }
     
     // MARK: - HealthKit Sync Contract Tests
@@ -108,10 +119,11 @@ final class HealthDataContractValidationTests: XCTestCase {
     func testHealthKitSyncRequestContract() throws {
         // Given - Sync request
         let request = HealthKitSyncRequestDTO(
-            dataTypes: ["heart_rate", "steps", "sleep_analysis"],
+            userId: "test-user-123",
             startDate: Date(timeIntervalSinceNow: -86400), // 24 hours ago
             endDate: Date(),
-            forceSync: true
+            dataTypes: ["stepCount", "heartRate", "sleepAnalysis"],
+            forceRefresh: true
         )
         
         // When - Encode to JSON
@@ -119,15 +131,17 @@ final class HealthDataContractValidationTests: XCTestCase {
         let json = try JSONSerialization.jsonObject(with: jsonData) as? [String: Any]
         
         // Then - Verify backend contract
-        let dataTypes = json?["data_types"] as? [String]
-        XCTAssertEqual(dataTypes?.count, 3)
-        XCTAssertTrue(dataTypes?.contains("heart_rate") ?? false)
-        XCTAssertTrue(dataTypes?.contains("steps") ?? false)
-        XCTAssertTrue(dataTypes?.contains("sleep_analysis") ?? false)
-        
+        XCTAssertNotNil(json)
+        XCTAssertEqual(json?["user_id"] as? String, "test-user-123")
         XCTAssertNotNil(json?["start_date"])
         XCTAssertNotNil(json?["end_date"])
-        XCTAssertEqual(json?["force_sync"] as? Bool, true)
+        XCTAssertEqual(json?["force_refresh"] as? Bool, true)
+        
+        let dataTypes = json?["data_types"] as? [String]
+        XCTAssertEqual(dataTypes?.count, 3)
+        XCTAssertTrue(dataTypes?.contains("stepCount") ?? false)
+        XCTAssertTrue(dataTypes?.contains("heartRate") ?? false)
+        XCTAssertTrue(dataTypes?.contains("sleepAnalysis") ?? false)
     }
     
     // MARK: - Paginated Health Data Contract Tests
@@ -138,40 +152,27 @@ final class HealthDataContractValidationTests: XCTestCase {
         {
             "data": [
                 {
-                    "id": "metric-1",
-                    "type": "heart_rate",
-                    "value": 72.5,
-                    "unit": "bpm",
-                    "timestamp": "2025-01-13T10:00:00Z",
-                    "source": "Apple Watch",
-                    "metadata": {
-                        "workout_active": false,
-                        "device_model": "Watch7,4"
-                    }
+                    "metric_id": "123e4567-e89b-12d3-a456-426614174000",
+                    "metric_type": "biometric",
+                    "biometric_data": {
+                        "heart_rate": 72.5,
+                        "oxygen_saturation": 98.5
+                    },
+                    "device_id": "apple-watch-123",
+                    "created_at": "2025-01-13T10:00:00Z"
                 },
                 {
-                    "id": "metric-2",
-                    "type": "steps",
-                    "value": 5432,
-                    "unit": "count",
-                    "timestamp": "2025-01-13T10:00:00Z",
-                    "source": "iPhone",
-                    "metadata": {
-                        "distance_meters": 4123.5
-                    }
+                    "metric_id": "223e4567-e89b-12d3-a456-426614174000",
+                    "metric_type": "activity",
+                    "activity_data": {
+                        "steps": 5432,
+                        "distance": 4.1,
+                        "active_energy": 250.5
+                    },
+                    "device_id": "iphone-123",
+                    "created_at": "2025-01-13T11:00:00Z"
                 }
-            ],
-            "pagination": {
-                "page": 1,
-                "per_page": 20,
-                "total": 150,
-                "total_pages": 8
-            },
-            "summary": {
-                "average_heart_rate": 68.5,
-                "total_steps": 12543,
-                "data_quality_score": 0.95
-            }
+            ]
         }
         """
         
