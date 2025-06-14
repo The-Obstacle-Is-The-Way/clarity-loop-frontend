@@ -183,19 +183,15 @@ final class HealthDataContractValidationTests: XCTestCase {
         XCTAssertEqual(response.data.count, 2)
         
         let firstMetric = response.data[0]
-        XCTAssertEqual(firstMetric.id, "metric-1")
-        XCTAssertEqual(firstMetric.type, "heart_rate")
-        XCTAssertEqual(firstMetric.value, 72.5)
-        XCTAssertEqual(firstMetric.unit, "bpm")
-        XCTAssertEqual(firstMetric.source, "Apple Watch")
+        XCTAssertEqual(firstMetric.metricId.uuidString.lowercased(), "123e4567-e89b-12d3-a456-426614174000")
+        XCTAssertEqual(firstMetric.metricType, "biometric")
+        XCTAssertNotNil(firstMetric.biometricData)
+        XCTAssertEqual(firstMetric.biometricData?.heartRate, 72.5)
         
-        XCTAssertEqual(response.pagination?.page, 1)
-        XCTAssertEqual(response.pagination?.perPage, 20)
-        XCTAssertEqual(response.pagination?.total, 150)
-        XCTAssertEqual(response.pagination?.totalPages, 8)
-        
-        XCTAssertEqual(response.summary?["average_heart_rate"]?.value as? Double, 68.5)
-        XCTAssertEqual(response.summary?["total_steps"]?.value as? Int, 12543)
+        let secondMetric = response.data[1]
+        XCTAssertEqual(secondMetric.metricType, "activity")
+        XCTAssertNotNil(secondMetric.activityData)
+        XCTAssertEqual(secondMetric.activityData?.steps, 5432)
     }
     
     // MARK: - Processing Status Contract Tests
